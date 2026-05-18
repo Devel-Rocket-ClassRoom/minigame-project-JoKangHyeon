@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class NumbersHand : Hand
 {
-    private int numTarget;
+    public int numTarget;
 
     public NumbersHand(int num)
     {
         numTarget = num;
+    }
+
+    public override Hand Clone()
+    {
+        return new NumbersHand(numTarget);
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -33,6 +38,11 @@ public class NumbersHand : Hand
 
 public class ChoiceHand : Hand
 {
+    public override Hand Clone()
+    {
+        return new ChoiceHand();
+    }
+
     public override int GetDiceScore(List<Dice> dices)
     {
         if (dices == null)
@@ -50,6 +60,11 @@ public class ChoiceHand : Hand
 
 public class FullHouseHand : Hand
 {
+    public override Hand Clone()
+    {
+        return new FullHouseHand();
+    }
+
     public override int GetDiceScore(List<Dice> dices)
     {
         if (dices == null || dices.Count<5)
@@ -92,10 +107,16 @@ public class FullHouseHand : Hand
 
 public class SmallAlighmentHand : Hand
 {
+    public override Hand Clone()
+    {
+        return new SmallAlighmentHand();
+    }
+
     public override int GetDiceScore(List<Dice> dices)
     {
         if (dices == null || dices.Count<4)
             return 0;
+
         int firstDice = dices[0].GetDice();
         int secondDice = dices[1].GetDice();
 
@@ -104,11 +125,11 @@ public class SmallAlighmentHand : Hand
 
         if (firstCount >= 4)
         {
-            return firstDice * firstCount;
+            return firstDice * 4;
         }
         else if (secondCount >= 4)
         {
-            return secondDice * secondCount;
+            return secondDice * 4;
         }
         else
         {
@@ -119,6 +140,11 @@ public class SmallAlighmentHand : Hand
 
 public class BigAlighmentHand : Hand
 {
+    public override Hand Clone()
+    {
+        return new BigAlighmentHand();
+    }
+
     public override int GetDiceScore(List<Dice> dices)
     {
         if (dices == null || dices.Count < 5)
@@ -138,15 +164,25 @@ public class BigAlighmentHand : Hand
     }
 }
 
-public class SmallStraight : Hand
+public class SmallStraightHand : Hand
 {
+    public override Hand Clone()
+    {
+        return new SmallStraightHand();
+    }
+
     public override int GetDiceScore(List<Dice> dices)
     {
+        if (dices == null || dices.Count < 4)
+            return 0;
+
+        dices = dices.ToList();//Clone List 안하면 화면 꼬임
         dices.Sort((a,b)=>a.GetDice().CompareTo(b.GetDice()));
 
         int straight = 1;
         int last = dices[dices.Count-1].GetDice();
         List<int> straights = new List<int>();
+        straights.Add(last);
         for (int i = dices.Count - 2; i >= 0; i--)
         {
             if (dices[i].GetDice() == last)
@@ -181,13 +217,23 @@ public class SmallStraight : Hand
 
 public class BigStraightHand : Hand
 {
+    public override Hand Clone()
+    {
+        return new BigStraightHand();
+    }
+
     public override int GetDiceScore(List<Dice> dices)
     {
+        if (dices == null || dices.Count < 5)
+            return 0;
+
+        dices = dices.ToList(); //Clone List 안하면 화면 꼬임
         dices.Sort((a, b) => a.GetDice().CompareTo(b.GetDice()));
 
         int straight = 1;
         int last = dices[dices.Count - 1].GetDice();
         List<int> straights = new List<int>();
+        straights.Add(last);
         for (int i = dices.Count - 2; i >= 0; i--)
         {
             if (dices[i].GetDice() == last)
@@ -214,6 +260,7 @@ public class BigStraightHand : Hand
 
         if (straight >= 5)
         {
+            Debug.Log(string.Join(',', straights));
             return straights.Sum();
         }
         return 0;

@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18341f701839f1840a0c37d8bf275566, type: 3}
+  m_Name: HandDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::HandDefinitionSO
+  hands:
+  - rid: 4409310316887802095
+  - rid: 4409310316887802096
+  - rid: 4409310316887802097
+  - rid: 4409310316887802098
+  - rid: 4409310316887802099
+  - rid: 4409310316887802100
+  - rid: 4409310316887802110
+  - rid: 4409310316887802103
+  - rid: 4409310316887802104
+  - rid: 4409310316887802108
+  - rid: 4409310316887802106
+  - rid: 4409310318304952506
+  references:
+    version: 2
+    RefIds:
+    - rid: 4409310316887802095
+      type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: ones
+        multiplier: 3
+        numTarget: 1
+    - rid: 4409310316887802096
+      type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: twos
+        multiplier: 3
+        numTarget: 2
+    - rid: 4409310316887802097
+      type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: threes
+        multiplier: 3
+        numTarget: 0
+    - rid: 4409310316887802098
+      type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: fours
+        multiplier: 3
+        numTarget: 0
+    - rid: 4409310316887802099
+      type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: fives
+        multiplier: 3
+        numTarget: 5
+    - rid: 4409310316887802100
+      type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: sixs
+        multiplier: 3
+        numTarget: 6
+    - rid: 4409310316887802103
+      type: {class: FullHouseHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: fullhouse
+        multiplier: 3
+    - rid: 4409310316887802104
+      type: {class: SmallStraightHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: smallstraight
+        multiplier: 2
+    - rid: 4409310316887802106
+      type: {class: SmallAlignmentData, ns: , asm: Assembly-CSharp}
+      data:
+        name: smallalignment
+        multiplier: 2
+    - rid: 4409310316887802108
+      type: {class: BigStraightHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: bigstraight
+        multiplier: 4
+    - rid: 4409310316887802110
+      type: {class: ChoiceHandData, ns: , asm: Assembly-CSharp}
+      data:
+        name: choice
+        multiplier: 1
+    - rid: 4409310318304952506
+      type: {class: BigAlignmentData, ns: , asm: Assembly-CSharp}
+      data:
+        name: bigalignment
+        multiplier: 4

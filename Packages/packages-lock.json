@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.alexeytaranov.serializereferencedropdown": {
+      "version": "https://github.com/AlexeyTaranov/SerializeReferenceDropdown.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.0"
+      },
+      "hash": "ef554167015bf60706b3a112c26cd070aa375c4c"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.12",
       "depth": 0,
@@ -90,6 +99,13 @@
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
       "depth": 3,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.2",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
