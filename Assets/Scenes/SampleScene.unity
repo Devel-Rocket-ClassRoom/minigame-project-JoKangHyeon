@@ -1137,7 +1137,7 @@ MonoBehaviour:
   handDefine: {fileID: 11400000, guid: 1905e6fb29bd039448a592bf244d66cc, type: 2}
   startingsDefine: {fileID: 11400000, guid: 0add5eaae69d5ed4bb2a851c05157fb1, type: 2}
   diceDefine: {fileID: 11400000, guid: 6ea697efe51478940a7f55bafeaef01b, type: 2}
-  currentStartingIndex: 1
+  currentStartingIndex: 0
   dicesSetted: []
   dicesRemain: []
   handsUI: []

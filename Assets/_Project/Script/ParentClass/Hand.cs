@@ -20,6 +20,17 @@ public abstract class Hand
     {
         return GetDiceScore(dices) > 0;
     }
+
+    public virtual bool lsAchived()
+    {
+        return IsAchived(diceList);
+    }
+
+    public virtual bool IsUsed()
+    {
+        return diceList != null;
+    }
+
     public abstract int GetDiceScore(List<Dice> dices);
 
     public virtual int SetDice(List<Dice> dices)

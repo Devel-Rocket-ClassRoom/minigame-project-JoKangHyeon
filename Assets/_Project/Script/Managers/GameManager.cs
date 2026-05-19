@@ -1,9 +1,11 @@
 using NUnit.Framework.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,7 +32,7 @@ public class GameManager : MonoBehaviour
     {
         state = new(this);
         state.Setup(startingsDefine.startings[currentStartingIndex]);
-        state.currentCycle.ResetCycle();
+        state.RoundStart();
         RefreshUI();
     }
 
@@ -164,6 +166,8 @@ public class CycleState
     public RunState currentRun;
     public GameManager gameManager;
 
+    public bool isFirstCycle = false;
+
     public CycleState(GameManager gameManager, RunState runState)
     {
         this.gameManager = gameManager;
@@ -192,8 +196,12 @@ public class CycleState
     public void EndCycle(int targetSlot)
     {
         currentRun.hands[targetSlot].hand.SetDice(dicesSetted);
-        dicesSetted = new();
-        ResetCycle();
+        EventBus.Publish(EventType.OnSlotScored, currentRun.hands[targetSlot]);
+
+        if (isFirstCycle)
+        {
+            EventBus.Publish(EventType.OnFirstScoreOfRound, currentRun.hands[targetSlot]);
+        }
     }
 
     public void Reroll()
@@ -210,6 +218,8 @@ public class CycleState
         {
             dice.RollDice();
         }
+
+        EventBus.Publish(EventType.OnRollComplete, dicesRemain);
     }
 
     public void SetDice(int pos)
@@ -303,22 +313,137 @@ public class RunState
         rerollPerCycle = 8000;
     }
 
-    public void ResetRound()
+
+
+
+    //라운드 사이클 정의
+    public void RoundStart()
     {
-        foreach(var dice in dices)
+        EventBus.Publish(EventType.OnRoundStart, null);
+
+        foreach (var hand in hands)
+        {
+            hand.hand.ResetHand();
+        }
+
+        //이번 라운드의 첫 턴 시작
+        CycleStart();
+        currentCycle.isFirstCycle = true;
+        EventBus.Subscribe<HandSlot>(EventType.OnSlotScored, RoundEndCheck);
+    }
+
+    public void CycleStart()
+    {
+        foreach (var dice in dices)
         {
             dice.ResetDice();
         }
 
-        foreach(var hand in hands)
+        currentCycle = new CycleState(gameManager, this);
+        currentCycle.ResetCycle();
+        EventBus.Publish(EventType.OnFirstRollComplete, currentCycle.dicesRemain);
+        gameManager.RefreshUI();
+    }
+
+    public void RoundEndCheck(object _)
+    {
+        bool flag = true;
+        foreach (var hand in hands)
         {
-            hand.hand.ResetHand();
+            if (!hand.hand.IsUsed())
+            {
+                flag = false;
+                break;
+            }
+        }
+
+        if(flag)
+        {
+            RoundEnd();
+            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScored, RoundEndCheck);
+        }
+        else
+        {
+            CycleStart();
         }
     }
 
-    public void StartCycle()
+    public void RoundEnd()
     {
-        currentCycle = new CycleState(gameManager, this);
-        currentCycle.ResetCycle();
+        Debug.Log("Round End");
+    }
+}
+
+
+public enum EventType
+{
+    /// <summary>
+    /// 족보 점수 계산 시작 전
+    /// return : int HandNumber
+    /// </summary>
+    OnHandStart,
+    /// <summary>
+    /// 이번 사이클의 첫번째 주사위 굴림 후
+    /// return : List<Dice>
+    /// </summary>
+    OnFirstRollComplete,
+    /// <summary>
+    /// 주사위 굴림 완료 후
+    /// return : List<Dice>
+    /// </summary>
+    OnRollComplete,
+    /// <summary>
+    /// 족보 슬롯에 점수가 입력되었을 때
+    /// return : HandSlot
+    /// </summary>
+    OnSlotScored,
+    /// <summary>
+    /// 이번 라운드의 첫 점수 활성화시
+    /// return : HandSlot
+    /// </summary>
+    OnFirstScoreOfRound,
+    /// <summary>
+    /// 라운드 시작 시
+    /// return : null
+    /// </summary>
+    OnRoundStart,
+    /// <summary>
+    /// 라운드 성공 시
+    /// retrun : null
+    /// </summary>
+    OnRoundClear,
+}
+
+
+public static class EventBus
+{
+    private static Dictionary<EventType, Action<object>> eventTable = new();
+
+    public static void Subscribe<T>(EventType eventType, Action<T> callback)
+    {
+        if (!eventTable.ContainsKey(eventType))
+        {
+            eventTable[eventType] = (obj) => callback((T)obj);
+        }
+        else
+        {
+            eventTable[eventType] += (obj) => callback((T)obj);
+        }
+    }
+
+    public static void Unsubscribe<T>(EventType eventType, Action<T> callback)
+    {
+        if (eventTable.ContainsKey(eventType))
+        {
+            eventTable[eventType] -= (obj) => callback((T)obj);
+        }
+    }
+
+    public static void Publish(EventType eventType, object eventData)
+    {
+        if (eventTable.ContainsKey(eventType))
+        {
+            eventTable[eventType]?.Invoke(eventData);
+        }
     }
 }
