@@ -11,4 +11,20 @@ public class Defines
         SmallAlignment,
         LargeAlignment,
     }
+
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary
+    }
+
+    public enum RelicCategory
+    {
+        DiceManipulation, 
+        ScoreBoost, 
+        Resource
+    }
 }
