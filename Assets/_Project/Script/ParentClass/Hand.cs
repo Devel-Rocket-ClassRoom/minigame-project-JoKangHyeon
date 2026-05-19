@@ -56,8 +56,12 @@ public abstract class Hand
     public string GetDicesString()
     {
         if(diceList == null) return string.Empty;
-        var dices = diceList.ConvertAll<int>((d) => d.GetDice());
-        return string.Join(',', dices);
+        var result = GetResult();
+
+        var dices = result.dices.ConvertAll<int>((d) => d.GetDice());
+        var effectiveDices = result.effectiveDices.ConvertAll<int>((d) => d.GetDice());
+
+        return string.Join(',', dices) + "\neffective:" + string.Join(',', effectiveDices);
     }
 
     public int GetCurrentMultipliedScore()
@@ -79,6 +83,13 @@ public abstract class Hand
         return $"{GetDiceScore(dices)}X{scoreMultiplier:N2}={GetMultipliedScore(dices)}";
     }
 
+    public virtual void SetEffectiveDices()
+    {
+        effectiveDices = GetEffectiveDices(diceList);
+    }
+
+    public abstract List<Dice> GetEffectiveDices(List<Dice> dices);
+
     public struct HandResult
     {
         public List<Dice> dices;
@@ -89,6 +100,8 @@ public abstract class Hand
 
     public HandResult GetResult()
     {
+        if(effectiveDices == null) SetEffectiveDices();
+
         HandResult result = new HandResult()
         {
             dices = diceList.ToList(),

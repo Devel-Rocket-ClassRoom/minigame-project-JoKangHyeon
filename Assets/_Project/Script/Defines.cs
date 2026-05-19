@@ -11,11 +11,4 @@ public class Defines
         SmallAlignment,
         LargeAlignment,
     }
-
-    public enum RelicTiming
-    {
-        None,
-        OnRoll,
-
-    }
 }

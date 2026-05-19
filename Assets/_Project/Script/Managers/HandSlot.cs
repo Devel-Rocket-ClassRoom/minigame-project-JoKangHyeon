@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class HandSlot
 {
     public Hand hand;
@@ -15,7 +17,8 @@ public class HandSlot
     public void OnHandScored(HandSlot slot)
     {
         if(slot != this) return;
-        currentScore = hand.GetCurrentMultipliedScore();
+        var result = hand.GetResult();
+        currentScore = result.baseScore;
     }
 
     public void ResetSlot()

@@ -19,20 +19,17 @@ public class NumbersHand : Hand
 
     public override int GetDiceScore(List<Dice> dices)
     {
-        if(dices == null) 
-            return 0;
-
-        int score = 0;
-        foreach (Dice dice in dices)
-        {
-            if (dice.GetDice() == numTarget)
-            {
-                score += numTarget;
-            }
-        }
-
-        return score;
+        return GetEffectiveDices(dices).Sum(d => d.GetDice());
     }
+
+    public override List<Dice> GetEffectiveDices(List<Dice> dices)
+    {
+        if (dices == null)
+            return new List<Dice>();
+
+        return dices.Where(d => d.GetDice() == numTarget).ToList();
+    }
+
 
 }
 
@@ -45,16 +42,15 @@ public class ChoiceHand : Hand
 
     public override int GetDiceScore(List<Dice> dices)
     {
+        return GetEffectiveDices(dices).Sum(d => d.GetDice());
+    }
+
+    public override List<Dice> GetEffectiveDices(List<Dice> dices)
+    {
         if (dices == null)
-            return 0;
+            return new List<Dice>();
 
-        int score = 0;
-        foreach (Dice dice in dices)
-        {
-            score += dice.GetDice();
-        }
-
-        return score;
+        return dices;
     }
 }
 
@@ -67,8 +63,14 @@ public class FullHouseHand : Hand
 
     public override int GetDiceScore(List<Dice> dices)
     {
-        if (dices == null || dices.Count<5)
-            return 0;
+        return GetEffectiveDices (dices).Sum(d => d.GetDice());
+    }
+
+    public override List<Dice> GetEffectiveDices(List<Dice> dices)
+    {
+        if (dices == null)
+            return new List<Dice>();
+
 
         Dictionary<int, int> diceDict = new();
 
@@ -95,13 +97,9 @@ public class FullHouseHand : Hand
         }
 
         if (threeCard.Count == 0 || twoCard.Count < 2)
-            return 0;
+            return new List<Dice>();
 
-        int threeCardResult = threeCard.Max();
-        twoCard.Remove(threeCardResult);
-        int twoCardResult = twoCard.Max();
-
-        return threeCardResult * 3 + twoCardResult * 2;
+        return dices;
     }
 }
 
@@ -114,26 +112,31 @@ public class SmallAlighmentHand : Hand
 
     public override int GetDiceScore(List<Dice> dices)
     {
-        if (dices == null || dices.Count<4)
-            return 0;
+        return GetEffectiveDices(dices).Sum(d => d.GetDice());
+    }
+
+    public override List<Dice> GetEffectiveDices(List<Dice> dices)
+    {
+        if (dices == null || dices.Count < 4)
+            return new List<Dice>();
 
         int firstDice = dices[0].GetDice();
         int secondDice = dices[1].GetDice();
 
-        int firstCount = dices.FindAll(d=>d.GetDice()==firstDice).Count();
+        int firstCount = dices.FindAll(d => d.GetDice() == firstDice).Count();
         int secondCount = dices.FindAll(d => d.GetDice() == secondDice).Count();
 
         if (firstCount >= 4)
         {
-            return firstDice * 4;
+            return dices.Where(d => d.GetDice() == firstDice).Take(4).ToList();
         }
         else if (secondCount >= 4)
         {
-            return secondDice * 4;
+            return dices.Where(d => d.GetDice() == secondDice).Take(4).ToList();
         }
         else
         {
-            return 0;
+            return new List<Dice>();
         }
     }
 }
@@ -147,19 +150,24 @@ public class BigAlighmentHand : Hand
 
     public override int GetDiceScore(List<Dice> dices)
     {
+        return GetEffectiveDices(dices).Sum(d => d.GetDice());
+    }
+
+    public override List<Dice> GetEffectiveDices(List<Dice> dices)
+    {
         if (dices == null || dices.Count < 5)
-            return 0;
+            return new List<Dice>();
 
         int firstDice = dices[0].GetDice();
         int firstCount = dices.FindAll(d => d.GetDice() == firstDice).Count();
 
         if (firstCount >= 5)
         {
-            return firstDice * firstCount;
+            return dices;
         }
         else
         {
-            return 0;
+            return new List<Dice>();
         }
     }
 }
@@ -173,16 +181,22 @@ public class SmallStraightHand : Hand
 
     public override int GetDiceScore(List<Dice> dices)
     {
+        return GetEffectiveDices(dices).Sum(d => d.GetDice());
+    }
+
+    public override List<Dice> GetEffectiveDices(List<Dice> dices)
+    {
         if (dices == null || dices.Count < 4)
-            return 0;
+            return new List<Dice>();
 
         dices = dices.ToList();//Clone List 안하면 화면 꼬임
-        dices.Sort((a,b)=>a.GetDice().CompareTo(b.GetDice()));
+        dices.Sort((a, b) => a.GetDice().CompareTo(b.GetDice()));
 
-        int straight = 1;
-        int last = dices[dices.Count-1].GetDice();
-        List<int> straights = new List<int>();
-        straights.Add(last);
+        int last = dices[dices.Count - 1].GetDice();
+        List<Dice> straightDices = new List<Dice>();
+
+        straightDices.Add(dices[dices.Count - 1]);
+
         for (int i = dices.Count - 2; i >= 0; i--)
         {
             if (dices[i].GetDice() == last)
@@ -191,27 +205,28 @@ public class SmallStraightHand : Hand
             }
             else if (dices[i].GetDice() != last - 1)
             {
-                straight = 1;
-                straights.Clear();
+                straightDices.Clear();
             }
             else
             {
-                straight++;
-                if (straight == 4)
+                straightDices.Add(dices[i]);
+                last = dices[i].GetDice();
+
+                if (straightDices.Count == 4)
                 {
-                    straights.Add(dices[i].GetDice());
                     break;
                 }
             }
-            straights.Add(dices[i].GetDice());
-            last = dices[i].GetDice();
         }
 
-        if(straight >= 4)
+        if (straightDices.Count == 4)
         {
-            return straights.Sum();
+            return straightDices;
         }
-        return 0;
+        else
+        {
+            return new List<Dice>();
+        }
     }
 }
 
@@ -224,16 +239,22 @@ public class BigStraightHand : Hand
 
     public override int GetDiceScore(List<Dice> dices)
     {
-        if (dices == null || dices.Count < 5)
-            return 0;
+        return GetEffectiveDices(dices).Sum(d => d.GetDice());
+    }
 
-        dices = dices.ToList(); //Clone List 안하면 화면 꼬임
+    public override List<Dice> GetEffectiveDices(List<Dice> dices)
+    {
+        if (dices == null || dices.Count < 4)
+            return new List<Dice>();
+
+        dices = dices.ToList();//Clone List 안하면 화면 꼬임
         dices.Sort((a, b) => a.GetDice().CompareTo(b.GetDice()));
 
-        int straight = 1;
         int last = dices[dices.Count - 1].GetDice();
-        List<int> straights = new List<int>();
-        straights.Add(last);
+        List<Dice> straightDices = new List<Dice>();
+
+        straightDices.Add(dices[dices.Count - 1]);
+
         for (int i = dices.Count - 2; i >= 0; i--)
         {
             if (dices[i].GetDice() == last)
@@ -242,27 +263,27 @@ public class BigStraightHand : Hand
             }
             else if (dices[i].GetDice() != last - 1)
             {
-                straight = 1;
-                straights.Clear();
+                straightDices.Clear();
             }
             else
             {
-                straight++;
-                if (straight == 5)
+                straightDices.Add(dices[i]);
+                last = dices[i].GetDice();
+
+                if (straightDices.Count == 5)
                 {
-                    straights.Add(dices[i].GetDice());
                     break;
                 }
             }
-            straights.Add(dices[i].GetDice());
-            last = dices[i].GetDice();
         }
 
-        if (straight >= 5)
+        if (straightDices.Count == 5)
         {
-            Debug.Log(string.Join(',', straights));
-            return straights.Sum();
+            return straightDices;
         }
-        return 0;
+        else
+        {
+            return new List<Dice>();
+        }
     }
 }
