@@ -18,6 +18,8 @@ public abstract class Dice
     public abstract void ForceSetDice(int number);
 
     public abstract Dice Clone();
+
+    public abstract void TrySetDice(int value);
 }
 
 [Serializable]
@@ -54,6 +56,14 @@ public class NormalDice : Dice
     public override void SetDice(int faceIndex)
     {
         diceResult = faces[faceIndex];
+    }
+
+    public override void TrySetDice(int value)
+    {
+        if (faces.Contains(value))
+        {
+            diceResult = value;
+        }
     }
 
     public override Dice Clone()

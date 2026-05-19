@@ -27,7 +27,8 @@ MonoBehaviour:
     - Normal
     - Normal
     - Normal
-    startingRelics: []
+    startingRelics:
+    - AlchemistsTouchstone
   - name: FULL
     description: Normal mode for test
     startingHands:
@@ -49,4 +50,5 @@ MonoBehaviour:
     - Normal
     - Normal
     - Normal
-    startingRelics: []
+    startingRelics:
+    - AlchemistsTouchstone

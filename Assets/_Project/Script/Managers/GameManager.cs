@@ -11,9 +11,10 @@ public class GameManager : MonoBehaviour
 {
     public RunState state;
 
-    public HandDefinitionSO handDefine;
     public StartingDefinitionSO startingsDefine;
+    public HandDefinitionSO handDefine;
     public DiceDefinitionSO diceDefine;
+    public RelicDefinitionSO relicDefine;
 
     public int currentStartingIndex = 0;
 
@@ -329,6 +330,14 @@ public class RunState
             hands.Add(handSlot);
         }
 
+        relics = new();
+        foreach(var relicName in starting.startingRelics)
+        {
+            var relic = gameManager.relicDefine.Find(relicName);
+            relics.Add(relic);
+            relic.OnAdd(gameManager);
+        }
+
         maxCunsumable = c_defaultMaxCunsumable;
         consumableInventory = new();
 
@@ -433,12 +442,12 @@ public enum EventType
     OnHandStart,
     /// <summary>
     /// 이번 사이클의 첫번째 주사위 굴림 후
-    /// return : List<Dice>
+    /// return : List Dice
     /// </summary>
     OnFirstRollComplete,
     /// <summary>
     /// 주사위 굴림 완료 후
-    /// return : List<Dice>
+    /// return : List Dice
     /// </summary>
     OnRollComplete,
     /// <summary>

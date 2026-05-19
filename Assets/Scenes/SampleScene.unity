@@ -1135,9 +1135,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ede357c7bc2e9645962d95dd6cfb560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  handDefine: {fileID: 11400000, guid: 1905e6fb29bd039448a592bf244d66cc, type: 2}
   startingsDefine: {fileID: 11400000, guid: 0add5eaae69d5ed4bb2a851c05157fb1, type: 2}
+  handDefine: {fileID: 11400000, guid: 1905e6fb29bd039448a592bf244d66cc, type: 2}
   diceDefine: {fileID: 11400000, guid: 6ea697efe51478940a7f55bafeaef01b, type: 2}
+  relicDefine: {fileID: 11400000, guid: 89c692cd76678294793ab881a8068a13, type: 2}
   currentStartingIndex: 0
   demoScoreCut: 6400000082000000c80000000401000054010000fe010000940200005c0300000a0500009006000084080000c60c00009a1000009a1500006c200000
   dicesSetted: []
@@ -1149,6 +1150,7 @@ MonoBehaviour:
   dicesSettedParent: {fileID: 785976930}
   handParent: {fileID: 1505537809}
   testOutput: {fileID: 1278242545}
+  restartButton: {fileID: 1475153390}
 --- !u!4 &1277408321
 Transform:
   m_ObjectHideFlags: 0
@@ -1675,7 +1677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1475153391
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1742,7 +1744,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1277408320}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Reroll
+        m_MethodName: RestartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
