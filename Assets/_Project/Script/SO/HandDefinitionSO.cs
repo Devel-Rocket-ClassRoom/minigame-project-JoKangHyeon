@@ -72,7 +72,7 @@ public class SmallAlignmentData : HandData
 {
     protected override Hand CreateBaseHand()
     {
-        return new SmallAlighmentHand();
+        return new SmallAlignmentHand();
     }
 }
 
@@ -81,7 +81,7 @@ public class BigAlignmentData : HandData
 {
     protected override Hand CreateBaseHand()
     {
-        return new BigAlighmentHand();
+        return new BigAlignmentHand();
     }
 }
 

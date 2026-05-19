@@ -21,10 +21,13 @@ public class AlchemistsTouchstone : Relic
 
     void Effect(List<Dice> dices)
     {
-        var target = dices[Random.Range(0, dices.Count)];
+        int randomIndex = Random.Range(0, dices.Count);
+        var target = dices[randomIndex];
         int targetValue = target.GetDice() + 1;
 
         Debug.Log("AlchemistsTouchstone: " + target.name + " is increased by 1 from " + target.GetDice() + " to " + targetValue);
         target.TrySetDice(targetValue);
+
+        gameManager.SetRemianDiceEffect(randomIndex);
     }
 }

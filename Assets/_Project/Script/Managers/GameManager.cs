@@ -1,7 +1,5 @@
-using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     public int currentStartingIndex = 0;
 
-    
+
     public List<int> demoScoreCut = new()
     {
         100,  130, 200,
@@ -37,7 +35,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 
@@ -92,12 +90,22 @@ public class GameManager : MonoBehaviour
         }
         handsUI.Clear();
 
+        if (state != null)
+        {
+            foreach (var hand in state.hands)
+            {
+                hand.Dispose();
+            }
+        }
+
 
         state = new(this);
         state.Setup(startingsDefine.startings[currentStartingIndex]);
-        state.RoundStart();
         restartButton.gameObject.SetActive(false);
         EventBus.Subscribe<object>(EventType.OnGameOver, OnGameOver);
+        EventBus.Subscribe<List<Dice>>(EventType.OnRollComplete, RemoveEffect);
+
+        state.RoundStart();
         RefreshUI();
     }
 
@@ -108,7 +116,7 @@ public class GameManager : MonoBehaviour
             diceRemianText.transform.parent.gameObject.SetActive(false);
         }
 
-        for(int i=0; i < state.currentCycle.dicesRemain.Count; i++)
+        for (int i = 0; i < state.currentCycle.dicesRemain.Count; i++)
         {
             if (i < dicesRemain.Count)
             {
@@ -117,7 +125,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                GameObject newDice = Instantiate(dicePrefab,dicesRemainParent);
+                GameObject newDice = Instantiate(dicePrefab, dicesRemainParent);
                 TextMeshProUGUI text = newDice.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
                 text.text = state.currentCycle.dicesRemain[i].GetDice().ToString();
@@ -164,7 +172,7 @@ public class GameManager : MonoBehaviour
         {
             if (i >= handsUI.Count)
             {
-                var newHand = Instantiate(handPrefab,handParent);
+                var newHand = Instantiate(handPrefab, handParent);
                 newHand.Set(state.hands[i]);
                 handsUI.Add(newHand);
                 int index = i;
@@ -180,6 +188,27 @@ public class GameManager : MonoBehaviour
         restartButton.SetActive(true);
     }
 
+
+    public void RemoveEffect(List<Dice> _)
+    {
+        foreach (var dice in dicesRemain)
+        {
+            dice.transform.parent.gameObject.GetComponent<Image>().color = Color.white;
+        }
+
+        foreach (var dice in dicesSetted)
+        {
+            dice.transform.parent.gameObject.GetComponent<Image>().color = Color.white;
+        }
+    }
+
+    public void SetRemianDiceEffect(int pos)
+    {
+        Debug.Log(pos);
+
+
+        dicesRemain[pos].transform.parent.gameObject.GetComponent<Image>().color = Color.green;
+    }
     #endregion
 }
 
@@ -212,13 +241,14 @@ public class CycleState
         }
 
         reroll = currentRun.rerollPerCycle;
+        gameManager.RefreshUI();
         RollAll();
     }
 
     public void EndCycle(int targetSlot)
     {
         currentRun.hands[targetSlot].hand.SetDice(dicesSetted);
-        EventBus.Publish(EventType.OnSlotScore, currentRun.hands[targetSlot]);
+        currentRun.hands[targetSlot].SetCurrentScore();
         EventBus.Publish(EventType.OnSlotScored, currentRun.hands[targetSlot]);
 
         if (isFirstCycle)
@@ -280,8 +310,8 @@ public class RunState
     public List<Relic> relics;
     public List<HandSlot> hands;
     public List<Card> cards;
-    public List<IConsumable> consumableInventory;
-    
+    public List<Consumable> consumableInventory;
+
     public int level;
     public int coin;
     public int rerollPerCycle;
@@ -299,7 +329,7 @@ public class RunState
 
     public RunState(GameManager gameManager)
     {
-        this.gameManager = gameManager;   
+        this.gameManager = gameManager;
     }
 
     public RunState(GameManager gameManager, int seed) : this(gameManager)
@@ -317,13 +347,13 @@ public class RunState
         startingSet = starting;
 
         dices = new();
-        foreach(var diceName in starting.startingDices)
+        foreach (var diceName in starting.startingDices)
         {
             dices.Add(gameManager.diceDefine.Find(diceName));
         }
 
         hands = new();
-        foreach(var handName in starting.startingHands)
+        foreach (var handName in starting.startingHands)
         {
             HandSlot handSlot = new HandSlot();
             handSlot.hand = gameManager.handDefine.Find(handName);
@@ -331,7 +361,7 @@ public class RunState
         }
 
         relics = new();
-        foreach(var relicName in starting.startingRelics)
+        foreach (var relicName in starting.startingRelics)
         {
             var relic = gameManager.relicDefine.Find(relicName);
             relics.Add(relic);
@@ -362,9 +392,10 @@ public class RunState
             hand.ResetSlot();
         }
 
+        currentCycle.isFirstCycle = true;
+
         //이번 라운드의 첫 턴 시작
         CycleStart();
-        currentCycle.isFirstCycle = true;
         EventBus.Subscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
         EventBus.Subscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
     }
@@ -377,9 +408,9 @@ public class RunState
         }
 
         currentCycle = new CycleState(gameManager, this);
+        gameManager.RefreshUI();
         currentCycle.ResetCycle();
         EventBus.Publish(EventType.OnFirstRollComplete, currentCycle.dicesRemain);
-        gameManager.RefreshUI();
     }
 
     public void RoundEndCheck(object _)
@@ -394,7 +425,7 @@ public class RunState
             }
         }
 
-        if(flag)
+        if (flag)
         {
             EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
             EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
@@ -415,8 +446,9 @@ public class RunState
     {
         Debug.Log("Round End");
 
-        if(currentScore >= gameManager.demoScoreCut[level])
+        if (currentScore >= gameManager.demoScoreCut[level])
         {
+            currentScore -= gameManager.demoScoreCut[level];
             level += 1;
             Debug.Log("Round Clear");
             EventBus.Publish(EventType.OnRoundClear, null);
@@ -450,10 +482,6 @@ public enum EventType
     /// return : List Dice
     /// </summary>
     OnRollComplete,
-    /// <summary>
-    /// 족보 슬롯에 점수 입력
-    /// </summary>
-    OnSlotScore,
     /// <summary>
     /// 족보 슬롯에 점수가 입력되었을 때
     /// return : HandSlot

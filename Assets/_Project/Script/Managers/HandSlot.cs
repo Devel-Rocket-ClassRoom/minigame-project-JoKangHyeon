@@ -9,14 +9,9 @@ public class HandSlot
 
     public bool isUsed => hand.IsUsed();
 
-    public HandSlot()
-    {
-        EventBus.Subscribe<HandSlot>(EventType.OnSlotScore, OnHandScored);
-    }
 
-    public void OnHandScored(HandSlot slot)
+    public void SetCurrentScore()
     {
-        if(slot != this) return;
         var result = hand.GetResult();
         currentScore = result.baseScore;
     }

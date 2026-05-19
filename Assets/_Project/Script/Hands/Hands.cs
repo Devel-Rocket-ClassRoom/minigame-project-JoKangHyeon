@@ -103,11 +103,11 @@ public class FullHouseHand : Hand
     }
 }
 
-public class SmallAlighmentHand : Hand
+public class SmallAlignmentHand : Hand
 {
     public override Hand Clone()
     {
-        return new SmallAlighmentHand();
+        return new SmallAlignmentHand();
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -141,11 +141,11 @@ public class SmallAlighmentHand : Hand
     }
 }
 
-public class BigAlighmentHand : Hand
+public class BigAlignmentHand : Hand
 {
     public override Hand Clone()
     {
-        return new BigAlighmentHand();
+        return new BigAlignmentHand();
     }
 
     public override int GetDiceScore(List<Dice> dices)

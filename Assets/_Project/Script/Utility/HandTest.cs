@@ -40,7 +40,7 @@ public class HandEvaluatorTests
     [TestCase(new[] { 1, 2, 3, 4, 5 }, false, 0)]
     public void Evaluate_SmallAlignment(int[] values, bool expectedMatched, int expectedSum)
     {
-        Hand hand = new SmallAlighmentHand();
+        Hand hand = new SmallAlignmentHand();
         List<Dice> dices = MakeNormalDice(values);
         int score = hand.GetDiceScore(dices);
         bool matched = hand.IsAchived(dices);

@@ -11,7 +11,8 @@ public class StartingDefinitionSO : ScriptableObject
     {
         foreach (Starting s in startings)
         {
-            return s;
+            if(s.name == name) 
+                return s;
         }
         return null;
     }

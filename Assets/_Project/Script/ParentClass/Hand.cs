@@ -23,7 +23,7 @@ public abstract class Hand
         return GetDiceScore(dices) > 0;
     }
 
-    public virtual bool lsAchived()
+    public virtual bool IsAchived()
     {
         return IsAchived(diceList);
     }
@@ -44,6 +44,7 @@ public abstract class Hand
     public virtual void ResetHand() 
     {
         diceList = null;
+        effectiveDices = null;
     }
 
     public virtual int GetCurrentHandScore()
@@ -100,7 +101,7 @@ public abstract class Hand
 
     public HandResult GetResult()
     {
-        if(effectiveDices == null) SetEffectiveDices();
+        SetEffectiveDices();
 
         HandResult result = new HandResult()
         {

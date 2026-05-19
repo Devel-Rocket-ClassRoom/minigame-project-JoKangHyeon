@@ -14,11 +14,9 @@ public class Defines
 
     public enum Rarity
     {
-        Common,
-        Uncommon,
-        Rare,
-        Epic,
-        Legendary
+        Common, 
+        Rare, 
+        Epic
     }
 
     public enum RelicCategory
