@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public int currentStartingIndex = 0;
 
     
-    List<int> demoScoreCut = new()
+    public List<int> demoScoreCut = new()
     {
         100,  130, 200,
         260,  340, 510,
@@ -196,12 +196,15 @@ public class CycleState
     public void EndCycle(int targetSlot)
     {
         currentRun.hands[targetSlot].hand.SetDice(dicesSetted);
+        EventBus.Publish(EventType.OnSlotScore, currentRun.hands[targetSlot]);
         EventBus.Publish(EventType.OnSlotScored, currentRun.hands[targetSlot]);
 
         if (isFirstCycle)
         {
             EventBus.Publish(EventType.OnFirstScoreOfRound, currentRun.hands[targetSlot]);
         }
+        EventBus.Publish(EventType.OnSlotScoreFixed, currentRun.hands[targetSlot]);
+        EventBus.Publish(EventType.OnCycleEnd, null);
     }
 
     public void Reroll()
@@ -245,7 +248,7 @@ public class CycleState
     public void RetreveDice(Dice dice)
     {
         int pos = dicesSetted.IndexOf(dice);
-        RetreveDice(dice);
+        RetreveDice(pos);
     }
 }
 
@@ -323,13 +326,14 @@ public class RunState
 
         foreach (var hand in hands)
         {
-            hand.hand.ResetHand();
+            hand.ResetSlot();
         }
 
         //이번 라운드의 첫 턴 시작
         CycleStart();
         currentCycle.isFirstCycle = true;
-        EventBus.Subscribe<HandSlot>(EventType.OnSlotScored, RoundEndCheck);
+        EventBus.Subscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
+        EventBus.Subscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
     }
 
     public void CycleStart()
@@ -359,8 +363,9 @@ public class RunState
 
         if(flag)
         {
+            EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
+            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
             RoundEnd();
-            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScored, RoundEndCheck);
         }
         else
         {
@@ -368,9 +373,27 @@ public class RunState
         }
     }
 
+    public void OnSlotCalcEnd(HandSlot slot)
+    {
+        currentScore += slot.currentScore;
+    }
+
     public void RoundEnd()
     {
         Debug.Log("Round End");
+
+        if(currentScore >= gameManager.demoScoreCut[level])
+        {
+            level += 1;
+            Debug.Log("Round Clear");
+            EventBus.Publish(EventType.OnRoundClear, null);
+
+            RoundStart();
+        }
+        else
+        {
+            Debug.Log("Round Failed");
+        }
     }
 }
 
@@ -393,10 +416,19 @@ public enum EventType
     /// </summary>
     OnRollComplete,
     /// <summary>
+    /// 족보 슬롯에 점수 입력
+    /// </summary>
+    OnSlotScore,
+    /// <summary>
     /// 족보 슬롯에 점수가 입력되었을 때
     /// return : HandSlot
     /// </summary>
     OnSlotScored,
+    /// <summary>
+    /// 족보 슬롯에 점수가 최종 결정되었을 때,
+    /// return : HandSlot
+    /// </summary>
+    OnSlotScoreFixed,
     /// <summary>
     /// 이번 라운드의 첫 점수 활성화시
     /// return : HandSlot
@@ -412,38 +444,70 @@ public enum EventType
     /// retrun : null
     /// </summary>
     OnRoundClear,
+    /// <summary>
+    /// 사이클 종료 시
+    /// return : null
+    /// </summary>
+    OnCycleEnd,
 }
-
 
 public static class EventBus
 {
-    private static Dictionary<EventType, Action<object>> eventTable = new();
+    private static readonly Dictionary<EventType, Action<object>> eventTable = new();
+    private static readonly Dictionary<EventType, Dictionary<Delegate, Action<object>>> delegateLookup = new();
 
     public static void Subscribe<T>(EventType eventType, Action<T> callback)
     {
-        if (!eventTable.ContainsKey(eventType))
+        if (callback == null) return;
+
+        if (!delegateLookup.TryGetValue(eventType, out var map))
         {
-            eventTable[eventType] = (obj) => callback((T)obj);
+            map = new Dictionary<Delegate, Action<object>>();
+            delegateLookup[eventType] = map;
+        }
+
+        if (map.ContainsKey(callback)) return;
+
+        Action<object> wrapper = (obj) => callback((T)obj);
+        map[callback] = wrapper;
+
+        if (!eventTable.TryGetValue(eventType, out var existing) || existing == null)
+        {
+            eventTable[eventType] = wrapper;
         }
         else
         {
-            eventTable[eventType] += (obj) => callback((T)obj);
+            eventTable[eventType] = existing + wrapper;
         }
     }
 
     public static void Unsubscribe<T>(EventType eventType, Action<T> callback)
     {
-        if (eventTable.ContainsKey(eventType))
+        if (callback == null) return;
+
+        if (!delegateLookup.TryGetValue(eventType, out var map)) return;
+        if (!map.TryGetValue(callback, out var wrapper)) return;
+
+        map.Remove(callback);
+
+        if (eventTable.TryGetValue(eventType, out var existing))
         {
-            eventTable[eventType] -= (obj) => callback((T)obj);
+            existing -= wrapper;
+            if (existing == null)
+                eventTable.Remove(eventType);
+            else
+                eventTable[eventType] = existing;
         }
+
+        if (map.Count == 0)
+            delegateLookup.Remove(eventType);
     }
 
     public static void Publish(EventType eventType, object eventData)
     {
-        if (eventTable.ContainsKey(eventType))
+        if (eventTable.TryGetValue(eventType, out var action))
         {
-            eventTable[eventType]?.Invoke(eventData);
+            action?.Invoke(eventData);
         }
     }
 }

@@ -16,6 +16,8 @@ public abstract class Hand
     public float scoreMultiplier = 1f;
     public bool Setted => diceList != null;
 
+    public HandSlot slot;
+
     public virtual bool IsAchived(List<Dice> dices)
     {
         return GetDiceScore(dices) > 0;
