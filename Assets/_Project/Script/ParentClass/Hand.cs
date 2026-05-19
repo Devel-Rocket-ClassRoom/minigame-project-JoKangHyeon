@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 public abstract class Hand
 {
     [NonSerialized]
     protected List<Dice> diceList;
+
+    [NonSerialized]
+    protected List<Dice> effectiveDices;
 
     public string name;
     public float scoreMultiplier = 1f;
@@ -60,5 +64,26 @@ public abstract class Hand
     public string GetDetailedString(List<Dice> dices)
     {
         return $"{GetDiceScore(dices)}X{scoreMultiplier:N2}={GetMultipliedScore(dices)}";
+    }
+
+    public struct HandResult
+    {
+        public List<Dice> dices;
+        public List<Dice> effectiveDices;
+        public int baseScore;
+        public bool isAchived;
+    }
+
+    public HandResult GetResult()
+    {
+        HandResult result = new HandResult()
+        {
+            dices = diceList.ToList(),
+            effectiveDices = effectiveDices.ToList(),
+            baseScore = GetCurrentMultipliedScore(),
+            isAchived = IsAchived(diceList)
+        };
+
+        return result;
     }
 }

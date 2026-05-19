@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     {
         state = new(this);
         state.Setup(startingsDefine.startings[currentStartingIndex]);
-        state.ResetCycle();
+        state.currentCycle.ResetCycle();
         RefreshUI();
     }
 
@@ -60,25 +60,25 @@ public class GameManager : MonoBehaviour
 
     public void Reroll()
     {
-        state.Reroll();
+        state.currentCycle.Reroll();
         RefreshUI();
     }
 
     public void SetDice(int pos)
     {
-        state.SetDice(pos);
+        state.currentCycle.SetDice(pos);
         RefreshUI();
     }
 
     public void RetreveDice(int pos)
     {
-        state.RetreveDice(pos);
+        state.currentCycle.RetreveDice(pos);
         RefreshUI();
     }
 
     public void SetHand(int pos)
     {
-        state.EndCycle(pos);
+        state.currentCycle.EndCycle(pos);
         RefreshUI();
     }
 
@@ -90,19 +90,19 @@ public class GameManager : MonoBehaviour
             diceRemianText.transform.parent.gameObject.SetActive(false);
         }
 
-        for(int i=0; i < state.dicesRemain.Count; i++)
+        for(int i=0; i < state.currentCycle.dicesRemain.Count; i++)
         {
             if (i < dicesRemain.Count)
             {
                 dicesRemain[i].transform.parent.gameObject.SetActive(true);
-                dicesRemain[i].text = state.dicesRemain[i].GetDice().ToString();
+                dicesRemain[i].text = state.currentCycle.dicesRemain[i].GetDice().ToString();
             }
             else
             {
                 GameObject newDice = Instantiate(dicePrefab,dicesRemainParent);
                 TextMeshProUGUI text = newDice.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
-                text.text = state.dicesRemain[i].GetDice().ToString();
+                text.text = state.currentCycle.dicesRemain[i].GetDice().ToString();
 
                 int index = i;
                 newDice.GetComponent<Button>().onClick.AddListener(() => SetDice(index));
@@ -117,19 +117,19 @@ public class GameManager : MonoBehaviour
             diceSetText.transform.parent.gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < state.dicesSetted.Count; i++)
+        for (int i = 0; i < state.currentCycle.dicesSetted.Count; i++)
         {
             if (i < dicesSetted.Count)
             {
                 dicesSetted[i].transform.parent.gameObject.SetActive(true);
-                dicesSetted[i].text = state.dicesSetted[i].GetDice().ToString();
+                dicesSetted[i].text = state.currentCycle.dicesSetted[i].GetDice().ToString();
             }
             else
             {
                 GameObject newDice = Instantiate(dicePrefab, dicesSettedParent);
                 TextMeshProUGUI text = newDice.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
-                text.text = state.dicesSetted[i].GetDice().ToString();
+                text.text = state.currentCycle.dicesSetted[i].GetDice().ToString();
 
                 int index = i;
                 newDice.GetComponent<Button>().onClick.AddListener(() => RetreveDice(index));
@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        testOutput.text = $"reroll left : {state.reroll}/{state.rerollPerCycle}\n\ncurrent level : {state.level}\n\ncurrent score : {state.currentScore}\ngoal score : {demoScoreCut[state.level]}\ncurrent coin : {state.coin}";
+        testOutput.text = $"reroll left : {state.currentCycle.reroll}/{state.rerollPerCycle}\n\ncurrent level : {state.level}\n\ncurrent score : {state.currentScore}\ngoal score : {demoScoreCut[state.level]}\ncurrent coin : {state.coin}";
 
 
         for (int i = 0; i < state.hands.Count; i++)
@@ -152,13 +152,91 @@ public class GameManager : MonoBehaviour
                 int index = i;
                 newHand.setButton.onClick.AddListener(() => { SetHand(index); });
             }
-            handsUI[i].Refresh(state.dicesSetted);
+            handsUI[i].Refresh(state.currentCycle.dicesSetted);
         }
     }
 
-    
-
     #endregion
+}
+
+public class CycleState
+{
+    public RunState currentRun;
+    public GameManager gameManager;
+
+    public CycleState(GameManager gameManager, RunState runState)
+    {
+        this.gameManager = gameManager;
+        currentRun = runState;
+        dicesRemain = new();
+        dicesSetted = new();
+    }
+
+    public List<Dice> dicesRemain;
+    public List<Dice> dicesSetted;
+    public int reroll;
+
+    public void ResetCycle()
+    {
+        dicesRemain.Clear();
+        dicesSetted.Clear();
+        foreach (Dice dice in currentRun.dices)
+        {
+            dicesRemain.Add(dice.Clone());
+        }
+
+        reroll = currentRun.rerollPerCycle;
+        RollAll();
+    }
+
+    public void EndCycle(int targetSlot)
+    {
+        currentRun.hands[targetSlot].hand.SetDice(dicesSetted);
+        dicesSetted = new();
+        ResetCycle();
+    }
+
+    public void Reroll()
+    {
+        if (reroll < 1)
+            return;
+        reroll -= 1;
+        RollAll();
+    }
+
+    private void RollAll()
+    {
+        foreach (Dice dice in dicesRemain)
+        {
+            dice.RollDice();
+        }
+    }
+
+    public void SetDice(int pos)
+    {
+        Dice dice = dicesRemain[pos];
+        dicesRemain.RemoveAt(pos);
+        dicesSetted.Add(dice);
+    }
+
+    public void SetDice(Dice dice)
+    {
+        int pos = dicesRemain.IndexOf(dice);
+        SetDice(pos);
+    }
+
+    public void RetreveDice(int pos)
+    {
+        Dice dice = dicesSetted[pos];
+        dicesSetted.RemoveAt(pos);
+        dicesRemain.Add(dice);
+    }
+
+    public void RetreveDice(Dice dice)
+    {
+        int pos = dicesSetted.IndexOf(dice);
+        RetreveDice(dice);
+    }
 }
 
 public class RunState
@@ -166,25 +244,20 @@ public class RunState
     public List<Dice> dices;
     public List<Relic> relics;
     public List<HandSlot> hands;
+    public List<Card> cards;
+    public List<IConsumable> consumableInventory;
+    
+    public int level;
+    public int coin;
+    public int rerollPerCycle;
+    public int currentScore;
 
     public int maxCunsumable;
     const int c_defaultMaxCunsumable = 3;
-    public List<IConsumable> consumableInventory;
 
-    public int coin;
-    public int level;
-    
     public Starting startingSet;
-
-    public List<Card> cards;
-
-    public int currentScore;
-    public List<Dice> dicesRemain;
-    public List<Dice> dicesSetted;
-    public int reroll;
-    public int rerollPerCycle;
-
     public GameManager gameManager;
+    public CycleState currentCycle;
 
     public RunState(GameManager gameManager)
     {
@@ -219,81 +292,33 @@ public class RunState
             hands.Add(handSlot);
         }
 
-        dicesRemain = new();
-        dicesSetted = new();
-
         maxCunsumable = c_defaultMaxCunsumable;
         consumableInventory = new();
 
         coin = 0;
         level = 0;
 
-        currentScore = 0;
 
         //DEBUG
         rerollPerCycle = 8000;
     }
 
-    public void ResetCycle()
+    public void ResetRound()
     {
-        dicesRemain.Clear();
-        dicesSetted.Clear();
-        foreach(Dice dice in dices)
+        foreach(var dice in dices)
         {
-            dicesRemain.Add(dice.Clone());
+            dice.ResetDice();
         }
 
-        reroll = rerollPerCycle;
-        RollAll();
-    }
-
-    public void EndCycle(int targetSlot)
-    {
-        hands[targetSlot].hand.SetDice(dicesSetted);
-        Debug.Log(hands[targetSlot].hand.GetCurrentHandScore());
-        dicesSetted = new();
-        ResetCycle();
-    }
-
-    public void Reroll()
-    {
-        if (reroll < 1)
-            return;
-        reroll -= 1;
-        RollAll();
-    }
-
-    private void RollAll()
-    {
-        foreach(Dice dice in dicesRemain)
+        foreach(var hand in hands)
         {
-            dice.RollDice();
+            hand.hand.ResetHand();
         }
     }
 
-    public void SetDice(int pos)
+    public void StartCycle()
     {
-        Dice dice = dicesRemain[pos];
-        dicesRemain.RemoveAt(pos);
-        dicesSetted.Add(dice);
-    }
-    
-    public void SetDice(Dice dice)
-    {
-        int pos = dicesRemain.IndexOf(dice);
-        SetDice(pos);
-    }
-
-    public void RetreveDice(int pos)
-    {
-        Dice dice = dicesSetted[pos];
-        dicesSetted.RemoveAt(pos);
-        dicesRemain.Add(dice);
-    }
-
-    public void RetreveDice(Dice dice)
-    {
-        int pos = dicesSetted.IndexOf(dice);
-        RetreveDice(dice);
+        currentCycle = new CycleState(gameManager, this);
+        currentCycle.ResetCycle();
     }
 }
