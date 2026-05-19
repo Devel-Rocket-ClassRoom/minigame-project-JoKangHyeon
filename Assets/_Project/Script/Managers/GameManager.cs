@@ -30,10 +30,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        state = new(this);
-        state.Setup(startingsDefine.startings[currentStartingIndex]);
-        state.RoundStart();
-        RefreshUI();
+        RestartGame();
     }
 
     // Update is called once per frame
@@ -57,6 +54,8 @@ public class GameManager : MonoBehaviour
     public Transform handParent;
 
     public TextMeshProUGUI testOutput;
+
+    public GameObject restartButton;
 
 
 
@@ -84,6 +83,22 @@ public class GameManager : MonoBehaviour
         RefreshUI();
     }
 
+    public void RestartGame()
+    {
+        foreach (var hand in handsUI)
+        {
+            Destroy(hand.gameObject);
+        }
+        handsUI.Clear();
+
+
+        state = new(this);
+        state.Setup(startingsDefine.startings[currentStartingIndex]);
+        state.RoundStart();
+        restartButton.gameObject.SetActive(false);
+        EventBus.Subscribe<object>(EventType.OnGameOver, OnGameOver);
+        RefreshUI();
+    }
 
     public void RefreshUI()
     {
@@ -156,6 +171,12 @@ public class GameManager : MonoBehaviour
             }
             handsUI[i].Refresh(state.currentCycle.dicesSetted);
         }
+    }
+
+    public void OnGameOver(object _)
+    {
+        testOutput.text = $"Game Over\nYour Score : {state.currentScore}\nPress Restart to try again!";
+        restartButton.SetActive(true);
     }
 
     #endregion
@@ -271,6 +292,9 @@ public class RunState
     public Starting startingSet;
     public GameManager gameManager;
     public CycleState currentCycle;
+
+
+    public bool isGameOver = false;
 
     public RunState(GameManager gameManager)
     {
@@ -393,6 +417,8 @@ public class RunState
         else
         {
             Debug.Log("Round Failed");
+            isGameOver = true;
+            EventBus.Publish(EventType.OnGameOver, null);
         }
     }
 }
@@ -449,6 +475,11 @@ public enum EventType
     /// return : null
     /// </summary>
     OnCycleEnd,
+    /// <summary>
+    /// 게임오버 시
+    /// return : null
+    /// </summary>
+    OnGameOver,
 }
 
 public static class EventBus
