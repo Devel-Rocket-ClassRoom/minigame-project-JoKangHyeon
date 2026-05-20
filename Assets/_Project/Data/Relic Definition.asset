@@ -32,6 +32,9 @@ MonoBehaviour:
         name: Relic_AlchemistsTouchstone_Name
         description: Relic_AlchemistsTouchstone_Desc
         flavorText: Relic_AlchemistsTouchstone_Flavor
+        rarity: 1
+        cost: 10
+        category: 0
         eventPriorityOnFirstRollComplete: 20
     - rid: 4409310361715474493
       type: {class: CrackedRune, ns: , asm: Assembly-CSharp}
@@ -39,51 +42,78 @@ MonoBehaviour:
         name: Relic_CrackedRune_Name
         description: Relic_CrackedRune_Desc
         flavorText: Relic_CrackedRune_Flavor
+        rarity: 0
+        cost: 5
+        category: 0
     - rid: 4409310361715474494
       type: {class: FortuneTellersFinger, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_FortuneTellorsFinger_Name
         description: Relic_FortuneTellorsFinger_Desc
         flavorText: Relic_FortuneTellorsFinger_Flavor
+        rarity: 2
+        cost: 25
+        category: 0
     - rid: 4409310361715474495
       type: {class: CrystalOrb, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_CrystalOrb_Name
         description: Relic_CrystalOrb_Desc
         flavorText: Relic_CrystalOrb_Flavor
+        rarity: 0
+        cost: 6
+        category: 1
     - rid: 4409310361715474496
       type: {class: ThreadOfFate, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_ThreadOfFate_Name
         description: Relic_ThreadOfFate_Desc
         flavorText: Relic_ThreadOfFate_Flavor
+        rarity: 1
+        cost: 12
+        category: 1
     - rid: 4409310361715474497
       type: {class: StarChalice, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_StarChalice_Name
         description: Relic_StarChalice_Desc
         flavorText: Relic_StarChalice_Flavor
+        rarity: 1
+        cost: 10
+        category: 1
     - rid: 4409310361715474498
       type: {class: GoldenMirror, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_GoldenMirror_Name
         description: Relic_GoldenMirror_Desc
         flavorText: Relic_GoldenMirror_Flavor
+        rarity: 2
+        cost: 20
+        category: 1
     - rid: 4409310361715474499
       type: {class: WatchGlass, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_WatchGlass_Name
         description: Relic_WatchGlass_Desc
         flavorText: Relic_WatchGlass_Flavor
+        rarity: 0
+        cost: 5
+        category: 2
     - rid: 4409310361715474500
       type: {class: BrokenChain, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_BrokenChain_Name
         description: Relic_BrokenChain_Desc
         flavorText: Relic_BrokenChain_Flavor
+        rarity: 1
+        cost: 10
+        category: 2
     - rid: 4409310361715474501
       type: {class: ObsidianScales, ns: , asm: Assembly-CSharp}
       data:
         name: Relic_ObsidianScales_Name
         description: Relic_ObsidianScales_Desc
         flavorText: Relic_ObsidianScales_Flavor
+        rarity: 2
+        cost: 22
+        category: 2
