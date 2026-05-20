@@ -115,8 +115,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290960872
+  m_fontColor: {r: 0.9098039, g: 0.8666667, b: 0.7607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -296,8 +296,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290960872
+  m_fontColor: {r: 0.9098039, g: 0.8666667, b: 0.7607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -595,8 +595,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290960872
+  m_fontColor: {r: 0.9098039, g: 0.8666667, b: 0.7607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -940,8 +940,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290960872
+  m_fontColor: {r: 0.9098039, g: 0.8666667, b: 0.7607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1158,7 +1158,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 5bfa9852f363f4145b5074090be6c4f1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1242,20 +1242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 222a4011a85433e43bf1b2fddf302127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CubeDice
-  faceQuaternion:
-  - {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
-  - {x: 0.49999997, y: 0.49999997, z: 0.49999997, w: 0.49999997}
-  - {x: 0, y: 0, z: 0, w: 0}
-  - {x: 0, y: 0, z: 1, w: -0.00000004371139}
-  - {x: 0.49999997, y: -0.49999997, z: -0.49999997, w: 0.49999997}
-  - {x: -0.00000003090862, y: -0.70710677, z: -0.70710677, w: 0.00000003090862}
-  diceText:
-  - {fileID: 1646305473620393765}
-  - {fileID: 841433095259405623}
-  - {fileID: 6049034265410597767}
-  - {fileID: 4084492957234239924}
-  - {fileID: 8981449147623219373}
-  - {fileID: 3425280004639778045}
   faces:
   - {fileID: 3101190586533465471}
   - {fileID: 5443811533114681664}
@@ -1263,6 +1249,14 @@ MonoBehaviour:
   - {fileID: 5519073395029294852}
   - {fileID: 6490304572398897151}
   - {fileID: 8604324182336702000}
+  rb: {fileID: 0}
+  diceText:
+  - {fileID: 1646305473620393765}
+  - {fileID: 841433095259405623}
+  - {fileID: 6049034265410597767}
+  - {fileID: 4084492957234239924}
+  - {fileID: 8981449147623219373}
+  - {fileID: 3425280004639778045}
 --- !u!1 &7981463144774219359
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,8 +1372,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290960872
+  m_fontColor: {r: 0.9098039, g: 0.8666667, b: 0.7607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1758,8 +1752,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4290960872
+  m_fontColor: {r: 0.9098039, g: 0.8666667, b: 0.7607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
