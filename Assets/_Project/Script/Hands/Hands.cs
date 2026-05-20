@@ -14,7 +14,11 @@ public class NumbersHand : Hand
 
     public override Hand Clone()
     {
-        return new NumbersHand(numTarget);
+        return new NumbersHand(numTarget)
+        {
+            name = name,
+            scoreMultiplier = scoreMultiplier,
+        };
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -37,7 +41,11 @@ public class ChoiceHand : Hand
 {
     public override Hand Clone()
     {
-        return new ChoiceHand();
+        return new ChoiceHand()
+        {
+            name = name,
+            scoreMultiplier = scoreMultiplier,
+        };
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -58,7 +66,11 @@ public class FullHouseHand : Hand
 {
     public override Hand Clone()
     {
-        return new FullHouseHand();
+        return new FullHouseHand()
+        {
+            name = name,
+            scoreMultiplier = scoreMultiplier,
+        };
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -107,7 +119,11 @@ public class SmallAlignmentHand : Hand
 {
     public override Hand Clone()
     {
-        return new SmallAlignmentHand();
+        return new SmallAlignmentHand()
+        {
+            name = name,
+            scoreMultiplier = scoreMultiplier,
+        };
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -145,7 +161,11 @@ public class BigAlignmentHand : Hand
 {
     public override Hand Clone()
     {
-        return new BigAlignmentHand();
+        return new BigAlignmentHand()
+        {
+            name = name,
+            scoreMultiplier = scoreMultiplier,
+        };
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -176,7 +196,11 @@ public class SmallStraightHand : Hand
 {
     public override Hand Clone()
     {
-        return new SmallStraightHand();
+        return new SmallStraightHand()
+        {
+            name = name,
+            scoreMultiplier = scoreMultiplier,
+        };
     }
 
     public override int GetDiceScore(List<Dice> dices)
@@ -234,7 +258,11 @@ public class BigStraightHand : Hand
 {
     public override Hand Clone()
     {
-        return new BigStraightHand();
+        return new BigStraightHand()
+        {
+            name = name,
+            scoreMultiplier = scoreMultiplier,
+        };
     }
 
     public override int GetDiceScore(List<Dice> dices)

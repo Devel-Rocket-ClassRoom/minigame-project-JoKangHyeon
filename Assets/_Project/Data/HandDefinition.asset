@@ -31,66 +31,78 @@ MonoBehaviour:
     - rid: 4409310316887802095
       type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: ones
+        name: Hand_Ones_Name
+        desc: Hand_Ones_Desc
         multiplier: 3
         numTarget: 1
     - rid: 4409310316887802096
       type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: twos
+        name: Hand_Twos_Name
+        desc: Hand_Twos_Desc
         multiplier: 3
         numTarget: 2
     - rid: 4409310316887802097
       type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: threes
+        name: Hand_Threes_Name
+        desc: Hand_Threes_Desc
         multiplier: 3
-        numTarget: 0
+        numTarget: 3
     - rid: 4409310316887802098
       type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: fours
+        name: Hand_Fours_Name
+        desc: Hand_Fours_Desc
         multiplier: 3
-        numTarget: 0
+        numTarget: 4
     - rid: 4409310316887802099
       type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: fives
+        name: Hand_Fives_Name
+        desc: Hand_Fives_Desc
         multiplier: 3
         numTarget: 5
     - rid: 4409310316887802100
       type: {class: NumbersHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: sixs
+        name: Hand_Sixs_Name
+        desc: Hand_Sixs_Desc
         multiplier: 3
         numTarget: 6
     - rid: 4409310316887802103
       type: {class: FullHouseHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: fullhouse
+        name: Hand_FullHouse_Name
+        desc: Hand_FullHouse_Desc
         multiplier: 3
     - rid: 4409310316887802104
       type: {class: SmallStraightHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: smallstraight
+        name: Hand_SmallStraight_Name
+        desc: Hand_SmallStraight_Desc
         multiplier: 2
     - rid: 4409310316887802106
       type: {class: SmallAlignmentData, ns: , asm: Assembly-CSharp}
       data:
-        name: smallalignment
+        name: Hand_SmallAlignment_Name
+        desc: Hand_SmallAlignment_Desc
         multiplier: 2
     - rid: 4409310316887802108
       type: {class: BigStraightHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: bigstraight
+        name: Hand_BigStraight_Name
+        desc: Hand_BigStraight_Desc
         multiplier: 4
     - rid: 4409310316887802110
       type: {class: ChoiceHandData, ns: , asm: Assembly-CSharp}
       data:
-        name: choice
+        name: Hand_Choice_Name
+        desc: Hand_Choice_Desc
         multiplier: 1
     - rid: 4409310318304952506
       type: {class: BigAlignmentData, ns: , asm: Assembly-CSharp}
       data:
-        name: bigalignment
+        name: Hand_BigAlignment_Name
+        desc: Hand_BigAlignment_Desc
         multiplier: 4

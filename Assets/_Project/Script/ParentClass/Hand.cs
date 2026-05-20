@@ -13,6 +13,7 @@ public abstract class Hand
     protected List<Dice> effectiveDices;
 
     public string name;
+    public string description;
     public float scoreMultiplier = 1f;
     public bool Setted => diceList != null;
 

@@ -13,42 +13,42 @@ MonoBehaviour:
   m_Name: Starting Definition
   m_EditorClassIdentifier: Assembly-CSharp::StartingDefinitionSO
   startings:
-  - name: Normal
-    description: Normal mode for test
+  - name: Starting_Normal_Name
+    description: Starting_Normal_Desc
     startingHands:
-    - ones
-    - sixs
-    - choice
-    - fullhouse
-    - smallstraight
+    - Hand_Ones_Name
+    - Hand_Sixs_Name
+    - Hand_Choice_Name
+    - Hand_FullHouse_Name
+    - Hand_SmallStraight_Name
     startingDices:
-    - Normal
-    - Normal
-    - Normal
-    - Normal
-    - Normal
+    - Dice_Normal_Name
+    - Dice_Normal_Name
+    - Dice_Normal_Name
+    - Dice_Normal_Name
+    - Dice_Normal_Name
     startingRelics:
-    - AlchemistsTouchstone
-  - name: FULL
-    description: Normal mode for test
+    - Relic_AlchemistsTouchstone_Name
+  - name: Starting_Full_Name
+    description: Starting_Full_Desc
     startingHands:
-    - ones
-    - twos
-    - threes
-    - fours
-    - fives
-    - sixs
-    - choice
-    - fullhouse
-    - smallstraight
-    - bigstraight
-    - smallalignment
-    - bigalignment
+    - Hand_Ones_Name
+    - Hand_Twos_Name
+    - Hand_Threes_Name
+    - Hand_Fours_Name
+    - Hand_Fives_Name
+    - Hand_Sixs_Name
+    - Hand_Choice_Name
+    - Hand_FullHouse_Name
+    - Hand_SmallStraight_Name
+    - Hand_BigStraight_Name
+    - Hand_SmallAlignment_Name
+    - Hand_BigAlignment_Name
     startingDices:
-    - Normal
-    - Normal
-    - Normal
-    - Normal
-    - Normal
+    - Dice_Normal_Name
+    - Dice_Normal_Name
+    - Dice_Normal_Name
+    - Dice_Normal_Name
+    - Dice_Normal_Name
     startingRelics:
-    - AlchemistsTouchstone
+    - Relic_AlchemistsTouchstone_Name

@@ -7,11 +7,13 @@ using Random = UnityEngine.Random;
 public class AlchemistsTouchstone : Relic
 {
     GameManager gameManager;
+    public int eventPriorityOnFirstRollComplete = 20;
+
 
     public override void OnAdd(GameManager gameManager)
     {
         this.gameManager = gameManager;
-        EventBus.Subscribe<List<Dice>>(EventType.OnFirstRollComplete, Effect);
+        EventBus.Subscribe<List<Dice>>(EventType.OnFirstRollComplete, Effect, eventPriorityOnFirstRollComplete);
     }
 
     public override void OnRemove()
@@ -31,3 +33,123 @@ public class AlchemistsTouchstone : Relic
         gameManager.SetRemianDiceEffect(randomIndex);
     }
 }
+
+[Serializable]
+public class CrackedRune : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class FortuneTellersFinger : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class CrystalOrb : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class ThreadOfFate : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class StarChalice : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class GoldenMirror : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class WatchGlass : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class BrokenChain : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+[Serializable]
+public class ObsidianScales : Relic
+{
+    public override void OnAdd(GameManager gameManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void OnRemove()
+    {
+        throw new NotImplementedException();
+    }
+}
+

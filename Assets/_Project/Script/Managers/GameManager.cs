@@ -95,8 +95,8 @@ public class GameManager : MonoBehaviour
         state = new(this);
         state.Setup(startingsDefine.startings[currentStartingIndex]);
         restartButton.gameObject.SetActive(false);
-        EventBus.Subscribe<object>(EventType.OnGameOver, OnGameOver);
-        EventBus.Subscribe<List<Dice>>(EventType.OnRollComplete, RemoveEffect);
+        EventBus.Subscribe<object>(EventType.OnGameOver, OnGameOver,Defines.c_maxPriority);
+        EventBus.Subscribe<List<Dice>>(EventType.OnRollComplete, RemoveEffect,Defines.c_maxPriority);
 
         state.RoundStart();
         RefreshUI();
@@ -161,12 +161,12 @@ public class GameManager : MonoBehaviour
         testOutput.text = $"reroll left : {state.currentRound.currentCycle.reroll}/{state.rerollPerCycle}\n\ncurrent level : {state.level}\n\ncurrent score : {state.currentScore}\ngoal score : {demoScoreCut[state.level]}\ncurrent coin : {state.coin}";
 
 
-        for (int i = 0; i < state.hands.Count; i++)
+        for (int i = 0; i < state.currentRound.hands.Count; i++)
         {
             if (i >= handsUI.Count)
             {
                 var newHand = Instantiate(handPrefab, handParent);
-                newHand.Set(state.hands[i]);
+                newHand.Set(state.currentRound.hands[i]);
                 handsUI.Add(newHand);
                 int index = i;
                 newHand.setButton.onClick.AddListener(() => { SetHand(index); });
@@ -333,8 +333,8 @@ public class RoundState
         //이번 라운드의 첫 턴 시작
         CycleStart();
         currentCycle.isFirstCycle = true;
-        EventBus.Subscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
-        EventBus.Subscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
+        EventBus.Subscribe<object>(EventType.OnCycleEnd, RoundEndCheck, Defines.c_maxPriority);
+        EventBus.Subscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd, Defines.c_maxPriority);
     }
 
     public void CycleStart()
@@ -539,32 +539,34 @@ public enum EventType
 
 public static class EventBus
 {
-    private static readonly Dictionary<EventType, Action<object>> eventTable = new();
-    private static readonly Dictionary<EventType, Dictionary<Delegate, Action<object>>> delegateLookup = new();
+    private static readonly Dictionary<EventType, List<PriorityCallback>> eventTable = new();
+    private static readonly Dictionary<EventType, Dictionary<Delegate, PriorityCallback>> delegateLookup = new();
 
-    public static void Subscribe<T>(EventType eventType, Action<T> callback)
+    public static void Subscribe<T>(EventType eventType, Action<T> callback, int priority)
     {
         if (callback == null) return;
 
         if (!delegateLookup.TryGetValue(eventType, out var map))
         {
-            map = new Dictionary<Delegate, Action<object>>();
+            map = new();
             delegateLookup[eventType] = map;
         }
 
         if (map.ContainsKey(callback)) return;
 
         Action<object> wrapper = (obj) => callback((T)obj);
-        map[callback] = wrapper;
+        map[callback] = new PriorityCallback { Callback = wrapper, Priority = priority };
 
         if (!eventTable.TryGetValue(eventType, out var existing) || existing == null)
         {
-            eventTable[eventType] = wrapper;
+            eventTable[eventType] = new List<PriorityCallback> { map[callback] };
         }
         else
         {
-            eventTable[eventType] = existing + wrapper;
+            eventTable[eventType].Add(map[callback]);
         }
+
+        eventTable[eventType].Sort((a, b) => b.Priority.CompareTo(a.Priority));
     }
 
     public static void Unsubscribe<T>(EventType eventType, Action<T> callback)
@@ -578,7 +580,7 @@ public static class EventBus
 
         if (eventTable.TryGetValue(eventType, out var existing))
         {
-            existing -= wrapper;
+            existing.Remove(map[callback]);
             if (existing == null)
                 eventTable.Remove(eventType);
             else
@@ -593,7 +595,13 @@ public static class EventBus
     {
         if (eventTable.TryGetValue(eventType, out var action))
         {
-            action?.Invoke(eventData);
+            action?.ForEach(cb => cb.Callback(eventData));
         }
+    }
+
+    private class PriorityCallback
+    {
+        public int Priority { get; set; }
+        public Action<object> Callback { get; set; }
     }
 }

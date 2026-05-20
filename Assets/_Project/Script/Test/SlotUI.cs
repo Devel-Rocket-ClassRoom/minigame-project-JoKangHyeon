@@ -41,7 +41,7 @@ public class SlotUI : MonoBehaviour
     
     public void Refresh(List<Dice> tempView)
     {
-        nameText.text = slot.hand.name;
+        nameText.text = StringTable.GetString(slot.hand.name);
         diceText.text = slot.hand.GetDicesString();
         currentTemp = tempView;
 

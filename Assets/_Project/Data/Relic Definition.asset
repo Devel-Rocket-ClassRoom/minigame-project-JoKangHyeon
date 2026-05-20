@@ -13,12 +13,77 @@ MonoBehaviour:
   m_Name: Relic Definition
   m_EditorClassIdentifier: Assembly-CSharp::RelicDefinitionSO
   relics:
+  - rid: 4409310361715474493
   - rid: 4409310340085710909
+  - rid: 4409310361715474494
+  - rid: 4409310361715474495
+  - rid: 4409310361715474496
+  - rid: 4409310361715474497
+  - rid: 4409310361715474498
+  - rid: 4409310361715474499
+  - rid: 4409310361715474500
+  - rid: 4409310361715474501
   references:
     version: 2
     RefIds:
     - rid: 4409310340085710909
       type: {class: AlchemistsTouchstone, ns: , asm: Assembly-CSharp}
       data:
-        name: AlchemistsTouchstone
-        description: AlchemistsTouchstone
+        name: Relic_AlchemistsTouchstone_Name
+        description: Relic_AlchemistsTouchstone_Desc
+        flavorText: Relic_AlchemistsTouchstone_Flavor
+        eventPriorityOnFirstRollComplete: 20
+    - rid: 4409310361715474493
+      type: {class: CrackedRune, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_CrackedRune_Name
+        description: Relic_CrackedRune_Desc
+        flavorText: Relic_CrackedRune_Flavor
+    - rid: 4409310361715474494
+      type: {class: FortuneTellersFinger, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_FortuneTellorsFinger_Name
+        description: Relic_FortuneTellorsFinger_Desc
+        flavorText: Relic_FortuneTellorsFinger_Flavor
+    - rid: 4409310361715474495
+      type: {class: CrystalOrb, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_CrystalOrb_Name
+        description: Relic_CrystalOrb_Desc
+        flavorText: Relic_CrystalOrb_Flavor
+    - rid: 4409310361715474496
+      type: {class: ThreadOfFate, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_ThreadOfFate_Name
+        description: Relic_ThreadOfFate_Desc
+        flavorText: Relic_ThreadOfFate_Flavor
+    - rid: 4409310361715474497
+      type: {class: StarChalice, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_StarChalice_Name
+        description: Relic_StarChalice_Desc
+        flavorText: Relic_StarChalice_Flavor
+    - rid: 4409310361715474498
+      type: {class: GoldenMirror, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_GoldenMirror_Name
+        description: Relic_GoldenMirror_Desc
+        flavorText: Relic_GoldenMirror_Flavor
+    - rid: 4409310361715474499
+      type: {class: WatchGlass, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_WatchGlass_Name
+        description: Relic_WatchGlass_Desc
+        flavorText: Relic_WatchGlass_Flavor
+    - rid: 4409310361715474500
+      type: {class: BrokenChain, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_BrokenChain_Name
+        description: Relic_BrokenChain_Desc
+        flavorText: Relic_BrokenChain_Flavor
+    - rid: 4409310361715474501
+      type: {class: ObsidianScales, ns: , asm: Assembly-CSharp}
+      data:
+        name: Relic_ObsidianScales_Name
+        description: Relic_ObsidianScales_Desc
+        flavorText: Relic_ObsidianScales_Flavor

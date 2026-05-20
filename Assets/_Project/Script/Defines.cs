@@ -1,5 +1,7 @@
 public class Defines
 {
+    public const int c_maxPriority = 9999;
+
     public enum HandType
     {
         None,

@@ -26,6 +26,7 @@ public class HandDefinitionSO : ScriptableObject
 public abstract class HandData
 {
     public string name;
+    public string desc;
     public float multiplier;
 
     public virtual Hand GetHand()
@@ -33,6 +34,7 @@ public abstract class HandData
         Hand hand = CreateBaseHand();
         hand.name = name;
         hand.scoreMultiplier = multiplier;
+        hand.description = desc;
         return hand;
     }
 

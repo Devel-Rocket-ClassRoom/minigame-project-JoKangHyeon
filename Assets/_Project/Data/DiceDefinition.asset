@@ -20,7 +20,7 @@ MonoBehaviour:
     - rid: 4409310318304952505
       type: {class: NormalDice, ns: , asm: Assembly-CSharp}
       data:
-        name: Normal
+        name: Dice_Normal_Name
         diceResult: 0
         faces: 010000000200000003000000040000000500000006000000
         rolled: 0
