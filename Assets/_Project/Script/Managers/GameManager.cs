@@ -90,14 +90,6 @@ public class GameManager : MonoBehaviour
         }
         handsUI.Clear();
 
-        if (state != null)
-        {
-            foreach (var hand in state.hands)
-            {
-                hand.Dispose();
-            }
-        }
-
 
         state = new(this);
         state.Setup(startingsDefine.startings[currentStartingIndex]);
@@ -392,10 +384,10 @@ public class RunState
             hand.ResetSlot();
         }
 
-        currentCycle.isFirstCycle = true;
 
         //이번 라운드의 첫 턴 시작
         CycleStart();
+        currentCycle.isFirstCycle = true;
         EventBus.Subscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
         EventBus.Subscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
     }
