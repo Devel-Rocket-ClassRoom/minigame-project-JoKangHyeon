@@ -24,7 +24,7 @@ public class RollManager : MonoBehaviour
             new(){"1","2","3","4","5","6"},
             new(){"1","2","3","4","5","6"},
             new(){"1","2","3","4","5","6"},
-        }, new() { 6,6,6,6,6,6 }));
+        }, new() { 1,2,3,4,5,6 }));
 
         //StartCoroutine(PredictRoll());
     }
