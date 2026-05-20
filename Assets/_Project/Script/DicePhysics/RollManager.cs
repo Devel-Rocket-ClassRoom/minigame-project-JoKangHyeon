@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ public class RollManager : MonoBehaviour
     List<RollData> rollDatas = new();
 
     const int maxIterations = 1000;
+    const int maxSimulations = 10;
 
     private void Start()
     {
@@ -125,46 +127,64 @@ public class RollManager : MonoBehaviour
         foreach (var dice in dices)
         {
             dice.rb.isKinematic = false;
-            dice.rb.linearVelocity = Random.insideUnitSphere * 3f;
-            dice.rb.angularVelocity = Random.insideUnitSphere * 10f;
 
             rollDatas.Add(new RollData
             {
                 dice = dice,
                 pos = dice.transform.position,
                 rot = dice.transform.rotation,
-                linearVelicity = dice.rb.linearVelocity,
-                angularVelicity = dice.rb.angularVelocity
+                linearVelicity = Random.insideUnitSphere * 3f,
+                angularVelicity = Random.insideUnitSphere * 10f
             });
         }
 
-        //Simulate
-        for (int i = 0; i < maxIterations; i++)
+
+
+        List<List<int>> predicted = new();
+
+        for(int i=0; i < rollDatas.Count; i++)
         {
-            Physics.Simulate(Time.fixedDeltaTime);
-            if (rollDatas.All(data => data.dice.rb.IsSleeping()))
-                break;
+            predicted.Add(new List<int>());
         }
 
-        List<int> predicted = new();
-
-
-        for (int i = 0; i < rollDatas.Count; i++)
+        for (int simulation = 0; simulation < maxSimulations; simulation++)
         {
-            RollData dice = rollDatas[i];
-            int simulatedIndex = -1;
-            float simulatedDot = -255f;
-            for (int j = 0; j < dice.dice.faces.Count; j++)
+            for (int i = 0; i < rollDatas.Count; i++)
             {
-                float dot = Vector3.Dot(dice.dice.faces[j].transform.up, Vector3.up);
-                if (dot > simulatedDot)
-                {
-                    simulatedDot = dot;
-                    simulatedIndex = j;
-                }
+                RollData data = rollDatas[i];
+                data.dice.transform.position = data.pos;
+                data.dice.transform.rotation = data.rot;
+                data.dice.rb.linearVelocity = data.linearVelicity;
+                data.dice.rb.angularVelocity = data.angularVelicity;
             }
-            predicted.Add(simulatedIndex);
+
+            //Simulate
+            for (int i = 0; i < maxIterations; i++)
+            {
+                Physics.Simulate(Time.fixedDeltaTime);
+                if (rollDatas.All(data => data.dice.rb.IsSleeping()))
+                    break;
+            }
+
+            for (int i = 0; i < rollDatas.Count; i++)
+            {
+                RollData dice = rollDatas[i];
+                int simulatedIndex = -1;
+                float simulatedDot = -255f;
+                for (int j = 0; j < dice.dice.faces.Count; j++)
+                {
+                    float dot = Vector3.Dot(dice.dice.faces[j].transform.up, Vector3.up);
+                    if (dot > simulatedDot)
+                    {
+                        simulatedDot = dot;
+                        simulatedIndex = j;
+                    }
+                }
+                predicted[i].Add(simulatedIndex);
+            }
         }
+
+        List<int> simulationResult = new List<int>();
 
         //Reset
         for (int i = 0; i < rollDatas.Count; i++)
@@ -174,7 +194,13 @@ public class RollManager : MonoBehaviour
             data.dice.transform.rotation = data.rot;
             data.dice.rb.linearVelocity = data.linearVelicity;
             data.dice.rb.angularVelocity = data.angularVelicity;
-            data.dice.TextSet(faces[i], predicted[i], values[i]);
+            data.dice.TextSet(
+                faces[i], 
+                predicted[i].GroupBy(x => x)
+                       .OrderByDescending(g => g.Count())
+                       .Select(g => g.Key)
+                       .FirstOrDefault(), 
+                values[i]);
         }
 
         Physics.simulationMode = SimulationMode.FixedUpdate;
@@ -200,7 +226,7 @@ public class RollManager : MonoBehaviour
             real.Add(maxIndex);
         }
 
-        Debug.Log($"Predicted: {string.Join(", ", predicted.Select(i => i + 1))}");
+        Debug.Log($"Predicted: {string.Join(", ", predicted.Select(list => list.GroupBy(x => x).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault() + 1))}");
         Debug.Log($"Real: {string.Join(", ", real.Select(i => i + 1))}");
     }
 
