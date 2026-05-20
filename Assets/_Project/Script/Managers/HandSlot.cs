@@ -6,7 +6,6 @@ public class HandSlot
     public int slotLevel;
     public int currentScore;
 
-
     public bool isUsed => hand.IsUsed();
 
 
@@ -20,5 +19,16 @@ public class HandSlot
     {
         hand?.ResetHand();
         currentScore = 0;
+    }
+
+    public HandSlot Clone()
+    {
+        var clone = new HandSlot
+        {
+            hand = hand.Clone(),
+            slotLevel = slotLevel,
+            currentScore = currentScore
+        };
+        return clone;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -60,25 +61,25 @@ public class GameManager : MonoBehaviour
 
     public void Reroll()
     {
-        state.currentCycle.Reroll();
+        state.currentRound.currentCycle.Reroll();
         RefreshUI();
     }
 
     public void SetDice(int pos)
     {
-        state.currentCycle.SetDice(pos);
+        state.currentRound.currentCycle.SetDice(pos);
         RefreshUI();
     }
 
     public void RetreveDice(int pos)
     {
-        state.currentCycle.RetreveDice(pos);
+        state.currentRound.currentCycle.RetreveDice(pos);
         RefreshUI();
     }
 
     public void SetHand(int pos)
     {
-        state.currentCycle.EndCycle(pos);
+        state.currentRound.currentCycle.EndCycle(pos);
         RefreshUI();
     }
 
@@ -108,19 +109,19 @@ public class GameManager : MonoBehaviour
             diceRemianText.transform.parent.gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < state.currentCycle.dicesRemain.Count; i++)
+        for (int i = 0; i < state.currentRound.currentCycle.dicesRemain.Count; i++)
         {
             if (i < dicesRemain.Count)
             {
                 dicesRemain[i].transform.parent.gameObject.SetActive(true);
-                dicesRemain[i].text = state.currentCycle.dicesRemain[i].GetDice().ToString();
+                dicesRemain[i].text = state.currentRound.currentCycle.dicesRemain[i].GetDice().ToString();
             }
             else
             {
                 GameObject newDice = Instantiate(dicePrefab, dicesRemainParent);
                 TextMeshProUGUI text = newDice.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
-                text.text = state.currentCycle.dicesRemain[i].GetDice().ToString();
+                text.text = state.currentRound.currentCycle.dicesRemain[i].GetDice().ToString();
 
                 int index = i;
                 newDice.GetComponent<Button>().onClick.AddListener(() => SetDice(index));
@@ -135,19 +136,19 @@ public class GameManager : MonoBehaviour
             diceSetText.transform.parent.gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < state.currentCycle.dicesSetted.Count; i++)
+        for (int i = 0; i < state.currentRound.currentCycle.dicesSetted.Count; i++)
         {
             if (i < dicesSetted.Count)
             {
                 dicesSetted[i].transform.parent.gameObject.SetActive(true);
-                dicesSetted[i].text = state.currentCycle.dicesSetted[i].GetDice().ToString();
+                dicesSetted[i].text = state.currentRound.currentCycle.dicesSetted[i].GetDice().ToString();
             }
             else
             {
                 GameObject newDice = Instantiate(dicePrefab, dicesSettedParent);
                 TextMeshProUGUI text = newDice.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
-                text.text = state.currentCycle.dicesSetted[i].GetDice().ToString();
+                text.text = state.currentRound.currentCycle.dicesSetted[i].GetDice().ToString();
 
                 int index = i;
                 newDice.GetComponent<Button>().onClick.AddListener(() => RetreveDice(index));
@@ -157,7 +158,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        testOutput.text = $"reroll left : {state.currentCycle.reroll}/{state.rerollPerCycle}\n\ncurrent level : {state.level}\n\ncurrent score : {state.currentScore}\ngoal score : {demoScoreCut[state.level]}\ncurrent coin : {state.coin}";
+        testOutput.text = $"reroll left : {state.currentRound.currentCycle.reroll}/{state.rerollPerCycle}\n\ncurrent level : {state.level}\n\ncurrent score : {state.currentScore}\ngoal score : {demoScoreCut[state.level]}\ncurrent coin : {state.coin}";
 
 
         for (int i = 0; i < state.hands.Count; i++)
@@ -170,7 +171,7 @@ public class GameManager : MonoBehaviour
                 int index = i;
                 newHand.setButton.onClick.AddListener(() => { SetHand(index); });
             }
-            handsUI[i].Refresh(state.currentCycle.dicesSetted);
+            handsUI[i].Refresh(state.currentRound.currentCycle.dicesSetted);
         }
     }
 
@@ -206,15 +207,15 @@ public class GameManager : MonoBehaviour
 
 public class CycleState
 {
-    public RunState currentRun;
+    public RoundState currentRound;
     public GameManager gameManager;
 
     public bool isFirstCycle = false;
 
-    public CycleState(GameManager gameManager, RunState runState)
+    public CycleState(GameManager gameManager, RoundState roundState)
     {
         this.gameManager = gameManager;
-        currentRun = runState;
+        currentRound = roundState;
         dicesRemain = new();
         dicesSetted = new();
     }
@@ -227,27 +228,27 @@ public class CycleState
     {
         dicesRemain.Clear();
         dicesSetted.Clear();
-        foreach (Dice dice in currentRun.dices)
+        foreach (Dice dice in currentRound.dices)
         {
             dicesRemain.Add(dice.Clone());
         }
 
-        reroll = currentRun.rerollPerCycle;
+        reroll = currentRound.currentRun.rerollPerCycle;
         gameManager.RefreshUI();
         RollAll();
     }
 
     public void EndCycle(int targetSlot)
     {
-        currentRun.hands[targetSlot].hand.SetDice(dicesSetted);
-        currentRun.hands[targetSlot].SetCurrentScore();
-        EventBus.Publish(EventType.OnSlotScored, currentRun.hands[targetSlot]);
+        currentRound.hands[targetSlot].hand.SetDice(dicesSetted);
+        currentRound.hands[targetSlot].SetCurrentScore();
+        EventBus.Publish(EventType.OnSlotScored, currentRound.hands[targetSlot]);
 
         if (isFirstCycle)
         {
-            EventBus.Publish(EventType.OnFirstScoreOfRound, currentRun.hands[targetSlot]);
+            EventBus.Publish(EventType.OnFirstScoreOfRound, currentRound.hands[targetSlot]);
         }
-        EventBus.Publish(EventType.OnSlotScoreFixed, currentRun.hands[targetSlot]);
+        EventBus.Publish(EventType.OnSlotScoreFixed, currentRound.hands[targetSlot]);
         EventBus.Publish(EventType.OnCycleEnd, null);
     }
 
@@ -296,6 +297,108 @@ public class CycleState
     }
 }
 
+
+public class RoundState
+{
+    public RunState currentRun;
+    public CycleState currentCycle;
+    public GameManager gameManager;
+
+    public List<HandSlot> hands;
+    public List<Dice> dices;
+
+    public RoundState(GameManager gameManager, RunState runState)
+    {
+        this.gameManager = gameManager;
+        currentRun = runState;
+    }
+
+    //라운드 사이클 정의
+    public void Init()
+    {
+        EventBus.Publish(EventType.OnRoundStart, null);
+
+        hands = new List<HandSlot>();
+        foreach (var hand in currentRun.hands)
+        {
+            hands.Add(hand.Clone());
+        }
+
+        dices = new List<Dice>();
+        foreach(var dice in currentRun.dices)
+        {
+            dices.Add(dice.Clone());
+        }
+
+        //이번 라운드의 첫 턴 시작
+        CycleStart();
+        currentCycle.isFirstCycle = true;
+        EventBus.Subscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
+        EventBus.Subscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
+    }
+
+    public void CycleStart()
+    {
+        foreach (var dice in dices)
+        {
+            dice.ResetDice();
+        }
+
+        currentCycle = new CycleState(gameManager, this);
+        gameManager.RefreshUI();
+        currentCycle.ResetCycle();
+        EventBus.Publish(EventType.OnFirstRollComplete, currentCycle.dicesRemain);
+    }
+    public void RoundEndCheck(object _)
+    {
+        bool flag = true;
+        foreach (var hand in hands)
+        {
+            if (!hand.hand.IsUsed())
+            {
+                flag = false;
+                break;
+            }
+        }
+
+        if (flag)
+        {
+            EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
+            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
+            RoundEnd();
+        }
+        else
+        {
+            CycleStart();
+        }
+    }
+
+    public void OnSlotCalcEnd(HandSlot slot)
+    {
+        currentRun.currentScore += slot.currentScore;
+    }
+
+    public void RoundEnd()
+    {
+        Debug.Log("Round End");
+
+        if (currentRun.currentScore >= gameManager.demoScoreCut[currentRun.level])
+        {
+            currentRun.currentScore -= gameManager.demoScoreCut[currentRun.level];
+            currentRun.level += 1;
+            Debug.Log("Round Clear");
+            EventBus.Publish(EventType.OnRoundClear, null);
+
+            Init();
+        }
+        else
+        {
+            Debug.Log("Round Failed");
+            currentRun.isGameOver = true;
+            EventBus.Publish(EventType.OnGameOver, null);
+        }
+    }
+}
 public class RunState
 {
     public List<Dice> dices;
@@ -314,7 +417,7 @@ public class RunState
 
     public Starting startingSet;
     public GameManager gameManager;
-    public CycleState currentCycle;
+    public RoundState currentRound;
 
 
     public bool isGameOver = false;
@@ -372,87 +475,10 @@ public class RunState
     }
 
 
-
-
-    //라운드 사이클 정의
     public void RoundStart()
     {
-        EventBus.Publish(EventType.OnRoundStart, null);
-
-        foreach (var hand in hands)
-        {
-            hand.ResetSlot();
-        }
-
-
-        //이번 라운드의 첫 턴 시작
-        CycleStart();
-        currentCycle.isFirstCycle = true;
-        EventBus.Subscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
-        EventBus.Subscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
-    }
-
-    public void CycleStart()
-    {
-        foreach (var dice in dices)
-        {
-            dice.ResetDice();
-        }
-
-        currentCycle = new CycleState(gameManager, this);
-        gameManager.RefreshUI();
-        currentCycle.ResetCycle();
-        EventBus.Publish(EventType.OnFirstRollComplete, currentCycle.dicesRemain);
-    }
-
-    public void RoundEndCheck(object _)
-    {
-        bool flag = true;
-        foreach (var hand in hands)
-        {
-            if (!hand.hand.IsUsed())
-            {
-                flag = false;
-                break;
-            }
-        }
-
-        if (flag)
-        {
-            EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
-            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
-            RoundEnd();
-        }
-        else
-        {
-            CycleStart();
-        }
-    }
-
-    public void OnSlotCalcEnd(HandSlot slot)
-    {
-        currentScore += slot.currentScore;
-    }
-
-    public void RoundEnd()
-    {
-        Debug.Log("Round End");
-
-        if (currentScore >= gameManager.demoScoreCut[level])
-        {
-            currentScore -= gameManager.demoScoreCut[level];
-            level += 1;
-            Debug.Log("Round Clear");
-            EventBus.Publish(EventType.OnRoundClear, null);
-
-            RoundStart();
-        }
-        else
-        {
-            Debug.Log("Round Failed");
-            isGameOver = true;
-            EventBus.Publish(EventType.OnGameOver, null);
-        }
+        currentRound = new RoundState(gameManager, this);
+        currentRound.Init();
     }
 }
 
@@ -460,10 +486,10 @@ public class RunState
 public enum EventType
 {
     /// <summary>
-    /// 족보 점수 계산 시작 전
+    /// 사이클 시작 시
     /// return : int HandNumber
     /// </summary>
-    OnHandStart,
+    OnCycleStart,
     /// <summary>
     /// 이번 사이클의 첫번째 주사위 굴림 후
     /// return : List Dice
