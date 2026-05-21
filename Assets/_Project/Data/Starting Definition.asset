@@ -27,8 +27,7 @@ MonoBehaviour:
     - Dice_Normal_Name
     - Dice_Normal_Name
     - Dice_Normal_Name
-    startingRelics:
-    - Relic_AlchemistsTouchstone_Name
+    startingRelics: []
   - name: Starting_Full_Name
     description: Starting_Full_Desc
     startingHands:
@@ -50,5 +49,4 @@ MonoBehaviour:
     - Dice_Normal_Name
     - Dice_Normal_Name
     - Dice_Normal_Name
-    startingRelics:
-    - Relic_AlchemistsTouchstone_Name
+    startingRelics: []

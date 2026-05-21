@@ -8,6 +8,8 @@ public class DiceObject : MonoBehaviour
     public Rigidbody rb;
     public List<TextMeshPro> diceText;
 
+    public Dice dice;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -31,11 +33,24 @@ public class DiceObject : MonoBehaviour
 
     public void TextSet(List<string> data, int faceIndex, int valueIndex)
     {
-        int dataIndex = valueIndex - faceIndex - 1 + data.Count;
+        int dataIndex = valueIndex - faceIndex + data.Count;
         for (int i = 0; i < 6; i++)
         {
             diceText[i].text = data[(dataIndex + i) % data.Count];
         }
+    }
+
+    public void TextSetOffset(int faceIndex)
+    {
+        List<string> data = dice.faces.ConvertAll(face => face.value.ToString());
+        Debug.Log($"FaceIndex: {faceIndex}, DiceResultIndex: {dice.diceResultIndex}");
+        TextSet(data, faceIndex, dice.diceResultIndex);
+    }
+
+    public void SetOutline(bool enable)
+    {
+        Renderer renderer = GetComponent<Renderer>();
+        renderer.material.SetFloat("_Size", enable ? 0.005f : 0f);
     }
 }
 

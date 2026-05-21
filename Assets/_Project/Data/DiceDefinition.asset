@@ -21,6 +21,7 @@ MonoBehaviour:
       type: {class: NormalDice, ns: , asm: Assembly-CSharp}
       data:
         name: Dice_Normal_Name
-        diceResult: 0
-        faces: 010000000200000003000000040000000500000006000000
+        prefab: {fileID: 8054929813692931209, guid: 7513e12359b276e4a965abb3087da45f, type: 3}
+        diceResultIndex: 0
         rolled: 0
+        isTempFace: 0

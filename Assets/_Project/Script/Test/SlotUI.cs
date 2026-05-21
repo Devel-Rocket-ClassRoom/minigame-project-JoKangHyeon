@@ -23,24 +23,21 @@ public class SlotUI : MonoBehaviour
         if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
         {
             detailView = true;
-            Refresh(currentTemp);
+            Refresh(slot, currentTemp);
         }
 
         if (Keyboard.current.leftShiftKey.wasReleasedThisFrame)
         {
             detailView = false;
-            Refresh(currentTemp);
+            Refresh(slot, currentTemp);
         }
     }
 
-    public void Set(HandSlot slot)
+
+    public void Refresh(HandSlot slot, List<Dice> tempView)
     {
         this.slot = slot;
-        Refresh(null);
-    }
-    
-    public void Refresh(List<Dice> tempView)
-    {
+
         nameText.text = StringTable.GetString(slot.hand.name);
         diceText.text = slot.hand.GetDicesString();
         currentTemp = tempView;
