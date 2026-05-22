@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using Debug= UnityEngine.Debug;
 
@@ -160,12 +159,13 @@ public class CycleState
             GameObject.Destroy(diceObject.gameObject);
         }
 
-        foreach (var dice in dicesRemain)
+        for (int i = 0; i < dicesRemain.Count; i++)
         {
+            Dice dice = dicesRemain[i];
             var diceObject = GameObject.Instantiate(dice.prefab, gameManager.DiceSpawnPoint.transform);
-            diceObject.transform.localPosition = Vector3.zero;
-            diceObject.dice = dice;
             diceObject.rb.isKinematic = true;
+            diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.0f);
+            diceObject.dice = dice;
             diceObjects.Add(diceObject);
         }
     }
