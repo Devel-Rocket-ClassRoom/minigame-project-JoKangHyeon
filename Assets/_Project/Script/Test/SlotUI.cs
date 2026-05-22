@@ -44,7 +44,7 @@ public class SlotUI : MonoBehaviour
 
         if (slot.hand.Setted)
         {
-            scoreText.color = Color.black;
+            scoreText.color = Defines.colorGold;
             if (detailView)
             {
                 scoreText.text = slot.hand.GetCurrentDetailedString();
@@ -56,7 +56,7 @@ public class SlotUI : MonoBehaviour
         }
         else
         {
-            scoreText.color = Color.blue;
+            scoreText.color = Defines.colorPaper;
             
             if (tempView == null)
             {
