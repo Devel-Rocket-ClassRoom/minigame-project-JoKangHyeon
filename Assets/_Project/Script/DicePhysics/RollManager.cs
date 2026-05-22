@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class RollManager : MonoBehaviour
 {    
@@ -11,6 +13,8 @@ public class RollManager : MonoBehaviour
     const int maxSimulations = 10;
 
     public bool rolling = false;
+
+    private WaitForSeconds wait = new WaitForSeconds(0.2f);
 
     public IEnumerator DeterministicRoll(List<DiceObject> dices)
     {
@@ -24,25 +28,32 @@ public class RollManager : MonoBehaviour
         Random.State preservedState = Random.state;
 
         rollDatas.Clear();
-        Physics.simulationMode = SimulationMode.Script;
-
-        //Setup Dice
+        //다이스 던지기
         foreach (var dice in dices)
         {
             dice.rb.isKinematic = false;
+            dice.rb.linearVelocity = Random.insideUnitSphere * 3f + Vector3.up * 5f;
+            dice.rb.angularVelocity = Random.insideUnitSphere * 10f;
+        }
 
-            rollDatas.Add(new RollData
+        //전부 시뮬레이션 하면 오차가 너무 크니,
+        //약간 진행한 후에 시뮬레이션 진행
+        yield return wait;
+
+        Physics.simulationMode = SimulationMode.Script;
+        foreach(var dice in dices)
+        {
+            rollDatas.Add(new RollData()
             {
                 dice = dice,
                 pos = dice.transform.position,
                 rot = dice.transform.rotation,
-                linearVelicity = Random.insideUnitSphere * 3f + Vector3.up * 5f,
-                angularVelicity = Random.insideUnitSphere * 10f
+                linearVelicity = dice.rb.linearVelocity,
+                angularVelicity = dice.rb.angularVelocity
             });
         }
 
         List<List<int>> predicted = new();
-
         for (int i = 0; i < rollDatas.Count; i++)
         {
             predicted.Add(new List<int>());

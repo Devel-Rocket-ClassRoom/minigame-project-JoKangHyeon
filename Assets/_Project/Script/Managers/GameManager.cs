@@ -20,6 +20,13 @@ public class GameManager : MonoBehaviour
 
     public RollManager rollManager;
 
+    public TextMeshProUGUI coinText;
+    public TextMeshProUGUI roundText;
+    public TextMeshProUGUI rerollText;
+    public Button rerollButton;
+
+    public Button MenuButton;
+
     private void Awake()
     {
         rollManager = GetComponent<RollManager>();
@@ -187,8 +194,22 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        testOutput.text = $"reroll left : {currentRun.currentRound.currentCycle.reroll}/{currentRun.rerollPerCycle}\n\ncurrent level : {currentRun.level}\n\ncurrent score : {currentRun.currentScore}\ngoal score : {demoScoreCut[currentRun.level]}\ncurrent coin : {currentRun.coin}";
+        //DEBUG
+        //testOutput.text = $"reroll left : {currentRun.currentRound.currentCycle.reroll}/{currentRun.rerollPerCycle}\n\ncurrent level : {currentRun.level}\n\ncurrent score : {currentRun.currentScore}\ngoal score : {demoScoreCut[currentRun.level]}\ncurrent coin : {currentRun.coin}";
 
+
+        rerollText.text = $"{currentRun.currentRound.currentCycle.reroll} / {currentRun.rerollPerCycle}";
+        coinText.text = currentRun.coin.ToString();
+        roundText.text = string.Format(StringTable.GetString("RoundStatus"), currentRun.currentScore, currentRun.TargetScore);
+
+        if(currentRun.currentScore >= currentRun.TargetScore)
+        {
+            roundText.color = Defines.colorGold;
+        }
+        else
+        {
+            roundText.color = Defines.colorPaper;
+        }
 
         for (int i = 0; i < currentRun.currentRound.hands.Count; i++)
         {
@@ -249,5 +270,10 @@ public class GameManager : MonoBehaviour
         //TODO : UI로 주사위 면 선택
         //DEBUG
         callback(target, 1);
+    }
+
+    public void RerollButton()
+    {
+        currentRun.currentRound.currentCycle.Reroll();
     }
 }

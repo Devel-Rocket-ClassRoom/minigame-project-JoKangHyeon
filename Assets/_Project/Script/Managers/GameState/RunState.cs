@@ -14,6 +14,13 @@ public class RunState
     public int coin;
     public int rerollPerCycle;
     public int currentScore;
+    public int TargetScore
+    {
+        get
+        {
+            return gameManager.demoScoreCut[level];
+        }
+    }
 
     public int maxCunsumable;
     const int c_defaultMaxCunsumable = 3;

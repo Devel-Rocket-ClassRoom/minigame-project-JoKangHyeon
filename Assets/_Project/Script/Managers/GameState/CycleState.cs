@@ -166,7 +166,7 @@ public class CycleState
             Dice dice = dicesRemain[i];
             var diceObject = GameObject.Instantiate(dice.prefab, gameManager.DiceSpawnPoint.transform);
             diceObject.rb.isKinematic = true;
-            diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.0f);
+            diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.5f);
             diceObject.dice = dice;
             diceObjects.Add(diceObject);
         }
