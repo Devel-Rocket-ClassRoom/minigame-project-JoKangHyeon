@@ -61,6 +61,9 @@ public class CycleState
 
     public void Reroll()
     {
+        if (gameManager.rollManager.rolling)
+            return;
+
         if (reroll < 1)
             return;
         reroll -= 1;
@@ -76,7 +79,6 @@ public class CycleState
 
         EventBus.Publish(EventType.OnRollComplete, dicesRemain);
 
-        Debug.Log(dicesRemain[0].diceResultIndex);
 
         foreach(var diceObj in diceObjects)
         {

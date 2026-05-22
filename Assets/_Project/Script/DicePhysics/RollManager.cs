@@ -10,10 +10,12 @@ public class RollManager : MonoBehaviour
     const int maxIterations = 1000;
     const int maxSimulations = 10;
 
-    
+    public bool rolling = false;
 
     public IEnumerator DeterministicRoll(List<DiceObject> dices)
     {
+        rolling = true;
+
         foreach (var dice in dices)
         {
             dice.gameObject.SetActive(true);
@@ -120,10 +122,29 @@ public class RollManager : MonoBehaviour
             real.Add(maxIndex);
         }
 
-        Debug.Log($"Predicted: {string.Join(", ", predicted.Select(list => list.GroupBy(x => x).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault() + 1))}");
-        Debug.Log($"Real: {string.Join(", ", real.Select(i => i + 1))}");
+        //Debug.Log($"Real: {string.Join(", ", real.Select(i => i + 1))}");
+
+        var predict = predicted.Select(list => list.GroupBy(x => x).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault()).ToList();
+        var realResult = real.Select(i => i).ToList();
+        Debug.Log($"Predicted: {string.Join(',', predict)}");
+        Debug.Log($"real: {string.Join(',', realResult)}");
 
 
+        if (predict.SequenceEqual(realResult))
+        {
+            Debug.Log("Predict success");
+        }
+        else
+        {
+            Debug.Log("Predict Failed, Realign");
+            for (int i = 0; i < rollDatas.Count; i++)
+            {
+                RollData data = rollDatas[i];
+                data.dice.TextSetOffset(real[i]);
+            }
+        }
+
+        rolling = false;
     }
 
     struct RollData
