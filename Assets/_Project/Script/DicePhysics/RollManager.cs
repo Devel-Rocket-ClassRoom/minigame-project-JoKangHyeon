@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.Rendering.DebugUI.Table;
+using Random = UnityEngine.Random;
 
 public class RollManager : MonoBehaviour
 {    
@@ -16,32 +16,10 @@ public class RollManager : MonoBehaviour
 
     private WaitForSeconds wait = new WaitForSeconds(0.2f);
 
-    public IEnumerator DeterministicRoll(List<DiceObject> dices)
+    public void Simulate(List<DiceObject> dices)
     {
-        rolling = true;
-
-        foreach (var dice in dices)
-        {
-            dice.gameObject.SetActive(true);
-        }
-        //물리처리는 보존되는 랜덤 요소가 아님
-        Random.State preservedState = Random.state;
-
-        rollDatas.Clear();
-        //다이스 던지기
-        foreach (var dice in dices)
-        {
-            dice.rb.isKinematic = false;
-            dice.rb.linearVelocity = Random.insideUnitSphere * 3f + Vector3.up * 5f;
-            dice.rb.angularVelocity = Random.insideUnitSphere * 10f;
-        }
-
-        //전부 시뮬레이션 하면 오차가 너무 크니,
-        //약간 진행한 후에 시뮬레이션 진행
-        yield return wait;
-
         Physics.simulationMode = SimulationMode.Script;
-        foreach(var dice in dices)
+        foreach (var dice in dices)
         {
             rollDatas.Add(new RollData()
             {
@@ -98,7 +76,7 @@ public class RollManager : MonoBehaviour
 
         List<int> simulationResult = new List<int>();
 
-        //Reset
+        //Apply / Reset
         for (int i = 0; i < rollDatas.Count; i++)
         {
             RollData data = rollDatas[i];
@@ -113,6 +91,37 @@ public class RollManager : MonoBehaviour
         }
 
         Physics.simulationMode = SimulationMode.FixedUpdate;
+    }
+
+    public IEnumerator DeterministicRoll(List<DiceObject> dices)
+    {
+        rolling = true;
+
+        foreach (var dice in dices)
+        {
+            dice.gameObject.SetActive(true);
+        }
+        //시드가 같아도 주사위 굴림은 랜덤한 것 처럼 보여야 함.
+        Random.State preservedState = Random.state;
+        Random.InitState((int)DateTime.Now.Ticks);
+
+        rollDatas.Clear();
+        foreach (var dice in dices)
+        {
+            dice.rb.isKinematic = false;
+            dice.rb.linearVelocity = Random.insideUnitSphere * 3f + Vector3.up * 5f;
+            dice.rb.angularVelocity = Random.insideUnitSphere * 10f;
+        }
+
+        Random.state = preservedState;
+
+        Simulate(dices);
+
+
+        //전부 시뮬레이션 하면 오차가 너무 크니,
+        //약간 진행한 후에 시뮬레이션 진행
+        yield return wait;
+        Simulate(dices);
 
         yield return new WaitUntil(() => rollDatas.All(data => data.dice.rb.IsSleeping()));
 
@@ -133,26 +142,10 @@ public class RollManager : MonoBehaviour
             real.Add(maxIndex);
         }
 
-        //Debug.Log($"Real: {string.Join(", ", real.Select(i => i + 1))}");
-
-        var predict = predicted.Select(list => list.GroupBy(x => x).OrderByDescending(g => g.Count()).Select(g => g.Key).FirstOrDefault()).ToList();
-        var realResult = real.Select(i => i).ToList();
-        Debug.Log($"Predicted: {string.Join(',', predict)}");
-        Debug.Log($"real: {string.Join(',', realResult)}");
-
-
-        if (predict.SequenceEqual(realResult))
+        for (int i = 0; i < rollDatas.Count; i++)
         {
-            Debug.Log("Predict success");
-        }
-        else
-        {
-            Debug.Log("Predict Failed, Realign");
-            for (int i = 0; i < rollDatas.Count; i++)
-            {
-                RollData data = rollDatas[i];
-                data.dice.TextSetOffset(real[i]);
-            }
+            RollData data = rollDatas[i];
+            data.dice.TextSetOffset(real[i]);
         }
 
         rolling = false;
