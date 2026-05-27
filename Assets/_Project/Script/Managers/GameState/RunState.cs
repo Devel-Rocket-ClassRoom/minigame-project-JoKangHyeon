@@ -4,14 +4,26 @@ using Random = UnityEngine.Random;
 
 public class RunState
 {
-    public List<Dice> dices;
-    public List<Relic> relics;
-    public List<HandSlot> hands;
-    public List<Card> cards;
-    public List<Consumable> consumableInventory;
+    public List<Dice> dices = new();
+    public List<Relic> relics = new();
+    public List<HandSlot> hands = new();
+    public List<Card> cards = new();
+    public List<Consumable> consumableInventory = new();
 
     public int level;
-    public int coin;
+    private int _coin;
+    public int Coin
+    {
+        get
+        {
+            return _coin;
+        }
+        set
+        {
+            _coin = value;
+            gameManager.UpdateCoin(Coin);
+        }
+    }
     public int rerollPerCycle;
     public int currentScore;
     public int TargetScore
@@ -28,9 +40,13 @@ public class RunState
     public Starting startingSet;
     public GameManager gameManager;
     public RoundState currentRound;
+    public ShopState shopState;
+
 
     public bool isGameOver = false;
 
+
+    #region Constructor
     public RunState(GameManager gameManager)
     {
         this.gameManager = gameManager;
@@ -45,6 +61,7 @@ public class RunState
     {
         Random.state = state;
     }
+    #endregion
 
     public void Setup(Starting starting)
     {
@@ -76,7 +93,7 @@ public class RunState
         maxCunsumable = c_defaultMaxCunsumable;
         consumableInventory = new();
 
-        coin = 0;
+        Coin = Defines.c_startingCoin;
         level = 0;
 
 
@@ -93,11 +110,21 @@ public class RunState
 
     public void GetCoin(int amount)
     {
-        coin += amount;
+        Coin += amount;
     }
 
     public void GetReroll(int amount)
     {
         currentRound.currentCycle.reroll += amount;
+    }
+
+    public void ShowShop()
+    {
+        if(shopState == null)
+        {
+            shopState = new ShopState();
+        }
+        shopState.Init(gameManager);
+        gameManager.ShowShop(shopState);
     }
 }

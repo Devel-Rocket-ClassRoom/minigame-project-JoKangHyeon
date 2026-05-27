@@ -88,9 +88,16 @@ public class RoundState
             currentRun.currentScore -= gameManager.demoScoreCut[currentRun.level];
             currentRun.level += 1;
             Debug.Log("Round Clear");
-            EventBus.Publish(EventType.OnRoundClear, null);
 
-            Init();
+            //base coin
+            currentRun.Coin += 5;
+            //group end bonus
+            currentRun.Coin += (currentRun.level % Defines.c_levelPerGroup == 0) ? Defines.c_groupEndBonusCoin : 0;
+
+            //TODO : 안 쓴 족보 코인으로 변환
+
+            EventBus.Publish(EventType.OnRoundClear, null);
+            currentRun.ShowShop();
         }
         else
         {

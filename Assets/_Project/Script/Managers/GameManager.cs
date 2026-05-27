@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public HandDefinitionSO handDefine;
     public DiceDefinitionSO diceDefine;
     public RelicDefinitionSO relicDefine;
+    public CardDefinitionSO cardDefine;
+    public ShopRarityDefinitionSO rarityDefine;
 
     public int currentStartingIndex = 0;
 
@@ -26,6 +28,11 @@ public class GameManager : MonoBehaviour
     public Button rerollButton;
 
     public Button MenuButton;
+
+    public ShopCanvas shopCanvas;
+
+    public List<GameObject> gameStateObjects;
+    public List<GameObject> shopStateObjects;
 
     private void Awake()
     {
@@ -199,7 +206,7 @@ public class GameManager : MonoBehaviour
 
 
         rerollText.text = $"{currentRun.currentRound.currentCycle.reroll} / {currentRun.rerollPerCycle}";
-        coinText.text = currentRun.coin.ToString();
+        coinText.text = currentRun.Coin.ToString();
         roundText.text = string.Format(StringTable.GetString("RoundStatus"), currentRun.currentScore, currentRun.TargetScore);
 
         if(currentRun.currentScore >= currentRun.TargetScore)
@@ -272,8 +279,51 @@ public class GameManager : MonoBehaviour
         callback(target, 1);
     }
 
+    public void StartHandSelect(Action<HandSlot> callback)
+    {
+        //TODO : UI로 족보 선택
+
+        //Debug
+        callback?.Invoke(currentRun.hands[0]);
+    }
+
     public void RerollButton()
     {
         currentRun.currentRound.currentCycle.Reroll();
+    }
+
+    public void ShowShop(ShopState state)
+    {
+        foreach(var gameobject in gameStateObjects)
+        {
+            gameobject.gameObject.SetActive(false);
+        }
+
+        foreach(var gameobject in shopStateObjects)
+        {
+            gameobject.gameObject.SetActive(true);
+        }
+
+        shopCanvas.Init(this, state);
+    }
+
+    public void ShowGame()
+    {
+        foreach (var gameobject in shopStateObjects)
+        {
+            gameobject.gameObject.SetActive(false);
+        }
+
+        foreach (var gameobject in gameStateObjects)
+        {
+            gameobject.gameObject.SetActive(true);
+        }
+
+        currentRun.RoundStart();
+    }
+
+    public void UpdateCoin(int coin)
+    {
+        coinText.text = coin.ToString();
     }
 }

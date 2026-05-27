@@ -11,9 +11,11 @@ public abstract class Dice
     public List<DiceFace> faces = new();
     public DiceObject prefab;
 
+
     [SerializeField]
     public int diceResultIndex;
 
+    public abstract DiceFace GetFace();
     public abstract int GetDice();
     public abstract void SetDice(int number);
     
@@ -60,7 +62,7 @@ public class NormalDice : Dice
 
     public override void ForceSetDice(int number)
     {
-        DiceFace diceFace = faces.Find(face => face.value == number);
+        DiceFace diceFace = faces.Find(face => face.Value == number);
         if (diceFace != null) {
             diceResultIndex = faces.IndexOf(diceFace);
             isTempFace = false;
@@ -78,18 +80,23 @@ public class NormalDice : Dice
         {
             return -1;  
         }
-        return DiceResult.value;
+        return DiceResult.Value;
     }
 
     public override void ResetDice()
     {
         rolled = false;
+
+        foreach (DiceFace face in faces)
+        {
+            face.ResetForCycle();
+        }
     }
 
     public override int RollDice()
     {
         SetDice(Random.Range(0, faces.Count));
-        return DiceResult.value;
+        return DiceResult.Value;
     }
 
     public override void SetDice(int faceIndex)
@@ -100,7 +107,7 @@ public class NormalDice : Dice
 
     public override void TrySetDice(int value)
     {
-        DiceFace diceFace = faces.Find(face => face.value == value);
+        DiceFace diceFace = faces.Find(face => face.Value == value);
         if(diceFace != null)
         {
             diceResultIndex = faces.IndexOf(diceFace);
@@ -126,26 +133,57 @@ public class NormalDice : Dice
     public override void SetFace(int position, int value)
     {
         faces[position] = new DiceFace(value, this);
-        faces.Sort((a, b) => a.value.CompareTo(b.value));
+        faces.Sort((a, b) => a.Value.CompareTo(b.Value));
     }
 
     public override void SetFaceValue(int position, int value)
     {
-        faces[position].value = value;
-        faces.Sort((a,b) => a.value.CompareTo(b.value));
+        faces[position].Value = value;
+        faces.Sort((a,b) => a.Value.CompareTo(b.Value));
+    }
+
+    public override DiceFace GetFace()
+    {
+        return isTempFace ? tempFace : faces[diceResultIndex];
     }
 }
 
 
 public class DiceFace
 {
-    public int value;
+    private int _value;
+    public int Value
+    {
+        get
+        {
+            return valueOverriden ? overrideValue : _value;
+        }
+
+        set
+        {
+            _value = value;
+        }
+    }
     public Dice dice;
+
+    public int overrideValue;
+    public bool valueOverriden = false;
 
     public DiceFace(int value, Dice dice)
     {
-        this.value = value;
+        this.Value = value;
         this.dice = dice;
+    }
+
+    public void ResetForCycle()
+    {
+        valueOverriden = false;
+    }
+
+    public void OverrideValue(int value)
+    {
+        valueOverriden = true;
+        overrideValue = value;
     }
 
     public Action<Dice, DiceFace> OnRolled;

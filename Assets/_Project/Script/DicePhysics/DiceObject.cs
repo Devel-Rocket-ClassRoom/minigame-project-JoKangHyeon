@@ -42,7 +42,7 @@ public class DiceObject : MonoBehaviour
 
     public void TextSetOffset(int faceIndex)
     {
-        List<string> data = dice.faces.ConvertAll(face => face.value.ToString());
+        List<string> data = dice.faces.ConvertAll(face => face.Value.ToString());
         //Debug.Log($"FaceIndex: {faceIndex}, DiceResultIndex: {dice.diceResultIndex}");
         TextSet(data, faceIndex, dice.diceResultIndex);
     }

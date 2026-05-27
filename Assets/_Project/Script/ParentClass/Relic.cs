@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public abstract class Relic
@@ -13,6 +14,7 @@ public abstract class Relic
     public string name;
     public string description;
     public string flavorText;
+    public Sprite sprite;
     public Defines.Rarity rarity;
     public int cost;
     public RelicCategory category;

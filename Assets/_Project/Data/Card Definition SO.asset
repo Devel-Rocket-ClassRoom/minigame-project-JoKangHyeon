@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0728f575b7337439cdefdbeb3deab0, type: 3}
+  m_Name: Card Definition SO
+  m_EditorClassIdentifier: Assembly-CSharp::CardDefinitionSO
+  cards:
+  - rid: 4409310497706868799
+  - rid: 4409310497706868801
+  - rid: 4409310497706868798
+  - rid: 4409310497706868800
+  - rid: 4409310497706868802
+  - rid: 4409310497706868804
+  - rid: 4409310497706868805
+  - rid: 4409310497706868803
+  references:
+    version: 2
+    RefIds:
+    - rid: 4409310497706868798
+      type: {class: CardC7, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_Cup7_Name
+        description: Card_Cup7_Desc
+        cost: 8
+        rarity: 0
+        sprite: {fileID: -2088613785, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        gameManager: {fileID: 0}
+        rerollAmount: 1
+        roundLimit: 1
+    - rid: 4409310497706868799
+      type: {class: CardP1, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_PentacleAce_Name
+        description: Card_PentacleAce_Desc
+        cost: 5
+        rarity: 0
+        sprite: {fileID: -168437790, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        gameManager: {fileID: 0}
+    - rid: 4409310497706868800
+      type: {class: CardM10, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_WheelOfFortune_Name
+        description: Card_WheelOfFortune_Desc
+        cost: 14
+        rarity: 1
+        sprite: {fileID: 736235289, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        gameManager: {fileID: 0}
+        increaseAmount: 5
+    - rid: 4409310497706868801
+      type: {class: CardP6, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_Pentacle6_Name
+        description: Card_Pentacle6_Desc
+        cost: 6
+        rarity: 0
+        sprite: {fileID: 2014196589, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        gameManager: {fileID: 0}
+        coinAmount: 2
+        roundLimit: 5
+    - rid: 4409310497706868802
+      type: {class: CardM21, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_World_Name
+        description: Card_World_Desc
+        cost: 22
+        rarity: 2
+        sprite: {fileID: -1535304401, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        gameManager: {fileID: 0}
+        increaseAmount: 5
+    - rid: 4409310497706868803
+      type: {class: CardW4, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_Wand4_Name
+        description: Card_Wand4_Desc
+        cost: 25
+        rarity: 0
+        sprite: {fileID: -686809916, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+    - rid: 4409310497706868804
+      type: {class: CardM0, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_Fool_Name
+        description: Card_Fool_Desc
+        cost: 40
+        rarity: 2
+        sprite: {fileID: 1962799097, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        diceSO: {fileID: 0}
+    - rid: 4409310497706868805
+      type: {class: CardS0, ns: , asm: Assembly-CSharp}
+      data:
+        name: Card_Sword0_Name
+        description: Card_Sword0_Desc
+        cost: 8
+        rarity: 0
+        sprite: {fileID: 1205227204, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        targetHandName: 
+        handSO: {fileID: 0}

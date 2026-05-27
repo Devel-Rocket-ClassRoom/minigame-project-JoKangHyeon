@@ -123,7 +123,22 @@ public class RollManager : MonoBehaviour
         yield return wait;
         Simulate(dices);
 
-        yield return new WaitUntil(() => rollDatas.All(data => data.dice.rb.IsSleeping()));
+        bool exception = false;
+        yield return new WaitUntil(() => rollDatas.All(data =>
+        {
+            try
+            {
+                return data.dice.rb.IsSleeping();
+            }
+            catch
+            {
+                exception = true;
+                return true;
+            }
+        }));
+
+        if (exception)
+            yield break;
 
         List<int> real = new();
         foreach (var dice in rollDatas)
