@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     [Header("Canvases")]
     public ShopCanvas shopCanvas;
     public DiceSelectCanvas diceSelectCanvas;
+    public FaceSelectCanvas faceSelectCanvas;
 
     [Header("View Objects")]
     public List<GameObject> gameStateObjects;
@@ -66,8 +67,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         RestartGame();
-
-        diceSelectCanvas.StartDiceSelect(this, (d) => Debug.Log(d.name));
     }
 
     // Update is called once per frame
@@ -274,20 +273,12 @@ public class GameManager : MonoBehaviour
 
     public void StartDiceSelect(Action<Dice> callback)
     {
-        //TODO : UI로 주사위 선택
-
-        //DEBUG
-        if (currentRun.currentRound.currentCycle.dicesRemain.Count > 0)
-        {
-            callback(currentRun.currentRound.currentCycle.dicesRemain[0]);
-        }
+        diceSelectCanvas.StartDiceSelect(this, callback);
     }
 
     public void StartDiceFaceSelect(Dice target, Action<Dice,int> callback)
     {
-        //TODO : UI로 주사위 면 선택
-        //DEBUG
-        callback(target, 1);
+        faceSelectCanvas.StartFaceSelect(target, callback);
     }
 
     public void StartHandSelect(Action<HandSlot> callback)

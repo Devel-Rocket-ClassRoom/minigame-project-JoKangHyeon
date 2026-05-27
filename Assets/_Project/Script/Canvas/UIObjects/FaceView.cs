@@ -1,8 +1,10 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FaceView : MonoBehaviour
 {
+    public Image background;
     public TextMeshProUGUI faceText;
     DiceFace face;
 

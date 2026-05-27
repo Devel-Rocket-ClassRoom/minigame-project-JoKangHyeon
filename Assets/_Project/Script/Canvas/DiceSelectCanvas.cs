@@ -32,6 +32,8 @@ public class DiceSelectCanvas : MonoBehaviour
             diceSelectors[i].Show(gameManager.currentRun.dices[i], callback, this);
             diceSelectors[i].gameObject.SetActive(true);
         }
+
+        this.gameObject.SetActive(true);
     }
 
     public void FinishDiceSelect()

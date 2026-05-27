@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8049b75d2628ac4bbdf65667faab809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FaceView
+  background: {fileID: 1022190742127901237}
   faceText: {fileID: 18471509385751201}
 --- !u!1 &4259612194852407226
 GameObject:
