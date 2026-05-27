@@ -47,12 +47,28 @@ public class ShopCanvas : MonoBehaviour
 
     public void BuyCard(int pos)
     {
+        if (currentState.cardsBuy[pos])
+            return;
 
+        if(gameManager.currentRun.Coin > Mathf.RoundToInt((currentState.cards[pos].cost * currentState.GetMultiplier())))
+        {
+            gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.cards[pos].cost * currentState.GetMultiplier()));
+            gameManager.currentRun.GetCard(currentState.cards[pos]);
+            currentState.cardsBuy[pos] = true;
+        }
     }
 
     public void BuyRelic(int pos)
     {
+        if (currentState.relicsBuy[pos])
+            return;
 
+        if (gameManager.currentRun.Coin > Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier())))
+        {
+            gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier()));
+            gameManager.currentRun.GetRelic(currentState.relics[pos]);
+            currentState.relicsBuy[pos] = true;
+        }
     }
 
     public void Reroll()

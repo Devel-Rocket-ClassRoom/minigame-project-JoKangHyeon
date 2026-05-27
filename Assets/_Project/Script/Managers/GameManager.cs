@@ -1,3 +1,4 @@
+using CsvHelper.Configuration.Attributes;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -7,8 +8,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public RunState currentRun;
 
+    [Header("Scriptable Objects")]
     public StartingDefinitionSO startingsDefine;
     public HandDefinitionSO handDefine;
     public DiceDefinitionSO diceDefine;
@@ -16,23 +17,31 @@ public class GameManager : MonoBehaviour
     public CardDefinitionSO cardDefine;
     public ShopRarityDefinitionSO rarityDefine;
 
-    public int currentStartingIndex = 0;
-
-    public GameObject DiceSpawnPoint;
-
-    public RollManager rollManager;
-
+    [Header("UI")]
     public TextMeshProUGUI coinText;
     public TextMeshProUGUI roundText;
     public TextMeshProUGUI rerollText;
     public Button rerollButton;
-
     public Button MenuButton;
 
-    public ShopCanvas shopCanvas;
 
+    [Header("Sub Managers")]
+    public RollManager rollManager;
+
+    [Header("Canvases")]
+    public ShopCanvas shopCanvas;
+    public DiceSelectCanvas diceSelectCanvas;
+
+    [Header("View Objects")]
     public List<GameObject> gameStateObjects;
     public List<GameObject> shopStateObjects;
+
+    [Header("Other")]
+    public GameObject DiceSpawnPoint;
+    public int currentStartingIndex = 0;
+
+    //Not Serialized
+    public RunState currentRun;
 
     private void Awake()
     {
@@ -57,6 +66,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         RestartGame();
+
+        diceSelectCanvas.StartDiceSelect(this, (d) => Debug.Log(d.name));
     }
 
     // Update is called once per frame

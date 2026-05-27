@@ -127,4 +127,13 @@ public class RunState
         shopState.Init(gameManager);
         gameManager.ShowShop(shopState);
     }
+
+    public void GetCard(Card card)
+    {
+
+    }
+
+    public void GetRelic(Relic relic)
+    {
+    }
 }
