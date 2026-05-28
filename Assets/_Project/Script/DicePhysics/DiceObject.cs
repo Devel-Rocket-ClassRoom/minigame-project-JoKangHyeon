@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class DiceObject : MonoBehaviour
+public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public List<GameObject> faces;
     public Rigidbody rb;
@@ -10,9 +11,12 @@ public class DiceObject : MonoBehaviour
 
     public Dice dice;
 
+    GameManager manager;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        manager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
     }
 
     public int GetFace()
@@ -51,6 +55,16 @@ public class DiceObject : MonoBehaviour
     {
         Renderer renderer = GetComponent<Renderer>();
         renderer.material.SetFloat("_Size", enable ? 0.005f : 0f);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        manager.tooltip.ShowDiceTooltip(dice);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        manager.tooltip.HideTooltip();
     }
 }
 

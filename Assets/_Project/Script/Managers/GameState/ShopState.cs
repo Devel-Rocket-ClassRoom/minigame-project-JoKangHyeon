@@ -35,6 +35,19 @@ public class ShopState
         manager = gameManager;
         ShopRarityDefinitionSO rarity = gameManager.rarityDefine;
 
+        for (int i = 0; i < relicsBuy.Count; i++)
+        {
+            relicsBuy[i] = false;
+        }
+        for (int i = 0; i < cardsBuy.Count; i++)
+        {
+            cardsBuy[i] = false;
+        }
+        for (int i = 0; i < consumablesBuy.Count; i++)
+        {
+            consumablesBuy[i] = false;
+        }
+
         relics.Clear();
 
         for (int randomCardCount = 0; randomCardCount < c_cardAppear; randomCardCount++)
@@ -64,7 +77,7 @@ public class ShopState
                 {
                     if (card.rarity == targetRarity)
                     {
-                        if (!gameManager.currentRun.cards.Any(c => c.name.Equals(card.name)) && !cards.Any(c=>c.name.Equals(card.name)))
+                        if (!gameManager.currentRun.cards.Any(c => c.Name.Equals(card.Name)) && !cards.Any(c=>c.Name.Equals(card.Name)))
                         {
                             rareityCards.Add(card);
                         }
@@ -73,7 +86,10 @@ public class ShopState
 
                 if (rareityCards.Count > 0)
                 {
-                    cards.Add(rareityCards[Random.Range(0, rareityCards.Count)]);
+                    // §6.1 — SO 원본 오염 방지: Clone 후 OnDisplay 호출
+                    Card cloned = rareityCards[Random.Range(0, rareityCards.Count)].Clone();
+                    cloned.OnDisplay(manager.currentRun);
+                    cards.Add(cloned);
                     cardsBuy.Add(false);
                     break;
                 }
@@ -205,7 +221,7 @@ public class ShopState
                 {
                     if (card.rarity == targetRarity)
                     {
-                        if (!manager.currentRun.cards.Any(c => c.name.Equals(card.name)) && !cards.Any(c => c.name.Equals(card.name)))
+                        if (!manager.currentRun.cards.Any(c => c.Name.Equals(card.Name)) && !cards.Any(c => c.Name.Equals(card.Name)))
                         {
                             rareityCards.Add(card);
                         }
@@ -214,7 +230,10 @@ public class ShopState
 
                 if (rareityCards.Count > 0)
                 {
-                    cards[randomCardCount] = rareityCards[Random.Range(0, rareityCards.Count)];
+                    // §6.1 — Reroll 시에도 Clone + OnDisplay
+                    Card cloned = rareityCards[Random.Range(0, rareityCards.Count)].Clone();
+                    cloned.OnDisplay(manager.currentRun);
+                    cards[randomCardCount] = cloned;
                     break;
                 }
                 else

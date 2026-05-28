@@ -21,14 +21,18 @@ MonoBehaviour:
   - rid: 4409310497706868804
   - rid: 4409310497706868805
   - rid: 4409310497706868803
+  - rid: 4409310520697684030
+  - rid: 4409310520697684031
+  - rid: 4409310520697684032
+  - rid: 4409310520697684033
   references:
     version: 2
     RefIds:
     - rid: 4409310497706868798
       type: {class: CardC7, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_Cup7_Name
-        description: Card_Cup7_Desc
+        nameStringKey: Card_Cup7_Name
+        descriptionStringKey: Card_Cup7_Desc
         cost: 8
         rarity: 0
         sprite: {fileID: -2088613785, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
@@ -38,8 +42,8 @@ MonoBehaviour:
     - rid: 4409310497706868799
       type: {class: CardP1, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_PentacleAce_Name
-        description: Card_PentacleAce_Desc
+        nameStringKey: Card_PentacleAce_Name
+        descriptionStringKey: Card_PentacleAce_Desc
         cost: 5
         rarity: 0
         sprite: {fileID: -168437790, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
@@ -47,8 +51,8 @@ MonoBehaviour:
     - rid: 4409310497706868800
       type: {class: CardM10, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_WheelOfFortune_Name
-        description: Card_WheelOfFortune_Desc
+        nameStringKey: Card_WheelOfFortune_Name
+        descriptionStringKey: Card_WheelOfFortune_Desc
         cost: 14
         rarity: 1
         sprite: {fileID: 736235289, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
@@ -57,8 +61,8 @@ MonoBehaviour:
     - rid: 4409310497706868801
       type: {class: CardP6, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_Pentacle6_Name
-        description: Card_Pentacle6_Desc
+        nameStringKey: Card_Pentacle6_Name
+        descriptionStringKey: Card_Pentacle6_Desc
         cost: 6
         rarity: 0
         sprite: {fileID: 2014196589, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
@@ -68,8 +72,8 @@ MonoBehaviour:
     - rid: 4409310497706868802
       type: {class: CardM21, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_World_Name
-        description: Card_World_Desc
+        nameStringKey: Card_World_Name
+        descriptionStringKey: Card_World_Desc
         cost: 22
         rarity: 2
         sprite: {fileID: -1535304401, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
@@ -78,27 +82,61 @@ MonoBehaviour:
     - rid: 4409310497706868803
       type: {class: CardW4, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_Wand4_Name
-        description: Card_Wand4_Desc
+        nameStringKey: Card_Wand4_Name
+        descriptionStringKey: Card_Wand4_Desc
         cost: 25
         rarity: 0
         sprite: {fileID: -686809916, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        targetHandName: 
     - rid: 4409310497706868804
       type: {class: CardM0, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_Fool_Name
-        description: Card_Fool_Desc
+        nameStringKey: Card_Fool_Name
+        descriptionStringKey: Card_Fool_Desc
         cost: 40
         rarity: 2
         sprite: {fileID: 1962799097, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
-        diceSO: {fileID: 0}
+        diceSO: {fileID: 11400000, guid: 6ea697efe51478940a7f55bafeaef01b, type: 2}
     - rid: 4409310497706868805
       type: {class: CardS0, ns: , asm: Assembly-CSharp}
       data:
-        name: Card_Sword0_Name
-        description: Card_Sword0_Desc
+        nameStringKey: Card_Sword0_Name
+        descriptionStringKey: Card_Sword0_Desc
         cost: 8
         rarity: 0
-        sprite: {fileID: 1205227204, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        sprite: {fileID: -410651273, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
         targetHandName: 
-        handSO: {fileID: 0}
+    - rid: 4409310520697684030
+      type: {class: CardW6, ns: , asm: Assembly-CSharp}
+      data:
+        nameStringKey: Card_Wand6_Name
+        descriptionStringKey: Card_Wand6_Desc
+        cost: 50
+        rarity: 1
+        sprite: {fileID: 1765191320, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+    - rid: 4409310520697684031
+      type: {class: CardM8, ns: , asm: Assembly-CSharp}
+      data:
+        nameStringKey: Card_Power_Name
+        descriptionStringKey: Card_Power_Desc
+        cost: 50
+        rarity: 1
+        sprite: {fileID: 742861720, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        targetHandName: 
+    - rid: 4409310520697684032
+      type: {class: CardM1, ns: , asm: Assembly-CSharp}
+      data:
+        nameStringKey: Card_Magician_Name
+        descriptionStringKey: Card_Magician_Desc
+        cost: 100
+        rarity: 2
+        sprite: {fileID: -1088981204, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+    - rid: 4409310520697684033
+      type: {class: CardM4, ns: , asm: Assembly-CSharp}
+      data:
+        nameStringKey: Card_Emperor_Name
+        descriptionStringKey: Card_Emperor_Desc
+        cost: 45
+        rarity: 2
+        sprite: {fileID: 175650858, guid: 12b973dcce1c3de4593521e9a097b187, type: 3}
+        targetHandName: 

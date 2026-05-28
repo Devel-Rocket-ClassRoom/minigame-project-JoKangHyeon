@@ -4,21 +4,35 @@ using UnityEngine;
 [Serializable]
 public abstract class Relic
 {
-    public enum RelicCategory
-    {
-        dice,
-        score,
-        resource
-    }
-
     public string name;
     public string description;
     public string flavorText;
     public Sprite sprite;
     public Defines.Rarity rarity;
     public int cost;
-    public RelicCategory category;
+    public Defines.RelicCategory category;
 
-    public abstract void OnAdd(GameManager gameManager);
+
+    #region 우선순위 상수
+    /// <summary>
+    /// 첫 굴림시 우선순위
+    /// </summary>
+    public const int c_priorityFirstRollEffect = 20;
+    /// <summary>
+    /// 부서진 룬 우선순위
+    /// </summary>
+    public const int c_priorityBrokenRune = 30;
+    /// <summary>
+    /// 금빛 거울 우선순위
+    /// </summary>
+    public const int c_priorityGoldenMirror = 50;
+    /// <summary>
+    /// 그 외 기타 일반순위
+    /// </summary>
+    public const int c_priorityDefault = 100;
+
+    #endregion
+
+    public abstract void OnObtain(GameManager gameManager);
     public abstract void OnRemove();
 }

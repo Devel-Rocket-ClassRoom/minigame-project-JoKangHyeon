@@ -27,6 +27,8 @@ public class RoundState
         foreach (var hand in currentRun.hands)
         {
             hands.Add(hand.Clone());
+
+           
         }
 
         dices = new List<Dice>();
@@ -97,6 +99,10 @@ public class RoundState
             //TODO : 안 쓴 족보 코인으로 변환
 
             EventBus.Publish(EventType.OnRoundClear, null);
+
+            EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
+            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
+
             currentRun.ShowShop();
         }
         else

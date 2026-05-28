@@ -61,9 +61,22 @@ public static class EventBus
     private static readonly Dictionary<EventType, List<PriorityCallback>> eventTable = new();
     private static readonly Dictionary<EventType, Dictionary<Delegate, PriorityCallback>> delegateLookup = new();
 
+    private static Action actionWaitingForEndExecution = () => { };
+    private static int executionDepth = 0;
+
     public static void Subscribe<T>(EventType eventType, Action<T> callback, int priority)
     {
         if (callback == null) return;
+
+        if (executionDepth > 0)
+        {
+            actionWaitingForEndExecution += () =>
+            {
+                Subscribe(eventType, callback, priority);
+            };
+            return;
+        }
+
 
         if (!delegateLookup.TryGetValue(eventType, out var map))
         {
@@ -90,6 +103,16 @@ public static class EventBus
 
     public static void Unsubscribe<T>(EventType eventType, Action<T> callback)
     {
+
+        if (executionDepth > 0)
+        {
+            actionWaitingForEndExecution += () =>
+            {
+                Unsubscribe(eventType, callback);
+            };
+            return;
+        }
+
         if (callback == null) return;
 
         if (!delegateLookup.TryGetValue(eventType, out var map)) return;
@@ -107,10 +130,35 @@ public static class EventBus
 
     public static void Publish(EventType eventType, object eventData)
     {
-        if (eventTable.TryGetValue(eventType, out var action))
+        executionDepth++;
+        if (eventTable.TryGetValue(eventType, out var action) && action != null)
         {
             action?.ForEach(cb => cb.Callback(eventData));
         }
+
+        executionDepth--;
+        if (executionDepth == 0)
+        {
+            var pending = actionWaitingForEndExecution;
+            actionWaitingForEndExecution = () => { };
+            pending?.Invoke();
+        }
+    }
+
+    public static void Clear()
+    {
+
+        if (executionDepth > 0)
+        {
+            actionWaitingForEndExecution += () =>
+            {
+                Clear();
+            };
+            return;
+        }
+
+        eventTable.Clear();
+        delegateLookup.Clear();
     }
 
     private class PriorityCallback

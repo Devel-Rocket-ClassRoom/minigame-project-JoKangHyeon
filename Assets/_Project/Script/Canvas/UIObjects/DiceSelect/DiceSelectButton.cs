@@ -21,6 +21,8 @@ public class DiceSelectButton : MonoBehaviour
     Action<Dice> callback;
     Dice dice;
 
+    DiceObject dice3D;
+
     private void Awake()
     {
         button = GetComponent<Button>();
@@ -33,7 +35,7 @@ public class DiceSelectButton : MonoBehaviour
         this.callback = callback;
         this.dice = dice;
 
-        DiceObject dice3D = Instantiate(dice.prefab, parentCanvas.diceObjectParent);
+        dice3D = Instantiate(dice.prefab, parentCanvas.diceObjectParent);
         dice3D.rb.isKinematic = true;
 
         FallowObject fallow = dice3D.AddComponent<FallowObject>();
@@ -63,5 +65,10 @@ public class DiceSelectButton : MonoBehaviour
     {
         callback?.Invoke(dice);
         parentCanvas.FinishDiceSelect();
+    }
+
+    public void Remove3dDice()
+    {
+        Destroy(dice3D.gameObject);
     }
 }

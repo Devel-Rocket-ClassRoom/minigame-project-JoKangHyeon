@@ -1,11 +1,13 @@
 
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class SlotUI : MonoBehaviour
+public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI diceText;
@@ -15,8 +17,14 @@ public class SlotUI : MonoBehaviour
     public bool detailView = false;
 
     private HandSlot slot;
+    private GameManager gameManager;
 
     private List<Dice> currentTemp;
+
+    public void Init(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
+    }
 
     private void Update()
     {
@@ -74,4 +82,15 @@ public class SlotUI : MonoBehaviour
             }
         }
     }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        gameManager.tooltip.ShowHandSlotTooltip(slot);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        gameManager.tooltip.HideTooltip();
+    }
+
 }

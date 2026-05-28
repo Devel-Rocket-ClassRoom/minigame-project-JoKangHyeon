@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -79,6 +80,7 @@ public class RunState
         {
             HandSlot handSlot = new HandSlot();
             handSlot.hand = gameManager.handDefine.Find(handName);
+            handSlot.slotLevel = 1;   // 시작 슬롯은 Lv 1
             hands.Add(handSlot);
         }
 
@@ -87,7 +89,7 @@ public class RunState
         {
             var relic = gameManager.relicDefine.Find(relicName);
             relics.Add(relic);
-            relic.OnAdd(gameManager);
+            relic.OnObtain(gameManager);
         }
 
         maxCunsumable = c_defaultMaxCunsumable;
@@ -104,6 +106,9 @@ public class RunState
 
     public void RoundStart()
     {
+        // 카드 라운드 시작 훅 — CardP6/C7 등 currentRoundLimit 리셋
+        cards.ForEach(c => c.OnRoundStart());
+
         currentRound = new RoundState(gameManager, this);
         currentRound.Init();
     }
@@ -130,10 +135,14 @@ public class RunState
 
     public void GetCard(Card card)
     {
-
+        Card clonedCard = card.Clone();
+        cards.Add(clonedCard);
+        clonedCard.OnObtain(gameManager);
     }
 
     public void GetRelic(Relic relic)
     {
+        relics.Add(relic);
+        relic.OnObtain(gameManager);
     }
 }

@@ -27,7 +27,6 @@ public class HandSlot
         {
             hand = hand.Clone(),
             slotLevel = slotLevel,
-            currentScore = currentScore
         };
         return clone;
     }

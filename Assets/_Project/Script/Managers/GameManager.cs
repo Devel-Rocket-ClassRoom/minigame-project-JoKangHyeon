@@ -32,10 +32,13 @@ public class GameManager : MonoBehaviour
     public ShopCanvas shopCanvas;
     public DiceSelectCanvas diceSelectCanvas;
     public FaceSelectCanvas faceSelectCanvas;
+    public HandSelectCanvas handSelectCanvas;
 
     [Header("View Objects")]
     public List<GameObject> gameStateObjects;
     public List<GameObject> shopStateObjects;
+    public GameObject pauseSceen;
+    public Tooltip tooltip;
 
     [Header("Other")]
     public GameObject DiceSpawnPoint;
@@ -83,13 +86,43 @@ public class GameManager : MonoBehaviour
                     currentRun.currentRound.currentCycle.ToggleDice(hit.collider.GetComponent<DiceObject>());
                 }
             }
+
+            foreach(var hitDeBug in Physics.RaycastAll(ray))
+            {
+                Debug.Log(hitDeBug.collider.name);
+            }
         }
 
+
+
+        //TODO : 키 옮기고 디버그 삭제
+        #region DEBUG
         if (Keyboard.current.rKey.wasPressedThisFrame)
         {
             currentRun.currentRound.currentCycle.Reroll();
             RefreshUI();
         }
+
+        // 점쟁이의 손가락 임시 발동 hook (F키) — 정식 UI 연결 전까지 사용
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            var finger = currentRun?.relics.Find(r => r is FortuneTellersFinger) as FortuneTellersFinger;
+            finger?.TryActivate();
+        }
+
+        //디버그용 치트
+        if (Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            currentRun.currentScore += 100;
+            RefreshUI();
+        }
+        if (Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            currentRun.Coin += 100;
+            RefreshUI();
+        }
+
+        #endregion
     }
 
 
@@ -143,6 +176,8 @@ public class GameManager : MonoBehaviour
             Destroy(hand.gameObject);
         }
         handsUI.Clear();
+
+        EventBus.Clear();
 
 
         currentRun = new(this);
@@ -236,6 +271,7 @@ public class GameManager : MonoBehaviour
                 handsUI.Add(newHand);
                 int index = i;
                 newHand.setButton.onClick.AddListener(() => { SetHand(index); });
+                newHand.Init(this);
             }
             handsUI[i].Refresh(currentRun.currentRound.hands[i], currentRun.currentRound.currentCycle.dicesSetted);
         }
@@ -281,12 +317,20 @@ public class GameManager : MonoBehaviour
         faceSelectCanvas.StartFaceSelect(target, callback);
     }
 
-    public void StartHandSelect(Action<HandSlot> callback)
+    public void StartHandSelect(Action<HandSlot> callback, Func<HandSlot, bool> filter = null)
     {
-        //TODO : UI로 족보 선택
-
-        //Debug
-        callback?.Invoke(currentRun.hands[0]);
+        if (handSelectCanvas != null)
+        {
+            handSelectCanvas.StartHandSelect(this, callback, filter);
+        }
+        else
+        {
+            // Editor 미연결 상태 — 필터 통과하는 첫 슬롯으로 디버그 폴백
+            HandSlot target = filter != null
+                ? currentRun.hands.Find(h => filter(h))
+                : (currentRun.hands.Count > 0 ? currentRun.hands[0] : null);
+            callback?.Invoke(target);
+        }
     }
 
     public void RerollButton()
@@ -306,6 +350,7 @@ public class GameManager : MonoBehaviour
             gameobject.gameObject.SetActive(true);
         }
 
+        tooltip.HideTooltip();
         shopCanvas.Init(this, state);
     }
 
@@ -321,11 +366,28 @@ public class GameManager : MonoBehaviour
             gameobject.gameObject.SetActive(true);
         }
 
+        tooltip.HideTooltip();
         currentRun.RoundStart();
     }
 
     public void UpdateCoin(int coin)
     {
         coinText.text = coin.ToString();
+    }
+
+    public void PauseGame()
+    {
+        pauseSceen.SetActive(true);
+        tooltip.HideTooltip();
+    }
+
+    public void ResumeGame()
+    {
+        pauseSceen.SetActive(false);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

@@ -12,7 +12,7 @@ public class CardDefinitionSO : ScriptableObject
     {
         foreach (Card c in cards)
         {
-            if (c.name == name) return c.Clone();
+            if (c.Name == name) return c.Clone();
         }
         return null;
     }

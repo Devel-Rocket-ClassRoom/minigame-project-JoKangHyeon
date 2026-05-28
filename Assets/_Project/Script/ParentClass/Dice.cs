@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -122,7 +123,7 @@ public class NormalDice : Dice
         result.faces = new();
         foreach(var face in faces)
         {
-            result.faces.Add(face);
+            result.faces.Add(face.Clone(result));
         }
 
         result.prefab = prefab;
@@ -173,6 +174,11 @@ public class DiceFace
     {
         this.Value = value;
         this.dice = dice;
+    }
+
+    public DiceFace Clone(Dice dice)
+    {
+        return new DiceFace(_value,dice);
     }
 
     public void ResetForCycle()

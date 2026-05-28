@@ -12,12 +12,10 @@ public class NumbersHand : Hand
         numTarget = num;
     }
 
-    public override Hand Clone()
+    protected override Hand CloneInstance()
     {
         return new NumbersHand(numTarget)
         {
-            name = name,
-            scoreMultiplier = scoreMultiplier,
         };
     }
 
@@ -39,12 +37,10 @@ public class NumbersHand : Hand
 
 public class ChoiceHand : Hand
 {
-    public override Hand Clone()
+    protected override Hand CloneInstance()
     {
         return new ChoiceHand()
         {
-            name = name,
-            scoreMultiplier = scoreMultiplier,
         };
     }
 
@@ -64,12 +60,10 @@ public class ChoiceHand : Hand
 
 public class FullHouseHand : Hand
 {
-    public override Hand Clone()
+    protected override Hand CloneInstance()
     {
         return new FullHouseHand()
         {
-            name = name,
-            scoreMultiplier = scoreMultiplier,
         };
     }
 
@@ -117,12 +111,10 @@ public class FullHouseHand : Hand
 
 public class SmallAlignmentHand : Hand
 {
-    public override Hand Clone()
+    protected override Hand CloneInstance()
     {
         return new SmallAlignmentHand()
         {
-            name = name,
-            scoreMultiplier = scoreMultiplier,
         };
     }
 
@@ -159,12 +151,10 @@ public class SmallAlignmentHand : Hand
 
 public class BigAlignmentHand : Hand
 {
-    public override Hand Clone()
+    protected override Hand CloneInstance()
     {
         return new BigAlignmentHand()
         {
-            name = name,
-            scoreMultiplier = scoreMultiplier,
         };
     }
 
@@ -194,12 +184,10 @@ public class BigAlignmentHand : Hand
 
 public class SmallStraightHand : Hand
 {
-    public override Hand Clone()
+    protected override Hand CloneInstance()
     {
         return new SmallStraightHand()
         {
-            name = name,
-            scoreMultiplier = scoreMultiplier,
         };
     }
 
@@ -256,12 +244,10 @@ public class SmallStraightHand : Hand
 
 public class BigStraightHand : Hand
 {
-    public override Hand Clone()
+    protected override Hand CloneInstance()
     {
         return new BigStraightHand()
         {
-            name = name,
-            scoreMultiplier = scoreMultiplier,
         };
     }
 

@@ -52,7 +52,17 @@ public abstract class Hand
         return GetDiceScore(diceList);
     }
 
-    public abstract Hand Clone();
+    public Hand Clone()
+    {
+        Hand clonedHand = CloneInstance();
+        clonedHand.name = name;
+        clonedHand.description = description;
+        clonedHand.scoreMultiplier = scoreMultiplier;
+
+        return clonedHand;
+    }
+
+    protected abstract Hand CloneInstance();
 
     public string GetDicesString()
     {

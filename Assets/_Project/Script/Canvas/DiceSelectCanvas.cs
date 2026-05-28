@@ -38,9 +38,9 @@ public class DiceSelectCanvas : MonoBehaviour
 
     public void FinishDiceSelect()
     {
-        foreach(var dice in dicePreviews)
+        foreach(DiceSelectButton diceSelector in diceSelectors)
         {
-            Destroy(dice.gameObject);
+            diceSelector.Remove3dDice();
         }
 
         this.gameObject.SetActive(false);
