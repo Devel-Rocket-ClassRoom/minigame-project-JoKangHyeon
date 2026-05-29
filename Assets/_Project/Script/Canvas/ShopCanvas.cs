@@ -60,7 +60,7 @@ public class ShopCanvas : MonoBehaviour
         if (!card.CanBuy(gameManager.currentRun))
             return;
 
-        if(gameManager.currentRun.Coin > Mathf.RoundToInt((card.cost * currentState.GetMultiplier())))
+        if(gameManager.currentRun.Coin >= Mathf.RoundToInt((card.cost * currentState.GetMultiplier())))
         {
             gameManager.currentRun.Coin -= Mathf.RoundToInt((card.cost * currentState.GetMultiplier()));
             gameManager.currentRun.GetCard(card);
@@ -75,7 +75,7 @@ public class ShopCanvas : MonoBehaviour
         if (currentState.relicsBuy[pos])
             return;
 
-        if (gameManager.currentRun.Coin > Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier())))
+        if (gameManager.currentRun.Coin >= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier())))
         {
             gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier()));
             gameManager.currentRun.GetRelic(currentState.relics[pos]);

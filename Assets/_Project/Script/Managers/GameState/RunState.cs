@@ -80,6 +80,7 @@ public class RunState
         {
             HandSlot handSlot = new HandSlot();
             handSlot.hand = gameManager.handDefine.Find(handName);
+            handSlot.hand.slot = handSlot;
             handSlot.slotLevel = 1;   // 시작 슬롯은 Lv 1
             hands.Add(handSlot);
         }

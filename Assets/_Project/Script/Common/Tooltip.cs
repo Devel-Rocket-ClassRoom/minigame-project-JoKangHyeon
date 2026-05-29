@@ -98,7 +98,7 @@ public class Tooltip : MonoBehaviour
         Debug.Log(slot.hand.description);
 
         handLevelText.text = string.Format(c_levelTextFormat, slot.slotLevel);
-        handMultiplierText.text = string.Format(StringTable.GetString(c_handMultiplierFormatStringKey), slot.hand.scoreMultiplier);
+        handMultiplierText.text = string.Format(StringTable.GetString(c_handMultiplierFormatStringKey), slot.hand.ScoreMultiplier);
         handAchievedText.text = slot.hand.IsAchived() ? StringTable.GetString(c_handAchivedSuccessStringKey) : StringTable.GetString(c_handAchivedFailStringKey);
 
         gameObject.SetActive(true);

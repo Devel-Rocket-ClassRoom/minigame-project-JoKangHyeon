@@ -97,6 +97,8 @@ public class NormalDice : Dice
     public override int RollDice()
     {
         SetDice(Random.Range(0, faces.Count));
+        GetFace().Rolled();
+        
         return DiceResult.Value;
     }
 
@@ -190,6 +192,11 @@ public class DiceFace
     {
         valueOverriden = true;
         overrideValue = value;
+    }
+
+    public void Rolled()
+    {
+        OnRolled?.Invoke(dice, this);
     }
 
     public Action<Dice, DiceFace> OnRolled;

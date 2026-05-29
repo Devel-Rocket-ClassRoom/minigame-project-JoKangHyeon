@@ -164,6 +164,7 @@ public class RollManager : MonoBehaviour
         }
 
         rolling = false;
+        
     }
 
     struct RollData

@@ -28,6 +28,7 @@ public class HandSlot
             hand = hand.Clone(),
             slotLevel = slotLevel,
         };
+        clone.hand.slot = clone;
         return clone;
     }
 }

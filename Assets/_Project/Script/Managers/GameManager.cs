@@ -186,6 +186,7 @@ public class GameManager : MonoBehaviour
         EventBus.Subscribe<object>(EventType.OnGameOver, OnGameOver,Defines.c_maxPriority);
         EventBus.Subscribe<List<Dice>>(EventType.OnRollComplete, RemoveEffect,Defines.c_maxPriority);
 
+
         currentRun.RoundStart();
         RefreshUI();
     }

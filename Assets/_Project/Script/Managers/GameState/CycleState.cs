@@ -85,12 +85,25 @@ public class CycleState
             diceObj.SetOutline(false);
         }
 
-        gameManager.StartCoroutine(gameManager.rollManager.DeterministicRoll(diceObjects));
+        List<DiceObject> rerollTarget = new();
+
+        foreach(var diceObj in diceObjects)
+        {
+            if(dicesRemain.Contains(diceObj.dice))
+            {
+                rerollTarget.Add(diceObj);
+            }
+        }
+
+        gameManager.StartCoroutine(gameManager.rollManager.DeterministicRoll(rerollTarget));
         UpdateOutline();
     }
 
     public void SetDice(int pos)
     {
+        if (dicesSetted.Count >= 5)
+            return;
+
         Dice dice = dicesRemain[pos];
         dicesRemain.RemoveAt(pos);
         dicesSetted.Add(dice);

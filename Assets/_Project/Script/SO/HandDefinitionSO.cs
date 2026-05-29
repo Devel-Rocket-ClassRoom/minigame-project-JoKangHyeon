@@ -33,7 +33,7 @@ public abstract class HandData
     {
         Hand hand = CreateBaseHand();
         hand.name = name;
-        hand.scoreMultiplier = multiplier;
+        hand.baseScoreMultiplier = multiplier;
         hand.description = desc;
         return hand;
     }

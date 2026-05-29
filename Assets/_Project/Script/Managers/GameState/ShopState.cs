@@ -35,20 +35,14 @@ public class ShopState
         manager = gameManager;
         ShopRarityDefinitionSO rarity = gameManager.rarityDefine;
 
-        for (int i = 0; i < relicsBuy.Count; i++)
-        {
-            relicsBuy[i] = false;
-        }
-        for (int i = 0; i < cardsBuy.Count; i++)
-        {
-            cardsBuy[i] = false;
-        }
-        for (int i = 0; i < consumablesBuy.Count; i++)
-        {
-            consumablesBuy[i] = false;
-        }
-
         relics.Clear();
+        relicsBuy.Clear();
+
+        cards.Clear();
+        cardsBuy.Clear();
+
+        consumables.Clear();
+        consumablesBuy.Clear();
 
         for (int randomCardCount = 0; randomCardCount < c_cardAppear; randomCardCount++)
         {
@@ -204,6 +198,7 @@ public class ShopState
                 if (r < rarity.raritySpread[rarityIndex])
                 {
                     targetRarity = rarity.rarity[rarityIndex];
+                    break;
                 }
                 else
                 {
@@ -245,7 +240,7 @@ public class ShopState
                         break;
                     }
 
-                    if (rarityIndex > rarity.rarity.Count)
+                    if (rarityIndex >= rarity.rarity.Count)
                     {
                         searchingFront = true;
                         rarityIndex = originalRarityIndex - 1;
@@ -271,6 +266,8 @@ public class ShopState
                 if (r < rarity.raritySpread[rarityIndex])
                 {
                     targetRarity = rarity.rarity[rarityIndex];
+
+                    break;
                 }
                 else
                 {
@@ -309,7 +306,7 @@ public class ShopState
                         break;
                     }
 
-                    if (rarityIndex > rarity.rarity.Count)
+                    if (rarityIndex >= rarity.rarity.Count)
                     {
                         searchingFront = true;
                         rarityIndex = originalRarityIndex - 1;

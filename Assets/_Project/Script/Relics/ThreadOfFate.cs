@@ -11,7 +11,7 @@ public class ThreadOfFate : Relic
         {
             if (IsTargetHand(slot.hand))
             {
-                slot.hand.scoreMultiplier += multiplierBonus;
+                slot.hand.baseScoreMultiplier += multiplierBonus;
             }
         }
     }

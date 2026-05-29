@@ -496,6 +496,7 @@ public class CardM4 : Card
             hand = handSO.Find(targetHandName),
             slotLevel = 1,
         };
+        newSlot.hand.slot = newSlot;
         gameManager.currentRun.hands.Add(newSlot);
 
         // §6.7 보고: RunState.hands와 RoundState.hands 관계 확인 필요.

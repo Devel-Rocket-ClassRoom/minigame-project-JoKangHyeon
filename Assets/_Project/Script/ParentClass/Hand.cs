@@ -13,7 +13,16 @@ public abstract class Hand
 
     public string name;
     public string description;
-    public float scoreMultiplier = 1f;
+    public float baseScoreMultiplier = 1f;
+    public float ScoreMultiplier
+    {
+        get
+        {
+            return baseScoreMultiplier * slot.slotLevel;
+        }
+    }
+
+        
     public bool Setted => diceList != null;
 
     public HandSlot slot;
@@ -57,7 +66,7 @@ public abstract class Hand
         Hand clonedHand = CloneInstance();
         clonedHand.name = name;
         clonedHand.description = description;
-        clonedHand.scoreMultiplier = scoreMultiplier;
+        clonedHand.baseScoreMultiplier = baseScoreMultiplier;
 
         return clonedHand;
     }
@@ -77,21 +86,21 @@ public abstract class Hand
 
     public int GetCurrentMultipliedScore()
     {
-        return (int)Mathf.Ceil(GetCurrentHandScore() * scoreMultiplier);
+        return (int)Mathf.Ceil(GetCurrentHandScore() * ScoreMultiplier);
     }
 
     public string GetCurrentDetailedString()
     {
-        return $"{GetCurrentHandScore()}X{scoreMultiplier:N2}={GetCurrentMultipliedScore()}";
+        return $"{GetCurrentHandScore()}X{ScoreMultiplier:N2}={GetCurrentMultipliedScore()}";
     }
 
     public int GetMultipliedScore(List<Dice> dices)
     {
-        return (int)Mathf.Ceil(GetDiceScore(dices) * scoreMultiplier);
+        return (int)Mathf.Ceil(GetDiceScore(dices) * ScoreMultiplier);
     }
     public string GetDetailedString(List<Dice> dices)
     {
-        return $"{GetDiceScore(dices)}X{scoreMultiplier:N2}={GetMultipliedScore(dices)}";
+        return $"{GetDiceScore(dices)}X{ScoreMultiplier:N2}={GetMultipliedScore(dices)}";
     }
 
     public virtual void SetEffectiveDices()

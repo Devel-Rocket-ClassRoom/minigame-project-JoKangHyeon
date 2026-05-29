@@ -61,6 +61,9 @@ public static class StringTable
         if (string.IsNullOrEmpty(key))
             return string.Empty;
 
+        if (!table.ContainsKey(key))
+            return key;
+
         return table[key];
     }
 
