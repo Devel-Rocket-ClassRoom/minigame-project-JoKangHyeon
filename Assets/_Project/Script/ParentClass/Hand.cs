@@ -11,8 +11,23 @@ public abstract class Hand
     [NonSerialized]
     protected List<Dice> effectiveDices;
 
-    public string name;
-    public string description;
+    public string nameStringKey;
+    public virtual string Name
+    {
+        get
+        {
+            return StringTable.GetString(nameStringKey);
+        }
+    }
+    
+    public string decryptionStringKey;
+    public virtual string Description
+    {
+        get
+        {
+            return StringTable.GetString(decryptionStringKey);
+        }
+    }
     public float baseScoreMultiplier = 1f;
     public float ScoreMultiplier
     {
@@ -64,8 +79,8 @@ public abstract class Hand
     public Hand Clone()
     {
         Hand clonedHand = CloneInstance();
-        clonedHand.name = name;
-        clonedHand.description = description;
+        clonedHand.nameStringKey = nameStringKey;
+        clonedHand.decryptionStringKey = decryptionStringKey;
         clonedHand.baseScoreMultiplier = baseScoreMultiplier;
 
         return clonedHand;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -145,5 +146,48 @@ public class RunState
     {
         relics.Add(relic);
         relic.OnObtain(gameManager);
+    }
+
+    public bool CanAddConsumable() => consumableInventory.Count < maxCunsumable;
+
+    public void AddConsumable(Consumable c)
+    {
+        Consumable clone = c.Clone();
+        consumableInventory.Add(clone);
+        clone.OnAdd(gameManager);
+    }
+
+    public void UseConsumable(Consumable c)
+    {
+        bool success = c.OnUse(gameManager);
+        if (success)
+        {
+            consumableInventory.Remove(c);
+            c.OnRemove();
+        }
+    }
+
+    public void Skip()
+    {
+        Coin += GetSkipGold();
+        currentRound.currentCycle.ClearDiceObject();
+        currentRound.RoundEnd();
+    }
+
+    public int GetSkipGold()
+    {
+        int handLeft = currentRound.hands.Count((h) => !h.isUsed);
+        return handLeft * Defines.c_coinPerHandLeft;
+    }
+
+    public bool IsSkipable()
+    {
+        if (currentScore < TargetScore)
+            return false;
+
+        if (currentRound.currentCycle.reroll < rerollPerCycle)
+            return false;
+
+        return true;
     }
 }

@@ -1,4 +1,3 @@
-using CsvHelper.Configuration.Attributes;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -15,6 +14,7 @@ public class GameManager : MonoBehaviour
     public DiceDefinitionSO diceDefine;
     public RelicDefinitionSO relicDefine;
     public CardDefinitionSO cardDefine;
+    public ConsumableDefinitionSO consumableDefine;
     public ShopRarityDefinitionSO rarityDefine;
 
     [Header("UI")]
@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI rerollText;
     public Button rerollButton;
     public Button MenuButton;
+    public Button skipButton;
+    public TextMeshProUGUI skipText;
 
 
     [Header("Sub Managers")]
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> gameStateObjects;
     public List<GameObject> shopStateObjects;
     public GameObject pauseSceen;
+    public GameObject gameOverScreen;
     public Tooltip tooltip;
 
     [Header("Other")]
@@ -46,6 +49,9 @@ public class GameManager : MonoBehaviour
 
     //Not Serialized
     public RunState currentRun;
+    public const string c_skipCoinTextFormat = "+{0}C";
+
+
 
     private void Awake()
     {
@@ -171,6 +177,8 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        gameOverScreen.SetActive(false);
+
         foreach (var hand in handsUI)
         {
             Destroy(hand.gameObject);
@@ -276,14 +284,26 @@ public class GameManager : MonoBehaviour
             }
             handsUI[i].Refresh(currentRun.currentRound.hands[i], currentRun.currentRound.currentCycle.dicesSetted);
         }
+
+        if (currentRun.IsSkipable())
+        {
+            skipButton.interactable = true;
+        }
+        else
+        {
+            skipButton.interactable = false;
+        }
+        skipText.text = string.Format(c_skipCoinTextFormat, currentRun.GetSkipGold().ToString());
     }
+
+
 
     public void OnGameOver(object _)
     {
-        testOutput.text = $"Game Over\nYour Score : {currentRun.currentScore}\nPress Restart to try again!";
-        restartButton.SetActive(true);
+        gameOverScreen.SetActive(true);
     }
 
+    
 
     public void RemoveEffect(List<Dice> _)
     {
@@ -320,18 +340,7 @@ public class GameManager : MonoBehaviour
 
     public void StartHandSelect(Action<HandSlot> callback, Func<HandSlot, bool> filter = null)
     {
-        if (handSelectCanvas != null)
-        {
-            handSelectCanvas.StartHandSelect(this, callback, filter);
-        }
-        else
-        {
-            // Editor 미연결 상태 — 필터 통과하는 첫 슬롯으로 디버그 폴백
-            HandSlot target = filter != null
-                ? currentRun.hands.Find(h => filter(h))
-                : (currentRun.hands.Count > 0 ? currentRun.hands[0] : null);
-            callback?.Invoke(target);
-        }
+        handSelectCanvas.StartHandSelect(this, callback, filter);
     }
 
     public void RerollButton()
@@ -376,6 +385,11 @@ public class GameManager : MonoBehaviour
         coinText.text = coin.ToString();
     }
 
+    public void Skip()
+    {
+        currentRun.Skip();
+    }
+
     public void PauseGame()
     {
         pauseSceen.SetActive(true);
@@ -389,6 +403,10 @@ public class GameManager : MonoBehaviour
 
     public void ExitGame()
     {
+#if UNITY_EDITOR
+        
+#else
         Application.Quit();
+#endif
     }
 }

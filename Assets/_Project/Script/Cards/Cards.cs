@@ -264,7 +264,7 @@ public class CardS0 : Card
     {
         if (run.hands.Count == 0) return false;
         if (string.IsNullOrEmpty(targetHandName)) return false;
-        return run.hands.Any(h => h.hand != null && h.hand.name != targetHandName);
+        return run.hands.Any(h => h.hand != null && h.hand.nameStringKey != targetHandName);
     }
 
     public override void OnObtain(GameManager gameManager)
@@ -274,7 +274,7 @@ public class CardS0 : Card
         // §3.7 — 이미 타겟 족보인 슬롯은 선택 불가 (filter)
         gameManager.StartHandSelect(
             OnHandSelected,
-            h => h.hand != null && h.hand.name != targetHandName
+            h => h.hand != null && h.hand.nameStringKey != targetHandName
         );
     }
 
@@ -323,7 +323,7 @@ public class CardW4 : Card
     // §4.1 — 보드에 해당 족보 Lv 1 슬롯이 1개 이상이어야 구매 가능
     public override bool CanBuy(RunState run)
         => run.hands.Any(h => h.hand != null
-                              && h.hand.name == targetHandName
+                              && h.hand.nameStringKey == targetHandName
                               && h.slotLevel == 1);
 
     public override void OnObtain(GameManager gameManager)
@@ -332,7 +332,7 @@ public class CardW4 : Card
 
         gameManager.StartHandSelect(
             OnHandSelected,
-            h => h.hand != null && h.hand.name == targetHandName && h.slotLevel == 1
+            h => h.hand != null && h.hand.nameStringKey == targetHandName && h.slotLevel == 1
         );
     }
 
@@ -406,7 +406,7 @@ public class CardM8 : Card
     // §4.3 — 보드에 해당 족보 Lv 2 슬롯이 1개 이상이어야 구매 가능
     public override bool CanBuy(RunState run)
         => run.hands.Any(h => h.hand != null
-                              && h.hand.name == targetHandName
+                              && h.hand.nameStringKey == targetHandName
                               && h.slotLevel == 2);
 
     public override void OnObtain(GameManager gameManager)
@@ -415,7 +415,7 @@ public class CardM8 : Card
 
         gameManager.StartHandSelect(
             OnHandSelected,
-            h => h.hand != null && h.hand.name == targetHandName && h.slotLevel == 2
+            h => h.hand != null && h.hand.nameStringKey == targetHandName && h.slotLevel == 2
         );
     }
 

@@ -9,6 +9,8 @@ public class Defines
     public const int c_groupEndBonusCoin = 5;
     public const int c_startingCoin = 4;
 
+    public const int c_coinPerHandLeft = 3;
+
     //#C9A14B
     public static readonly Color colorGold = new Color(0.7882353f, 0.6313726f, 0.2941177f);
     //#E8DDC2

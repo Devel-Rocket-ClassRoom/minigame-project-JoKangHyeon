@@ -218,6 +218,7 @@ public class SmallStraightHand : Hand
             else if (dices[i].GetDice() != last - 1)
             {
                 straightDices.Clear();
+                straightDices.Add(dices[i]);
                 last = dices[i].GetDice();
             }
             else
@@ -279,6 +280,7 @@ public class BigStraightHand : Hand
             else if (dices[i].GetDice() != last - 1)
             {
                 straightDices.Clear();
+                straightDices.Add(dices[i]);
                 last = dices[i].GetDice();
             }
             else

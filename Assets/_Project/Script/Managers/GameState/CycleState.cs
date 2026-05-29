@@ -23,6 +23,7 @@ public class CycleState
 
     public List<DiceObject> diceObjects = new();
 
+    public bool freeRerollActive = false;
 
     public void StartCycle()
     {
@@ -42,10 +43,7 @@ public class CycleState
 
     public void EndCycle(int targetSlot)
     {
-        foreach (DiceObject dice in diceObjects)
-        {
-            GameObject.Destroy(dice.gameObject);
-        }
+        ClearDiceObject();
 
         currentRound.hands[targetSlot].hand.SetDice(dicesSetted);
         currentRound.hands[targetSlot].SetCurrentScore();
@@ -59,14 +57,24 @@ public class CycleState
         EventBus.Publish(EventType.OnCycleEnd, null);
     }
 
+    public void ClearDiceObject() {
+        foreach (DiceObject dice in diceObjects)
+        {
+            GameObject.Destroy(dice.gameObject);
+        }
+    }
+
     public void Reroll()
     {
         if (gameManager.rollManager.rolling)
             return;
 
-        if (reroll < 1)
+        if (!freeRerollActive && reroll < 1)
             return;
-        reroll -= 1;
+
+        if (!freeRerollActive)
+            reroll -= 1;
+
         RollAll();
     }
 

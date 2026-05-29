@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48d710d9f47c6c74e9ae4600b86f6642, type: 3}
+  m_Name: Consumable Definition SO
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableDefinitionSO
+  consumables:
+  - rid: 4409310565517230142
+  - rid: 4409310565517230143
+  - rid: 4409310565517230144
+  - rid: 4409310565517230145
+  - rid: 4409310565517230146
+  - rid: 4409310565517230147
+  references:
+    version: 2
+    RefIds:
+    - rid: 4409310565517230142
+      type: {class: AlchemistsDust, ns: , asm: Assembly-CSharp}
+      data:
+        name: Consumable_AlchemistsDust_Name
+        description: Consumable_AlchemistsDust_Desc
+        flavorText: Consumable_AlchemistsDust_Flavor
+        sprite: {fileID: 21300000, guid: 8f9bb7d6bc9ecea41abbb9bc2e5cab2e, type: 3}
+        rarity: 2
+        cost: 15
+    - rid: 4409310565517230143
+      type: {class: RewindingSands, ns: , asm: Assembly-CSharp}
+      data:
+        name: Consumable_RewindingSands_Name
+        description: Consumable_RewindingSands_Desc
+        flavorText: Consumable_RewindingSands_Flavor
+        sprite: {fileID: 21300000, guid: 00fd728abdd7f2e409e523e1d8597c5d, type: 3}
+        rarity: 1
+        cost: 10
+    - rid: 4409310565517230144
+      type: {class: StardustCharm, ns: , asm: Assembly-CSharp}
+      data:
+        name: Consumable_StardustCharm_Name
+        description: Consumable_StardustCharm_Desc
+        flavorText: Consumable_StardustCharm_Flavor
+        sprite: {fileID: 21300000, guid: 18d071197fd6c8f4db44004a33d855c4, type: 3}
+        rarity: 1
+        cost: 9
+    - rid: 4409310565517230145
+      type: {class: WitchsVial, ns: , asm: Assembly-CSharp}
+      data:
+        name: Consumable_WitchsVial_Name
+        description: Consumable_WitchsVial_Desc
+        flavorText: Consumable_WitchsVial_Flavor
+        sprite: {fileID: 21300000, guid: 41499cb35f38cd942a7df00adcb2a57a, type: 3}
+        rarity: 0
+        cost: 4
+    - rid: 4409310565517230146
+      type: {class: MadWhirlwind, ns: , asm: Assembly-CSharp}
+      data:
+        name: Consumable_MadWhirlwind_Name
+        description: Consumable_MadWhirlwind_Desc
+        flavorText: Consumable_MadWhirlwind_Flavor
+        sprite: {fileID: 21300000, guid: 9f4ff67a1d5447e49b78e9c6ee168bdb, type: 3}
+        rarity: 1
+        cost: 7
+    - rid: 4409310565517230147
+      type: {class: ProphetsCoin, ns: , asm: Assembly-CSharp}
+      data:
+        name: Consumable_ProphetsCoin_Name
+        description: Consumable_ProphetsCoin_Desc
+        flavorText: Consumable_ProphetsCoin_Flavor
+        sprite: {fileID: 21300000, guid: d2f9a929147d6e3498f0b187712725cc, type: 3}
+        rarity: 1
+        cost: 8

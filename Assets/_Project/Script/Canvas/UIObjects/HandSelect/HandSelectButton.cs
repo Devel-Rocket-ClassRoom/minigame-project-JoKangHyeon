@@ -10,18 +10,15 @@ public class HandSelectButton : MonoBehaviour
 {
     public TextMeshProUGUI handNameText;
     public TextMeshProUGUI slotLevelText;
+    public TextMeshProUGUI handDescriptionText;
+
     public Image background;
+    public Button button;
 
     HandSelectCanvas parentCanvas;
-    Button button;
     Action<HandSlot> callback;
     HandSlot handSlot;
 
-    private void Awake()
-    {
-        button = GetComponent<Button>();
-        button.onClick.AddListener(OnButtonClicked);
-    }
 
     /// <summary>
     /// 버튼 내용을 설정한다.
@@ -36,7 +33,8 @@ public class HandSelectButton : MonoBehaviour
         callback = cb;
         parentCanvas = canvas;
 
-        handNameText.text = slot.hand != null ? slot.hand.name : "—";
+        handNameText.text = slot.hand != null ? slot.hand.Name : "—";
+        handDescriptionText.text = slot.hand != null ? slot.hand.Description : "-";
         slotLevelText.text = $"Lv {slot.slotLevel}";
 
         button.interactable = interactable;
@@ -44,7 +42,7 @@ public class HandSelectButton : MonoBehaviour
             background.color = interactable ? Color.white : Color.gray;
     }
 
-    private void OnButtonClicked()
+    public void OnButtonClicked()
     {
         callback?.Invoke(handSlot);
         parentCanvas.FinishHandSelect();

@@ -46,7 +46,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         this.slot = slot;
 
-        nameText.text = StringTable.GetString(slot.hand.name);
+        nameText.text = slot.hand.Name;
         diceText.text = slot.hand.GetDicesString();
         currentTemp = tempView;
 

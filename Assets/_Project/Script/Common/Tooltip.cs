@@ -92,10 +92,8 @@ public class Tooltip : MonoBehaviour
         transform.position = Mouse.current.position.value;
 
         handTooltip.SetActive(true);
-        handNameText.text = StringTable.GetString(slot.hand.name);
-        handDescriptionText.text = StringTable.GetString(slot.hand.description);
-
-        Debug.Log(slot.hand.description);
+        handNameText.text = slot.hand.Name;
+        handDescriptionText.text = slot.hand.Description;
 
         handLevelText.text = string.Format(c_levelTextFormat, slot.slotLevel);
         handMultiplierText.text = string.Format(StringTable.GetString(c_handMultiplierFormatStringKey), slot.hand.ScoreMultiplier);

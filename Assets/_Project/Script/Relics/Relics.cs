@@ -34,16 +34,3 @@ public class AlchemistsTouchstone : Relic
     }
 }
 
-[Serializable]
-public class ObsidianScales : Relic
-{
-    public override void OnObtain(GameManager gameManager)
-    {
-        throw new NotImplementedException();
-    }
-    public override void OnRemove()
-    {
-        throw new NotImplementedException();
-    }
-}
-

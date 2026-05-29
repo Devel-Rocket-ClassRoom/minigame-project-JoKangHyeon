@@ -32,9 +32,9 @@ public abstract class HandData
     public virtual Hand GetHand()
     {
         Hand hand = CreateBaseHand();
-        hand.name = name;
+        hand.nameStringKey = name;
         hand.baseScoreMultiplier = multiplier;
-        hand.description = desc;
+        hand.decryptionStringKey = desc;
         return hand;
     }
 
