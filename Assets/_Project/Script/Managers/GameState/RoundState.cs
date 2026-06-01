@@ -89,7 +89,7 @@ public class RoundState
             currentRun.level += 1;
 
             //base coin
-            currentRun.Coin += 5;
+            currentRun.Coin += Defines.c_roundClearCoin;
             //group end bonus
             currentRun.Coin += (currentRun.level % Defines.c_levelPerGroup == 0) ? Defines.c_groupEndBonusCoin : 0;
             EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);

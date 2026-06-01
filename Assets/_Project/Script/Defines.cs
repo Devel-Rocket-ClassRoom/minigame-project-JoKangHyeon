@@ -6,8 +6,10 @@ public class Defines
 
     public const int c_levelPerGroup = 3;
     
-    public const int c_groupEndBonusCoin = 5;
-    public const int c_startingCoin = 4;
+    public const int c_groupEndBonusCoin = 8;
+    public const int c_startingCoin = 6;
+
+    public const int c_roundClearCoin = 7;
 
     public const int c_coinPerHandLeft = 3;
 
