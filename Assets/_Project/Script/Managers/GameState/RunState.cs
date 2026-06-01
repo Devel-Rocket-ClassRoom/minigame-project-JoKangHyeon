@@ -12,6 +12,8 @@ public class RunState
     public List<Card> cards = new();
     public List<Consumable> consumableInventory = new();
 
+    public int slotCount = Defines.c_defaultConsumableInventory;
+
     public int level;
     private int _coin;
     public int Coin
@@ -102,6 +104,7 @@ public class RunState
 
 
         rerollPerCycle = 2;
+        gameManager.activeItemCanvas.Refresh(gameManager, consumableInventory, slotCount);
     }
 
    
@@ -152,10 +155,16 @@ public class RunState
 
     public void AddConsumable(Consumable c)
     {
+        if (consumableInventory.Count > slotCount)
+            return;
+
         Consumable clone = c.Clone();
         consumableInventory.Add(clone);
         clone.OnAdd(gameManager);
+
+        gameManager.activeItemCanvas.Refresh(gameManager, consumableInventory, slotCount);
     }
+    
 
     public void UseConsumable(Consumable c)
     {
@@ -164,7 +173,14 @@ public class RunState
         {
             consumableInventory.Remove(c);
             c.OnRemove();
+            gameManager.RefreshUI();
+            gameManager.activeItemCanvas.Refresh(gameManager, consumableInventory, slotCount);
         }
+    }
+
+    public bool IsConsumableInventoryMax()
+    {
+        return consumableInventory.Count >= slotCount;
     }
 
     public void Skip()

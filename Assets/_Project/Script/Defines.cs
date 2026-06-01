@@ -11,6 +11,8 @@ public class Defines
 
     public const int c_coinPerHandLeft = 3;
 
+    public const int c_defaultConsumableInventory = 3;
+
     //#C9A14B
     public static readonly Color colorGold = new Color(0.7882353f, 0.6313726f, 0.2941177f);
     //#E8DDC2

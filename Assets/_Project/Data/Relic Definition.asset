@@ -28,9 +28,9 @@ MonoBehaviour:
     - rid: 4409310340085710909
       type: {class: AlchemistsTouchstone, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_AlchemistsTouchstone_Name
-        description: Relic_AlchemistsTouchstone_Desc
-        flavorText: Relic_AlchemistsTouchstone_Flavor
+        nameStringKey: Relic_AlchemistsTouchstone_Name
+        descriptionStringKey: Relic_AlchemistsTouchstone_Desc
+        flavorTextStringKey: Relic_AlchemistsTouchstone_Flavor
         sprite: {fileID: 21300000, guid: 6e78eafb659ff1940998327567bc8875, type: 3}
         rarity: 1
         cost: 10
@@ -39,9 +39,9 @@ MonoBehaviour:
     - rid: 4409310361715474493
       type: {class: CrackedRune, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_CrackedRune_Name
-        description: Relic_CrackedRune_Desc
-        flavorText: Relic_CrackedRune_Flavor
+        nameStringKey: Relic_CrackedRune_Name
+        descriptionStringKey: Relic_CrackedRune_Desc
+        flavorTextStringKey: Relic_CrackedRune_Flavor
         sprite: {fileID: 21300000, guid: 7ebaf573eb7044240afb0930bdf708c5, type: 3}
         rarity: 0
         cost: 5
@@ -49,9 +49,9 @@ MonoBehaviour:
     - rid: 4409310361715474494
       type: {class: FortuneTellersFinger, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_FortuneTellorsFinger_Name
-        description: Relic_FortuneTellorsFinger_Desc
-        flavorText: Relic_FortuneTellorsFinger_Flavor
+        nameStringKey: Relic_FortuneTellorsFinger_Name
+        descriptionStringKey: Relic_FortuneTellorsFinger_Desc
+        flavorTextStringKey: Relic_FortuneTellorsFinger_Flavor
         sprite: {fileID: 21300000, guid: 415e701c0d424614288b862c727e4d4c, type: 3}
         rarity: 2
         cost: 25
@@ -59,9 +59,9 @@ MonoBehaviour:
     - rid: 4409310361715474495
       type: {class: CrystalOrb, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_CrystalOrb_Name
-        description: Relic_CrystalOrb_Desc
-        flavorText: Relic_CrystalOrb_Flavor
+        nameStringKey: Relic_FortuneTellorsFinger_Flavor
+        descriptionStringKey: Relic_CrystalOrb_Desc
+        flavorTextStringKey: Relic_CrystalOrb_Flavor
         sprite: {fileID: 21300000, guid: 4c97accc1b7b8be4cb6fdf32d5750ce6, type: 3}
         rarity: 0
         cost: 6
@@ -69,9 +69,9 @@ MonoBehaviour:
     - rid: 4409310361715474496
       type: {class: ThreadOfFate, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_ThreadOfFate_Name
-        description: Relic_ThreadOfFate_Desc
-        flavorText: Relic_ThreadOfFate_Flavor
+        nameStringKey: Relic_ThreadOfFate_Name
+        descriptionStringKey: Relic_ThreadOfFate_Desc
+        flavorTextStringKey: Relic_ThreadOfFate_Flavor
         sprite: {fileID: 21300000, guid: b9a0d6c6feeb17847ac797603f5fb29c, type: 3}
         rarity: 1
         cost: 12
@@ -79,9 +79,9 @@ MonoBehaviour:
     - rid: 4409310361715474497
       type: {class: StarChalice, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_StarChalice_Name
-        description: Relic_StarChalice_Desc
-        flavorText: Relic_StarChalice_Flavor
+        nameStringKey: Relic_StarChalice_Name
+        descriptionStringKey: Relic_StarChalice_Desc
+        flavorTextStringKey: Relic_StarChalice_Flavor
         sprite: {fileID: 21300000, guid: f94df4cf8a862b64c98616730bd9f9a1, type: 3}
         rarity: 1
         cost: 10
@@ -89,9 +89,9 @@ MonoBehaviour:
     - rid: 4409310361715474498
       type: {class: GoldenMirror, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_GoldenMirror_Name
-        description: Relic_GoldenMirror_Desc
-        flavorText: Relic_GoldenMirror_Flavor
+        nameStringKey: Relic_GoldenMirror_Name
+        descriptionStringKey: Relic_GoldenMirror_Desc
+        flavorTextStringKey: Relic_GoldenMirror_Flavor
         sprite: {fileID: 21300000, guid: 4a36d110230bb2448bc0899c73e1a05d, type: 3}
         rarity: 2
         cost: 20
@@ -99,9 +99,9 @@ MonoBehaviour:
     - rid: 4409310361715474499
       type: {class: WatchGlass, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_WatchGlass_Name
-        description: Relic_WatchGlass_Desc
-        flavorText: Relic_WatchGlass_Flavor
+        nameStringKey: Relic_WatchGlass_Name
+        descriptionStringKey: Relic_WatchGlass_Desc
+        flavorTextStringKey: Relic_WatchGlass_Flavor
         sprite: {fileID: 21300000, guid: ecde577193b11d74e8b1669b6cf53ba4, type: 3}
         rarity: 0
         cost: 5
@@ -109,9 +109,9 @@ MonoBehaviour:
     - rid: 4409310361715474500
       type: {class: BrokenChain, ns: , asm: Assembly-CSharp}
       data:
-        name: Relic_BrokenChain_Name
-        description: Relic_BrokenChain_Desc
-        flavorText: Relic_BrokenChain_Flavor
+        nameStringKey: Relic_BrokenChain_Name
+        descriptionStringKey: Relic_BrokenChain_Desc
+        flavorTextStringKey: Relic_BrokenChain_Flavor
         sprite: {fileID: 21300000, guid: 18cba5606a5e0514bb087cfb133854d4, type: 3}
         rarity: 1
         cost: 10

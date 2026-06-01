@@ -11,19 +11,23 @@ public abstract class Dice
     public string name;
     public List<DiceFace> faces = new();
     public DiceObject prefab;
+    public List<EffectView> effects = new();
 
+    public void AddEffect(EffectView effect) => effects.Add(effect);
+
+    public void ClearTemporaryEffects() => effects.RemoveAll(e => !e.isPermanent);
 
     [SerializeField]
     public int diceResultIndex;
 
     public abstract DiceFace GetFace();
     public abstract int GetDice();
-    public abstract void SetDice(int number);
+    public abstract void SetDice(int face);
     
     public abstract int RollDice();
     public abstract void ResetDice();
 
-    public abstract void ForceSetDice(int number);
+    public abstract void ForceSetDice(int value);
 
     public abstract Dice Clone();
 
@@ -87,6 +91,7 @@ public class NormalDice : Dice
     public override void ResetDice()
     {
         rolled = false;
+        ClearTemporaryEffects();
 
         foreach (DiceFace face in faces)
         {
@@ -129,6 +134,7 @@ public class NormalDice : Dice
         }
 
         result.prefab = prefab;
+        result.effects = new List<EffectView>(effects);
 
         return result;
     }

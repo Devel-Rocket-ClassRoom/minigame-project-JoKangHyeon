@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ShopRelic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ShopConsumable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Image image;
     public TextMeshProUGUI nameText;
@@ -13,7 +13,7 @@ public class ShopRelic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public GameManager gameManager;
 
     Button button;
-    Relic relic;
+    Consumable consumable;
 
     private void Awake()
     {
@@ -22,17 +22,17 @@ public class ShopRelic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     private void Start()
     {
-        if(gameManager==null)
+        if (gameManager == null)
             gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
     }
 
-    public void SetRelic(Relic relic, float multiplier)
+    public void SetConsumable(Consumable consumable, float multiplier)
     {
-        this.relic = relic;
+        this.consumable = consumable;
 
-        image.sprite = relic.sprite;
-        nameText.text = relic.Name;
-        costText.text = Mathf.RoundToInt((relic.cost * multiplier)).ToString();
+        image.sprite = consumable.sprite;
+        nameText.text = consumable.Name;
+        costText.text = Mathf.RoundToInt((consumable.cost * multiplier)).ToString();
 
         buyedImage.SetActive(false);
         button.interactable = true;
@@ -40,9 +40,9 @@ public class ShopRelic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (relic == null) return;
+        if (consumable == null) return;
 
-        gameManager?.tooltip.ShowRelicTooltip(relic);
+        gameManager?.tooltip.ShowConsumableTooltip(consumable);
     }
 
     public void OnPointerExit(PointerEventData eventData)

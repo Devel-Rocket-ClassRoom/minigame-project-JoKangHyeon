@@ -10,6 +10,16 @@ public class CrackedRune : Relic
     {
         this.gameManager = gameManager;
         EventBus.Subscribe<List<Dice>>(EventType.OnRollComplete, Effect, c_priorityBrokenRune);
+
+        foreach (var dice in gameManager.currentRun.dices)
+            dice.AddEffect(new EffectView
+            {
+                name = "effect_relic_crackedrune_name",
+                description = "effect_relic_crackedrune_desc",
+                sprite = sprite,
+                isPermanent = true,
+                targetFaceValue = 1
+            });
     }
 
     public override void OnRemove()

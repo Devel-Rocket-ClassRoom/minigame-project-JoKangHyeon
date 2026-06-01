@@ -11,7 +11,7 @@ public class ConsumableDefinitionSO : ScriptableObject
     public Consumable Find(string consumableName)
     {
         foreach (var c in consumables)
-            if (c.name == consumableName) return c.Clone();
+            if (c.nameStringKey == consumableName) return c.Clone();
         return null;
     }
 }

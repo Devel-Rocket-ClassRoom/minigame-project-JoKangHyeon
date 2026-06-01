@@ -34,7 +34,7 @@ public abstract class HandData
         Hand hand = CreateBaseHand();
         hand.nameStringKey = name;
         hand.baseScoreMultiplier = multiplier;
-        hand.decryptionStringKey = desc;
+        hand.descriptionStringKey = desc;
         return hand;
     }
 

@@ -25,6 +25,8 @@ public class CycleState
 
     public bool freeRerollActive = false;
 
+    public List<Dice> dices;
+
     public void StartCycle()
     {
         dicesRemain.Clear();
@@ -34,6 +36,7 @@ public class CycleState
             dicesRemain.Add(dice.Clone());
         }
 
+        dices = new List<Dice>(dicesRemain);
         reroll = currentRound.currentRun.rerollPerCycle;
 
         ShowDiceObjects();
@@ -177,10 +180,7 @@ public class CycleState
 
     public void ShowDiceObjects()
     {
-        foreach (var diceObject in diceObjects)
-        {
-            GameObject.Destroy(diceObject.gameObject);
-        }
+        ClearDiceObject();
 
         for (int i = 0; i < dicesRemain.Count; i++)
         {
@@ -193,4 +193,33 @@ public class CycleState
         }
     }
 
+
+    public void AddDice(List<Dice> dices)
+    {
+        foreach (Dice dice in dices)
+        {
+            dicesRemain.Add(dice);
+        }
+
+        List<DiceObject> newDiceObjects = new();
+
+        for (int i = 0; i < dices.Count; i++)
+        {
+            Dice dice = dices[i];
+            var diceObject = GameObject.Instantiate(dice.prefab, gameManager.DiceSpawnPoint.transform);
+            diceObject.rb.isKinematic = true;
+            diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.5f);
+            diceObject.dice = dice;
+            diceObjects.Add(diceObject);
+            newDiceObjects.Add(diceObject);
+        }
+
+        foreach(Dice dice in dices)
+        {
+            dice.RollDice();
+        }
+
+        gameManager.StartCoroutine(gameManager.rollManager.DeterministicRoll(newDiceObjects));
+        UpdateOutline();
+    }
 }

@@ -20,6 +20,8 @@ public class MouseSpinDice : MonoBehaviour
 
     public bool forceFaceChanged = false;
 
+    bool dragStartedOnDice = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -57,6 +59,7 @@ public class MouseSpinDice : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (click.IsPressed())
         {
             Vector2 value = mouseDelta.ReadValue<Vector2>();
@@ -67,8 +70,6 @@ public class MouseSpinDice : MonoBehaviour
 
         if (click.WasReleasedThisFrame() && !forceFaceChanged)
         {
-            if (EventSystem.current.IsPointerOverGameObject())
-                return;
 
             Vector3 targetDir = -cam.transform.forward;
 
@@ -90,6 +91,7 @@ public class MouseSpinDice : MonoBehaviour
             if (selectedFace != -1)
             {
                 SetFaceShown(selectedFace);
+                forceFaceChanged=  true;
             }
         }
 

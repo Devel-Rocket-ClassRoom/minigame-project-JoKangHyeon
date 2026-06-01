@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     public DiceSelectCanvas diceSelectCanvas;
     public FaceSelectCanvas faceSelectCanvas;
     public HandSelectCanvas handSelectCanvas;
+    public ActiveItemCanvas activeItemCanvas;
 
     [Header("View Objects")]
     public List<GameObject> gameStateObjects;
@@ -50,6 +51,9 @@ public class GameManager : MonoBehaviour
     //Not Serialized
     public RunState currentRun;
     public const string c_skipCoinTextFormat = "+{0}C";
+
+    bool isDiceObjectSelecting = false;
+    Action<DiceObject> diceObjactSelectCallback = (_) => { };
 
 
 
@@ -89,7 +93,16 @@ public class GameManager : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Dice"))
                 {
-                    currentRun.currentRound.currentCycle.ToggleDice(hit.collider.GetComponent<DiceObject>());
+                    if(isDiceObjectSelecting)
+                    {
+                        diceObjactSelectCallback(hit.collider.GetComponent<DiceObject>());
+                        isDiceObjectSelecting = false;
+                        diceObjactSelectCallback = (_) => { };
+                    }
+                    else
+                    {
+                        currentRun.currentRound.currentCycle.ToggleDice(hit.collider.GetComponent<DiceObject>());
+                    }
                 }
             }
 
@@ -294,6 +307,7 @@ public class GameManager : MonoBehaviour
             skipButton.interactable = false;
         }
         skipText.text = string.Format(c_skipCoinTextFormat, currentRun.GetSkipGold().ToString());
+
     }
 
 
@@ -328,6 +342,12 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
+    public void StartDiceObjectSelect(Action<DiceObject> callback)
+    {
+        isDiceObjectSelecting = true;
+        diceObjactSelectCallback +=callback;
+    }
+
     public void StartDiceSelect(Action<Dice> callback)
     {
         diceSelectCanvas.StartDiceSelect(this, callback);
@@ -338,9 +358,9 @@ public class GameManager : MonoBehaviour
         faceSelectCanvas.StartFaceSelect(target, callback);
     }
 
-    public void StartHandSelect(Action<HandSlot> callback, Func<HandSlot, bool> filter = null)
+    public void StartHandSelect(Action<HandSlot> callback, Func<HandSlot, bool> filter = null, bool isRound = false)
     {
-        handSelectCanvas.StartHandSelect(this, callback, filter);
+        handSelectCanvas.StartHandSelect(this, callback, filter, isRound);
     }
 
     public void RerollButton()

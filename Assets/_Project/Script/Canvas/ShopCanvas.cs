@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class ShopCanvas : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class ShopCanvas : MonoBehaviour
 
     public List<ShopCard> shopCards;
     public List<ShopRelic> shopRelics;
+    public List<ShopConsumable> shopConsumables;
 
     public TextMeshProUGUI rerollCostText;
 
@@ -25,6 +25,11 @@ public class ShopCanvas : MonoBehaviour
         foreach(ShopRelic relic in shopRelics)
         {
             relic.gameObject.SetActive(false);
+        }
+
+        foreach (ShopConsumable consumable in shopConsumables)
+        {
+            consumable.gameObject.SetActive(false);
         }
 
 
@@ -44,6 +49,14 @@ public class ShopCanvas : MonoBehaviour
 
             if (!shopState.relicsBuy[i])
                 shopRelics[i].SetRelic(shopState.relics[i],multiplier);
+        }
+
+        for (int i = 0; i < shopState.consumables.Count && i < shopConsumables.Count; i++)
+        {
+            shopConsumables[i].gameObject.SetActive(true);
+
+            if (!shopState.consumablesBuy[i])
+                shopConsumables[i].SetConsumable(shopState.consumables[i], multiplier);
         }
 
         rerollCostText.text = currentState.GetRerollCost().ToString();
@@ -67,6 +80,7 @@ public class ShopCanvas : MonoBehaviour
             currentState.cardsBuy[pos] = true;
 
             shopCards[pos].SetBuyed();
+            gameManager.RefreshUI();
         }
     }
 
@@ -75,6 +89,11 @@ public class ShopCanvas : MonoBehaviour
         if (currentState.relicsBuy[pos])
             return;
 
+        if (gameManager.currentRun.consumableInventory.Count >= gameManager.currentRun.maxCunsumable)
+        {
+            return;
+        }
+
         if (gameManager.currentRun.Coin >= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier())))
         {
             gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier()));
@@ -82,6 +101,23 @@ public class ShopCanvas : MonoBehaviour
             currentState.relicsBuy[pos] = true;
 
             shopRelics[pos].SetBuyed();
+            gameManager.RefreshUI();
+        }
+    }
+
+    public void BuyConsumable(int pos)
+    {
+        if (currentState.consumablesBuy[pos])
+            return;
+
+        if (gameManager.currentRun.Coin >= Mathf.RoundToInt((currentState.consumables[pos].cost * currentState.GetMultiplier())))
+        {
+            gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.consumables[pos].cost * currentState.GetMultiplier()));
+            gameManager.currentRun.AddConsumable(currentState.consumables[pos]);
+            currentState.consumablesBuy[pos] = true;
+
+            shopConsumables[pos].SetBuyed();
+            gameManager.RefreshUI();
         }
     }
 

@@ -67,4 +67,3 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         manager.tooltip.HideTooltip();
     }
 }
-

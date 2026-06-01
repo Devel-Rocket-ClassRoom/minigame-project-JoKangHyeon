@@ -14,7 +14,7 @@ public class DiceSelectCanvas : MonoBehaviour
 
     public Transform diceObjectParent;
 
-    public void StartDiceSelect(GameManager gameManager, Action<Dice> callback)
+    public void StartDiceSelect(GameManager gameManager, Action<Dice> callback, bool isCycle = false)
     {
         foreach(DiceSelectButton button in diceSelectors)
         {
@@ -29,7 +29,14 @@ public class DiceSelectCanvas : MonoBehaviour
                 diceSelectors.Add(newButton);
             }
 
-            diceSelectors[i].Show(gameManager.currentRun.dices[i], callback, this);
+            if (isCycle)
+            {
+                diceSelectors[i].Show(gameManager.currentRun.currentRound.currentCycle.dices[i], callback, this);
+            }
+            else
+            {
+                diceSelectors[i].Show(gameManager.currentRun.dices[i], callback, this);
+            }
             diceSelectors[i].gameObject.SetActive(true);
         }
 

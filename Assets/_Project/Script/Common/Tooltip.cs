@@ -12,7 +12,8 @@ public class Tooltip : MonoBehaviour
         DiceResult,
         Hand,
         Card,
-        Relic
+        Relic,
+        Consumable
     }
 
     TooltipMode currentMode = TooltipMode.None;
@@ -21,6 +22,9 @@ public class Tooltip : MonoBehaviour
     public GameObject diceResultTooltip;
     public FaceView faceView;
     public TextMeshProUGUI diceNameText;
+    public ScrollRect effectRect;
+    public Transform effectsContainer;
+    public GameObject effectItemPrefab;
 
     [Header("Hand")]
     public GameObject handTooltip;
@@ -43,7 +47,19 @@ public class Tooltip : MonoBehaviour
     public TextMeshProUGUI relicDescText;
     public TextMeshProUGUI relicFlavorText;
 
+    [Header("Consumable")]
+    public GameObject consumableTooltip;
+    public Image consumableImage;
+    public TextMeshProUGUI consumableNameText;
+    public TextMeshProUGUI consumableDescriptionText;
+    public TextMeshProUGUI consumableFlavorText;
 
+
+    RectTransform rt;
+    bool flippedX;
+    bool flippedY;
+    const float c_flipHysteresis = 24f;
+    private InputAction scrollWheel;
 
     const string c_levelTextFormat = "Lv.{0}";
     const string c_handMultiplierFormatStringKey = "hand_multiplier_formatString";
@@ -51,9 +67,40 @@ public class Tooltip : MonoBehaviour
     const string c_handAchivedFailStringKey = "hand_achieved_fail";
 
 
+    private void Awake()
+    {
+        rt = GetComponent<RectTransform>();
+        scrollWheel = InputSystem.actions.FindAction("ScrollWheel");
+    }
+
     private void Update()
     {
-        transform.position = Mouse.current.position.value;
+        RepositionTooltip();
+
+        switch(currentMode)
+        {
+            case TooltipMode.DiceResult:
+                effectRect.verticalNormalizedPosition -= scrollWheel.ReadValue<Vector2>().y * 0.1f;
+                break;
+        }
+    }
+
+    private void RepositionTooltip()
+    {
+        Vector2 mousePos = Mouse.current.position.value;
+        Vector2 size = rt.rect.size;
+
+        // 플립 진입: 경계 초과 시. 플립 해제: 반대 방향에 여유(hysteresis)가 생겼을 때만.
+        if (!flippedX) { if (mousePos.x + size.x > Screen.width)        flippedX = true; }
+        else           { if (mousePos.x + size.x <= Screen.width - c_flipHysteresis) flippedX = false; }
+
+        if (!flippedY) { if (mousePos.y - size.y < 0)                   flippedY = true; }
+        else           { if (mousePos.y - size.y >= c_flipHysteresis)    flippedY = false; }
+
+        float x = flippedX ? mousePos.x - size.x : mousePos.x;
+        float y = flippedY ? mousePos.y + size.y : mousePos.y;
+
+        transform.position = new Vector2(x, y);
     }
 
     public void HideAllSubTooltips()
@@ -62,6 +109,7 @@ public class Tooltip : MonoBehaviour
         handTooltip.SetActive(false);
         cardTooltip.SetActive(false);
         relicTooltip.SetActive(false);
+        consumableTooltip.SetActive(false);
     }
 
     public void ShowDiceTooltip(Dice dice)
@@ -80,6 +128,18 @@ public class Tooltip : MonoBehaviour
         else
         {
             faceView.Set(dice.GetFace());
+        }
+
+        if (effectsContainer != null && effectItemPrefab != null)
+        {
+            foreach (Transform child in effectsContainer)
+                Destroy(child.gameObject);
+
+            foreach (var effect in dice.effects)
+            {
+                var item = Instantiate(effectItemPrefab, effectsContainer);
+                item.GetComponent<EffectItemView>().Set(effect);
+            }
         }
 
         gameObject.SetActive(true);
@@ -104,6 +164,8 @@ public class Tooltip : MonoBehaviour
 
     public void ShowCardTooltip(Card card)
     {
+        if(card == null) return;
+
         currentMode = TooltipMode.Card;
         HideAllSubTooltips();
         transform.position= Mouse.current.position.value;
@@ -118,15 +180,34 @@ public class Tooltip : MonoBehaviour
 
     public void ShowRelicTooltip(Relic relic)
     {
+        if(relic == null) return;
+
         currentMode = TooltipMode.Relic;
         HideAllSubTooltips();
         transform.position = Mouse.current.position.value;
 
         relicTooltip.SetActive(true);
-        relicNameText.text = StringTable.GetString(relic.name);
-        relicDescText.text = StringTable.GetString(relic.description);
-        relicFlavorText.text = StringTable.GetString(relic.flavorText);
+        relicNameText.text = relic.Name;
+        relicDescText.text = relic.Description;
+        relicFlavorText.text = relic.FlavorText;
         relicImage.sprite = relic.sprite;
+
+        gameObject.SetActive(true);
+    }
+
+    public void ShowConsumableTooltip(Consumable consumable)
+    {
+        if(consumable == null) return;
+
+        currentMode = TooltipMode.Consumable;
+        HideAllSubTooltips();
+        transform.position = Mouse.current.position.value;
+
+        consumableTooltip.SetActive(true);
+        consumableNameText.text = consumable.Name;
+        consumableDescriptionText.text = consumable.Description;
+        consumableFlavorText.text = consumable.FlavorText;
+        consumableImage.sprite = consumable.sprite;
 
         gameObject.SetActive(true);
     }

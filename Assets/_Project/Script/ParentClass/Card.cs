@@ -6,9 +6,9 @@ using UnityEngine;
 public abstract class Card
 {
     public string nameStringKey;
-    public virtual string Name { get { return StringTable.GetString(nameStringKey); } }
+    public virtual string Name => StringTable.GetString(nameStringKey);
     public string descriptionStringKey;
-    public virtual string Description { get { return StringTable.GetString(descriptionStringKey); } }
+    public virtual string Description => StringTable.GetString(descriptionStringKey);
     public int cost;
     public Defines.Rarity rarity;
 

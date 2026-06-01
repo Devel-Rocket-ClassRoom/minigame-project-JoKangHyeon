@@ -9,10 +9,12 @@ public class ActiveItemCanvas : MonoBehaviour
     public Transform buttonParent;
 
     List<Consumable > consumables;
+    GameManager gameManager;
 
-    public void Refresh(List<Consumable> consumables, int slotCount)
+    public void Refresh(GameManager gameManager, List<Consumable> consumables, int slotCount)
     {
         this.consumables = consumables;
+        this.gameManager = gameManager;
 
         foreach(var button in buttons)
         {
@@ -21,18 +23,31 @@ public class ActiveItemCanvas : MonoBehaviour
 
         for (int i = 0; i < slotCount; i++)
         {
-            if (i <= buttons.Count)
+            if (i >= buttons.Count)
             {
                 ActiveItemButton newButton = Instantiate(buttonPrefab, buttonParent);
                 buttons.Add(newButton);
+            }
+            else
+            {
+                buttons[i].gameObject.SetActive(true);
             }
 
             ActiveItemButton button = buttons[i];
 
             if (i >= consumables.Count)
             {
-                //button.s
+                button.Set(null, i, this);
+            }
+            else
+            {
+                button.Set(consumables[i], i, this);    
             }
         }
+    }
+
+    public void UseItem(int slot)
+    {
+        gameManager.currentRun.UseConsumable(consumables[slot]);
     }
 }

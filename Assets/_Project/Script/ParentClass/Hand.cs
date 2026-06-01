@@ -20,12 +20,12 @@ public abstract class Hand
         }
     }
     
-    public string decryptionStringKey;
+    public string descriptionStringKey;
     public virtual string Description
     {
         get
         {
-            return StringTable.GetString(decryptionStringKey);
+            return StringTable.GetString(descriptionStringKey);
         }
     }
     public float baseScoreMultiplier = 1f;
@@ -80,7 +80,7 @@ public abstract class Hand
     {
         Hand clonedHand = CloneInstance();
         clonedHand.nameStringKey = nameStringKey;
-        clonedHand.decryptionStringKey = decryptionStringKey;
+        clonedHand.descriptionStringKey = descriptionStringKey;
         clonedHand.baseScoreMultiplier = baseScoreMultiplier;
 
         return clonedHand;

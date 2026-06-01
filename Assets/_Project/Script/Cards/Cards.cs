@@ -66,6 +66,7 @@ public class CardP6 : Card
 
     public void OnFaceSelect(Dice dice, int face)
     {
+        int faceValue = dice.faces[face].Value;
         dice.faces[face].OnRolled += (d, f) =>
         {
             if (currentRoundLimit > 0)
@@ -74,6 +75,14 @@ public class CardP6 : Card
                 gameManager.currentRun.GetCoin(coinAmount);
             }
         };
+        dice.AddEffect(new EffectView
+        {
+            name = "effect_card_p6_name",
+            description = "effect_card_p6_desc",
+            sprite = sprite,
+            isPermanent = true,
+            targetFaceValue = faceValue
+        });
     }
 
     // §3.2 — RunState.RoundStart에서 cards.ForEach(c => c.OnRoundStart()) 호출됨
@@ -113,6 +122,7 @@ public class CardC7 : Card
 
     public void OnFaceSelect(Dice dice, int face)
     {
+        int faceValue = dice.faces[face].Value;
         dice.faces[face].OnRolled += (d, f) =>
         {
             if (currentRoundLimit > 0)
@@ -121,6 +131,14 @@ public class CardC7 : Card
                 gameManager.currentRun.GetReroll(rerollAmount);
             }
         };
+        dice.AddEffect(new EffectView
+        {
+            name = "effect_card_c7_name",
+            description = "effect_card_c7_desc",
+            sprite = sprite,
+            isPermanent = true,
+            targetFaceValue = faceValue
+        });
     }
 
     // §3.3 — 버그 수정: OnRoundStart가 없어 첫 라운드부터 0이었음
@@ -189,6 +207,7 @@ public class CardM21 : Card
 
     public void OnFaceSelect(Dice dice, int face)
     {
+        int faceValue = dice.faces[face].Value;
         dice.faces[face].OnRolled += (d, f) =>
         {
             // §3.5 버그 수정 — 변수 섀도잉 해소: 파라미터 dice와 구분하기 위해 d2 사용
@@ -199,6 +218,14 @@ public class CardM21 : Card
             // §6.6 보고: dicesRemain만 대상 — dicesSetted(점수 확정 주사위)는 변경 안 함.
             // 기획서 §2.8.3.A "그 굴림의 모든 주사위"가 dicesRemain 범위와 일치하는지 확인 필요.
         };
+        dice.AddEffect(new EffectView
+        {
+            name = "effect_card_m21_name",
+            description = "effect_card_m21_desc",
+            sprite = sprite,
+            isPermanent = true,
+            targetFaceValue = faceValue
+        });
     }
 }
 

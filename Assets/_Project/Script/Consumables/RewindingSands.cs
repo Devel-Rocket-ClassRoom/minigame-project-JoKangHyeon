@@ -26,7 +26,8 @@ public class RewindingSands : Consumable
                 slot.ResetSlot();
                 gameManager.RefreshUI();
             },
-            slot => slot.isUsed
+            slot => slot.isUsed,
+            isRound: true
         );
 
         return true;

@@ -4,9 +4,13 @@ using UnityEngine;
 [Serializable]
 public abstract class Relic
 {
-    public string name;
-    public string description;
-    public string flavorText;
+    public string nameStringKey;
+    public string Name=>StringTable.GetString(nameStringKey);
+
+    public string descriptionStringKey;
+    public string Description => StringTable.GetString(descriptionStringKey);
+    public string flavorTextStringKey;
+    public string FlavorText => StringTable.GetString(flavorTextStringKey);
     public Sprite sprite;
     public Defines.Rarity rarity;
     public int cost;

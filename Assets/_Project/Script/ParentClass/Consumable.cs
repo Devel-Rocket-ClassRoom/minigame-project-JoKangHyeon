@@ -5,9 +5,12 @@ using UnityEngine;
 [Serializable]
 public abstract class Consumable
 {
-    public string name;
-    public string description;
-    public string flavorText;
+    public string nameStringKey;
+    public string Name => StringTable.GetString(nameStringKey);
+    public string descriptionStringKey;
+    public string Description=> StringTable.GetString(descriptionStringKey);
+    public string flavorTextStringKey;
+    public string FlavorText => StringTable.GetString(flavorTextStringKey);
     public Sprite sprite;
     public Defines.Rarity rarity;
     public int cost;
@@ -24,9 +27,9 @@ public abstract class Consumable
     public Consumable Clone()
     {
         Consumable c = CloneInstance();
-        c.name = name;
-        c.description = description;
-        c.flavorText = flavorText;
+        c.nameStringKey = nameStringKey;
+        c.descriptionStringKey = descriptionStringKey;
+        c.flavorTextStringKey = flavorTextStringKey;
         c.sprite = sprite;
         c.rarity = rarity;
         c.cost = cost;

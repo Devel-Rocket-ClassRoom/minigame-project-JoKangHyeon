@@ -18,9 +18,11 @@ public class HandSelectCanvas : MonoBehaviour
     /// <param name="gameManager">현재 GameManager</param>
     /// <param name="callback">슬롯 선택 시 호출</param>
     /// <param name="filter">null이면 전체 활성. 반환 false인 슬롯은 회색 비활성.</param>
-    public void StartHandSelect(GameManager gameManager, Action<HandSlot> callback, Func<HandSlot, bool> filter = null)
+    public void StartHandSelect(GameManager gameManager, Action<HandSlot> callback, Func<HandSlot, bool> filter = null, bool isRound = false)
     {
         List<HandSlot> slots = gameManager.currentRun.hands;
+        if (isRound)
+            slots = gameManager.currentRun.currentRound.hands;
 
         // 기존 버튼 비활성화
         foreach (HandSelectButton btn in handSelectors)

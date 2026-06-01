@@ -13,7 +13,7 @@ public class RelicDefinitionSO : ScriptableObject
     {
         foreach (Relic r in relics)
         {
-            if (r.name == name) return r;
+            if (r.nameStringKey == name) return r;
         }
         return null;
     }
