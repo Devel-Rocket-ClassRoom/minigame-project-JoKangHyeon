@@ -92,11 +92,16 @@ public class RoundState
             currentRun.Coin += 5;
             //group end bonus
             currentRun.Coin += (currentRun.level % Defines.c_levelPerGroup == 0) ? Defines.c_groupEndBonusCoin : 0;
+            EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
+            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
+
+            if(currentRun.level == 15)
+            {
+                EventBus.Publish(EventType.OnGameClear, null);
+            }
 
             EventBus.Publish(EventType.OnRoundClear, null);
 
-            EventBus.Unsubscribe<object>(EventType.OnCycleEnd, RoundEndCheck);
-            EventBus.Unsubscribe<HandSlot>(EventType.OnSlotScoreFixed, OnSlotCalcEnd);
 
             currentRun.ShowShop();
         }

@@ -36,12 +36,13 @@ public class GameManager : MonoBehaviour
     public FaceSelectCanvas faceSelectCanvas;
     public HandSelectCanvas handSelectCanvas;
     public ActiveItemCanvas activeItemCanvas;
+    public GameOverCanvas gameOverCanvas;
+
 
     [Header("View Objects")]
     public List<GameObject> gameStateObjects;
     public List<GameObject> shopStateObjects;
     public GameObject pauseSceen;
-    public GameObject gameOverScreen;
     public Tooltip tooltip;
 
     [Header("Other")]
@@ -187,7 +188,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        gameOverScreen.SetActive(false);
+        gameOverCanvas.gameObject.SetActive(false);
 
         foreach (var hand in handsUI)
         {
@@ -202,6 +203,7 @@ public class GameManager : MonoBehaviour
         currentRun.Setup(startingsDefine.startings[currentStartingIndex]);
         restartButton.gameObject.SetActive(false);
         EventBus.Subscribe<object>(EventType.OnGameOver, OnGameOver,Defines.c_maxPriority);
+        EventBus.Subscribe<object>(EventType.OnGameClear, OnGameClear, Defines.c_maxPriority);
         EventBus.Subscribe<List<Dice>>(EventType.OnRollComplete, RemoveEffect,Defines.c_maxPriority);
 
 
@@ -311,7 +313,12 @@ public class GameManager : MonoBehaviour
 
     public void OnGameOver(object _)
     {
-        gameOverScreen.SetActive(true);
+        gameOverCanvas.Show(this, false);
+    }
+
+    public void OnGameClear(object _)
+    {
+        gameOverCanvas.Show(this, true);
     }
 
     

@@ -155,7 +155,7 @@ public class RunState
 
     public void AddConsumable(Consumable c)
     {
-        if (consumableInventory.Count > slotCount)
+        if (!CanAddConsumable())
             return;
 
         Consumable clone = c.Clone();
@@ -176,11 +176,6 @@ public class RunState
             gameManager.RefreshUI();
             gameManager.activeItemCanvas.Refresh(gameManager, consumableInventory, slotCount);
         }
-    }
-
-    public bool IsConsumableInventoryMax()
-    {
-        return consumableInventory.Count >= slotCount;
     }
 
     public void Skip()

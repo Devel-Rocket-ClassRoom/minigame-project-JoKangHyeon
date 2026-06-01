@@ -89,11 +89,6 @@ public class ShopCanvas : MonoBehaviour
         if (currentState.relicsBuy[pos])
             return;
 
-        if (gameManager.currentRun.consumableInventory.Count >= gameManager.currentRun.maxCunsumable)
-        {
-            return;
-        }
-
         if (gameManager.currentRun.Coin >= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier())))
         {
             gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier()));
@@ -108,6 +103,9 @@ public class ShopCanvas : MonoBehaviour
     public void BuyConsumable(int pos)
     {
         if (currentState.consumablesBuy[pos])
+            return;
+
+        if(!gameManager.currentRun.CanAddConsumable())
             return;
 
         if (gameManager.currentRun.Coin >= Mathf.RoundToInt((currentState.consumables[pos].cost * currentState.GetMultiplier())))

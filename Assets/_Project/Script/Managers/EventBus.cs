@@ -53,6 +53,11 @@ public enum EventType
     /// return : null
     /// </summary>
     OnGameOver,
+    /// <summary>
+    /// 게임클리어 시
+    /// return : null
+    /// </summary>
+    OnGameClear,
 }
 
 

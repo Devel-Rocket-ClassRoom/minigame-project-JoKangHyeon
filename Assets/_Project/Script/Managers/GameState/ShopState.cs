@@ -175,128 +175,12 @@ public class ShopState
             }
         }
 
-        if (gameManager.consumableDefine != null)
-        {
-            for (int i = 0; i < c_consumableAppear; i++)
-            {
-                float r = Random.value;
-                Defines.Rarity targetRarity = Defines.Rarity.Common;
-                int rarityIndex = 0;
-                for (; rarityIndex < rarity.rarity.Count; rarityIndex++)
-                {
-                    if (r < rarity.raritySpread[rarityIndex])
-                    {
-                        targetRarity = rarity.rarity[rarityIndex];
-                        break;
-                    }
-                    else
-                    {
-                        r -= rarity.raritySpread[rarityIndex];
-                    }
-                }
-
-                bool searchingFront = false;
-                int originalRarityIndex = rarityIndex;
-                List<Consumable> candidates = new();
-                while (true)
-                {
-                    candidates.Clear();
-                    foreach (var c in gameManager.consumableDefine.consumables)
-                    {
-                        if (c.rarity == targetRarity)
-                            candidates.Add(c);
-                    }
-
-                    if (candidates.Count > 0)
-                    {
-                        consumables.Add(candidates[Random.Range(0, candidates.Count)].Clone());
-                        consumablesBuy.Add(false);
-                        break;
-                    }
-                    else
-                    {
-                        rarityIndex += searchingFront ? -1 : 1;
-                        if (rarityIndex < 0) break;
-                        if (rarityIndex >= rarity.rarity.Count)
-                        {
-                            searchingFront = true;
-                            rarityIndex = originalRarityIndex - 1;
-                            if (rarityIndex < 0) break;
-                        }
-                        targetRarity = rarity.rarity[rarityIndex];
-                    }
-                }
-            }
-        }
         #endregion
 
         #region Consumable
-        for (int randomConsumableCount = 0; randomConsumableCount < c_consumableAppear; randomConsumableCount++)
-        {
-            float r = Random.value;
-            Defines.Rarity targetRarity = Defines.Rarity.Common;
-            int rarityIndex = 0;
-            for (; rarityIndex < rarity.rarity.Count; rarityIndex++)
-            {
-                if (r < rarity.raritySpread[rarityIndex])
-                {
-                    targetRarity = rarity.rarity[rarityIndex];
-                    break;
-                }
-                else
-                {
-                    r -= rarity.raritySpread[rarityIndex];
-                }
-            }
-
-            bool searchingFront = false;
-            int originalRarityIndex = rarityIndex;
-            List<Consumable> rareityConsumables = new();
-            while (true)
-            {
-                rareityConsumables.Clear();
-                foreach (var consumable in gameManager.consumableDefine.consumables)
-                {
-                    if (consumable.rarity == targetRarity)
-                    {
-                        if (!consumables.Any(c => c.nameStringKey.Equals(consumable.nameStringKey)))
-                        {
-                            rareityConsumables.Add(consumable);
-                        }
-                    }
-                }
-
-                if (rareityConsumables.Count > 0)
-                {
-                    consumables.Add(rareityConsumables[Random.Range(0, rareityConsumables.Count)]);
-                    consumablesBuy.Add(false);
-                    break;
-                }
-                else
-                {
-                    rarityIndex += searchingFront ? -1 : 1;
-
-                    if (rarityIndex < 0)
-                    {
-                        break;
-                    }
-
-                    if (rarityIndex >= rarity.rarity.Count)
-                    {
-                        searchingFront = true;
-                        rarityIndex = originalRarityIndex - 1;
-                        if (rarityIndex < 0)
-                            break;
-                    }
-
-                    targetRarity = rarity.rarity[rarityIndex];
-                }
-            }
-        }
-
         if (gameManager.consumableDefine != null)
         {
-            for (int i = 0; i < c_consumableAppear; i++)
+            for (int randomConsumableCount = 0; randomConsumableCount < c_consumableAppear; randomConsumableCount++)
             {
                 float r = Random.value;
                 Defines.Rarity targetRarity = Defines.Rarity.Common;
@@ -316,32 +200,45 @@ public class ShopState
 
                 bool searchingFront = false;
                 int originalRarityIndex = rarityIndex;
-                List<Consumable> candidates = new();
+                List<Consumable> rareityConsumables = new();
                 while (true)
                 {
-                    candidates.Clear();
-                    foreach (var c in gameManager.consumableDefine.consumables)
+                    rareityConsumables.Clear();
+                    foreach (var consumable in gameManager.consumableDefine.consumables)
                     {
-                        if (c.rarity == targetRarity)
-                            candidates.Add(c);
+                        if (consumable.rarity == targetRarity)
+                        {
+                            if (!consumables.Any(c => c.nameStringKey.Equals(consumable.nameStringKey)))
+                            {
+                                rareityConsumables.Add(consumable);
+                            }
+                        }
                     }
 
-                    if (candidates.Count > 0)
+                    if (rareityConsumables.Count > 0)
                     {
-                        consumables.Add(candidates[Random.Range(0, candidates.Count)].Clone());
+                        // §6.1 — SO 원본 오염 방지: Clone 후 추가
+                        consumables.Add(rareityConsumables[Random.Range(0, rareityConsumables.Count)].Clone());
                         consumablesBuy.Add(false);
                         break;
                     }
                     else
                     {
                         rarityIndex += searchingFront ? -1 : 1;
-                        if (rarityIndex < 0) break;
+
+                        if (rarityIndex < 0)
+                        {
+                            break;
+                        }
+
                         if (rarityIndex >= rarity.rarity.Count)
                         {
                             searchingFront = true;
                             rarityIndex = originalRarityIndex - 1;
-                            if (rarityIndex < 0) break;
+                            if (rarityIndex < 0)
+                                break;
                         }
+
                         targetRarity = rarity.rarity[rarityIndex];
                     }
                 }
@@ -392,7 +289,8 @@ public class ShopState
                 {
                     if (card.rarity == targetRarity)
                     {
-                        if (!manager.currentRun.cards.Any(c => c.Name.Equals(card.Name)) && !cards.Any(c => c.Name.Equals(card.Name)))
+                        // 카드는 중복 획득 허용 — 보유 카드는 제외하지 않고, 같은 상점 내 중복만 방지
+                        if (!cards.Any(c => c.Name.Equals(card.Name)))
                         {
                             rareityCards.Add(card);
                         }
