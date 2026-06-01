@@ -79,6 +79,9 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        faceSelectCanvas.Init(this);
+        
+
         RestartGame();
     }
 
@@ -101,7 +104,8 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        currentRun.currentRound.currentCycle.ToggleDice(hit.collider.GetComponent<DiceObject>());
+                        if(!diceSelectCanvas.gameObject.activeSelf)
+                            currentRun.currentRound.currentCycle.ToggleDice(hit.collider.GetComponent<DiceObject>());
                     }
                 }
             }
@@ -120,13 +124,6 @@ public class GameManager : MonoBehaviour
         {
             currentRun.currentRound.currentCycle.Reroll();
             RefreshUI();
-        }
-
-        // 점쟁이의 손가락 임시 발동 hook (F키) — 정식 UI 연결 전까지 사용
-        if (Keyboard.current.fKey.wasPressedThisFrame)
-        {
-            var finger = currentRun?.relics.Find(r => r is FortuneTellersFinger) as FortuneTellersFinger;
-            finger?.TryActivate();
         }
 
         //디버그용 치트

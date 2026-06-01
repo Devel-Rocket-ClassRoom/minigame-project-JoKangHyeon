@@ -8,13 +8,14 @@ public class FaceSelectCanvas : MonoBehaviour
 {
     public Transform dice3dParent;
 
-    List<FaceView> faceViews = new();
+    public List<FaceView> faceViews;
     public FaceView faceViewPrefab;
     public Transform faceViewParent;
 
     MouseSpinDice dice3D;
     Dice diceData;
-    Action<Dice,int> callback;
+    Action<Dice,int> callback; 
+    GameManager gameManager;
 
     int diceIndex = -1;
 
@@ -39,6 +40,11 @@ public class FaceSelectCanvas : MonoBehaviour
         }
     }
 
+    public void Init(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
+    }
+
     public void StartFaceSelect(Dice dice, Action<Dice,int> callback)
     {
         diceData = dice;
@@ -51,7 +57,7 @@ public class FaceSelectCanvas : MonoBehaviour
 
         for(int i=0; i < dice.faces.Count; i++)
         {
-            if (i <= faceViews.Count)
+            if (i >= faceViews.Count)
             {
                 FaceView newFaceView = Instantiate(faceViewPrefab,faceViewParent);
                 faceViews.Add(newFaceView);
@@ -63,7 +69,7 @@ public class FaceSelectCanvas : MonoBehaviour
                 });
             }
 
-            faceViews[i].Set(dice.faces[i]);
+            faceViews[i].Set(gameManager.tooltip, dice.faces[i], i);
             faceViews[i].gameObject.SetActive(true);
         }
 

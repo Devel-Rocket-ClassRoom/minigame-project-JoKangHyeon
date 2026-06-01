@@ -31,11 +31,11 @@ public class DiceSelectCanvas : MonoBehaviour
 
             if (isCycle)
             {
-                diceSelectors[i].Show(gameManager.currentRun.currentRound.currentCycle.dices[i], callback, this);
+                diceSelectors[i].Show(gameManager, gameManager.currentRun.currentRound.currentCycle.dices[i], callback, this);
             }
             else
             {
-                diceSelectors[i].Show(gameManager.currentRun.dices[i], callback, this);
+                diceSelectors[i].Show(gameManager, gameManager.currentRun.dices[i], callback, this);
             }
             diceSelectors[i].gameObject.SetActive(true);
         }

@@ -112,7 +112,7 @@ public class Tooltip : MonoBehaviour
         consumableTooltip.SetActive(false);
     }
 
-    public void ShowDiceTooltip(Dice dice)
+    public void ShowDiceTooltip(Dice dice, int faceIndex)
     {
         if (dice == null) return;
 
@@ -121,13 +121,13 @@ public class Tooltip : MonoBehaviour
         transform.position = Mouse.current.position.value;
 
         diceResultTooltip.SetActive(true);
-        if(dice.diceResultIndex == -1)
+        if(faceIndex == -1)
         {
             faceView.faceText.text = "?";
         }
         else
         {
-            faceView.Set(dice.GetFace());
+            faceView.Set(this, dice.faces[faceIndex], faceIndex);
         }
 
         if (effectsContainer != null && effectItemPrefab != null)

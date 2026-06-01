@@ -15,7 +15,6 @@ MonoBehaviour:
   relics:
   - rid: 4409310361715474493
   - rid: 4409310340085710909
-  - rid: 4409310361715474494
   - rid: 4409310361715474495
   - rid: 4409310361715474496
   - rid: 4409310361715474497
@@ -46,20 +45,10 @@ MonoBehaviour:
         rarity: 0
         cost: 5
         category: 0
-    - rid: 4409310361715474494
-      type: {class: FortuneTellersFinger, ns: , asm: Assembly-CSharp}
-      data:
-        nameStringKey: Relic_FortuneTellorsFinger_Name
-        descriptionStringKey: Relic_FortuneTellorsFinger_Desc
-        flavorTextStringKey: Relic_FortuneTellorsFinger_Flavor
-        sprite: {fileID: 21300000, guid: 415e701c0d424614288b862c727e4d4c, type: 3}
-        rarity: 2
-        cost: 25
-        category: 0
     - rid: 4409310361715474495
       type: {class: CrystalOrb, ns: , asm: Assembly-CSharp}
       data:
-        nameStringKey: Relic_FortuneTellorsFinger_Flavor
+        nameStringKey: Relic_CrystalOrb_Name
         descriptionStringKey: Relic_CrystalOrb_Desc
         flavorTextStringKey: Relic_CrystalOrb_Flavor
         sprite: {fileID: 21300000, guid: 4c97accc1b7b8be4cb6fdf32d5750ce6, type: 3}

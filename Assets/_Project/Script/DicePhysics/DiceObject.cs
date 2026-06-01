@@ -59,11 +59,14 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        manager.tooltip.ShowDiceTooltip(dice);
+        if (manager == null) return;
+        if (dice == null) return;
+        manager.tooltip.ShowDiceTooltip(dice, dice.diceResultIndex);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if(manager == null ) return;
         manager.tooltip.HideTooltip();
     }
 }
