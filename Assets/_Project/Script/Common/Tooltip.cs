@@ -135,10 +135,19 @@ public class Tooltip : MonoBehaviour
             foreach (Transform child in effectsContainer)
                 Destroy(child.gameObject);
 
-            foreach (var effect in dice.effects)
+
+            if (dice.effects.Count > 0)
             {
-                var item = Instantiate(effectItemPrefab, effectsContainer);
-                item.GetComponent<EffectItemView>().Set(effect);
+                effectRect.gameObject.SetActive(true);
+                foreach (var effect in dice.effects)
+                {
+                    var item = Instantiate(effectItemPrefab, effectsContainer);
+                    item.GetComponent<EffectItemView>().Set(effect);
+                }
+            }
+            else
+            {
+                effectRect.gameObject.SetActive(false);
             }
         }
 

@@ -26,11 +26,15 @@ public class GameManager : MonoBehaviour
     public Button skipButton;
     public TextMeshProUGUI skipText;
 
+    public GameObject diceObjectSelectHandHider;
+    public TextMeshProUGUI diceObjectSelectText;
+
 
     [Header("Sub Managers")]
     public RollManager rollManager;
 
     [Header("Canvases")]
+    public Canvas overlayCanvas;
     public ShopCanvas shopCanvas;
     public DiceSelectCanvas diceSelectCanvas;
     public FaceSelectCanvas faceSelectCanvas;
@@ -46,15 +50,18 @@ public class GameManager : MonoBehaviour
     public Tooltip tooltip;
 
     [Header("Other")]
+    public Animator pauseAnimator;
+
     public GameObject DiceSpawnPoint;
     public int currentStartingIndex = 0;
 
     //Not Serialized
     public RunState currentRun;
-    public const string c_skipCoinTextFormat = "+{0}C";
+    public const string c_skipCoinTextFormat = "{0:+0;-0;0}C";
+    readonly int c_pauseShownAnimationKey = Animator.StringToHash("Shown");
 
     bool isDiceObjectSelecting = false;
-    Action<DiceObject> diceObjactSelectCallback = (_) => { };
+    Action<DiceObject> diceObjactSelectCallback;
 
 
 
@@ -62,6 +69,11 @@ public class GameManager : MonoBehaviour
     {
         rollManager = GetComponent<RollManager>();
         attack = InputSystem.actions.FindAction("Attack");
+
+        diceObjactSelectCallback = (_) => {
+            overlayCanvas.gameObject.SetActive(true);
+            diceObjectSelectHandHider.SetActive(false);
+        };
     }
 
     public List<int> demoScoreCut = new()
@@ -82,8 +94,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         faceSelectCanvas.Init(this);
-        
-
         RestartGame();
     }
 
@@ -102,7 +112,10 @@ public class GameManager : MonoBehaviour
                     {
                         diceObjactSelectCallback(hit.collider.GetComponent<DiceObject>());
                         isDiceObjectSelecting = false;
-                        diceObjactSelectCallback = (_) => { };
+                        diceObjactSelectCallback = (_) => { 
+                            overlayCanvas.gameObject.SetActive(true);
+                            diceObjectSelectHandHider.SetActive(false);
+                        };
                     }
                     else
                     {
@@ -124,6 +137,9 @@ public class GameManager : MonoBehaviour
         #region DEBUG
         if (Keyboard.current.rKey.wasPressedThisFrame)
         {
+            if (isDiceObjectSelecting)
+                return;
+
             currentRun.currentRound.currentCycle.Reroll();
             RefreshUI();
         }
@@ -306,7 +322,7 @@ public class GameManager : MonoBehaviour
         {
             skipButton.interactable = false;
         }
-        skipText.text = string.Format(c_skipCoinTextFormat, currentRun.GetSkipGold().ToString());
+        skipText.text = string.Format(c_skipCoinTextFormat, currentRun.GetSkipGold());
 
     }
 
@@ -349,6 +365,7 @@ public class GameManager : MonoBehaviour
 
     public void StartDiceObjectSelect(Action<DiceObject> callback)
     {
+        diceObjectSelectHandHider.SetActive(true);
         isDiceObjectSelecting = true;
         diceObjactSelectCallback +=callback;
     }
@@ -418,11 +435,13 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         pauseSceen.SetActive(true);
+        pauseAnimator.SetBool(c_pauseShownAnimationKey, true);
         tooltip.HideTooltip();
     }
 
     public void ResumeGame()
     {
+        pauseAnimator.SetBool(c_pauseShownAnimationKey, false);
         pauseSceen.SetActive(false);
     }
 
@@ -433,5 +452,10 @@ public class GameManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void ShowDiceView()
+    {
+        StartDiceSelect((_)=>{ }); 
     }
 }

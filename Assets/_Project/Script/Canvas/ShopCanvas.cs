@@ -59,7 +59,7 @@ public class ShopCanvas : MonoBehaviour
                 shopConsumables[i].SetConsumable(shopState.consumables[i], multiplier);
         }
 
-        rerollCostText.text = currentState.GetRerollCost().ToString();
+        rerollCostText.text = string.Format(GameManager.c_skipCoinTextFormat, -currentState.GetRerollCost());
     }
 
     public void BuyCard(int pos)

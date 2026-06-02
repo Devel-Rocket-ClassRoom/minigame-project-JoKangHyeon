@@ -37,11 +37,11 @@ public class ActiveItemCanvas : MonoBehaviour
 
             if (i >= consumables.Count)
             {
-                button.Set(null, i, this);
+                button.Set(gameManager, null, i, this);
             }
             else
             {
-                button.Set(consumables[i], i, this);    
+                button.Set(gameManager, consumables[i], i, this);    
             }
         }
     }

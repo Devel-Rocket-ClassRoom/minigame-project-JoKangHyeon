@@ -1,17 +1,24 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ActiveItemButton : MonoBehaviour
+public class ActiveItemButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Button button;
     public Image image;
 
     public int slot;
     public ActiveItemCanvas canvas;
-    public void Set(Consumable consumable, int slot, ActiveItemCanvas canvas)
+
+    Consumable consumable;
+    GameManager gameManager;
+
+    public void Set(GameManager gameManager, Consumable consumable, int slot, ActiveItemCanvas canvas)
     {
         this.slot = slot;
         this.canvas = canvas;
+        this.consumable = consumable;
+        this.gameManager = gameManager;
 
         if(consumable == null)
         {
@@ -28,5 +35,15 @@ public class ActiveItemButton : MonoBehaviour
     public void OnButtonClick()
     {
         canvas.UseItem(slot);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        gameManager.tooltip.ShowConsumableTooltip(consumable);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        gameManager.tooltip.HideTooltip();
     }
 }

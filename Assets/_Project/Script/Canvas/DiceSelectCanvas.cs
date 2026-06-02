@@ -14,8 +14,12 @@ public class DiceSelectCanvas : MonoBehaviour
 
     public Transform diceObjectParent;
 
+    public GameObject OverlayUI;
+
     public void StartDiceSelect(GameManager gameManager, Action<Dice> callback, bool isCycle = false)
     {
+        OverlayUI.SetActive(false);
+
         foreach(DiceSelectButton button in diceSelectors)
         {
             button.gameObject.SetActive(false);
@@ -50,6 +54,7 @@ public class DiceSelectCanvas : MonoBehaviour
             diceSelector.Remove3dDice();
         }
 
+        OverlayUI.SetActive(true);
         this.gameObject.SetActive(false);
     }
 }
