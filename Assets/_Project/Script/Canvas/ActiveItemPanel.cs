@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActiveItemCanvas : MonoBehaviour
+public class ActiveItemPanel : MonoBehaviour
 {
     public List<ActiveItemButton> buttons;
 

@@ -12,7 +12,12 @@ public class DiceDefinitionSO : ScriptableObject
     {
         foreach (Dice d in dices)
         {
-            if(d.name == name) return d.Clone();
+            if(d.nameStringKey == name)
+            {
+                Dice dice =  d.Clone();
+                dice.InitFaces();
+                return dice;
+            }
         }
         return null;
     }

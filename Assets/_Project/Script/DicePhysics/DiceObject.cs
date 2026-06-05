@@ -3,21 +3,59 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public AudioClip rollClip;
+
     public List<GameObject> faces;
     public Rigidbody rb;
     public List<TextMeshPro> diceText;
 
-    public Dice dice;
+    private Dice _dice;
+    public Dice Dice
+    {
+        get { return _dice; }
+        set { 
+            _dice = value;
+            rollClip = gameManager.soundDefine.Find(_dice.rollSFXKey);
+            audioSource.clip = rollClip;
+        }
+    }
+    GameManager gameManager;
+    AudioSource audioSource;
 
-    GameManager manager;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = rollClip;
 
-        manager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
+        gameManager = GameObject.FindWithTag("GameController").GetComponent<GameManager>();
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (gameManager == null) return;
+        if (Dice == null) return;
+        gameManager.tooltip.ShowDiceTooltip(Dice, Dice.diceResultIndex);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (gameManager == null) return;
+        gameManager.tooltip.HideTooltip();
+    }
+
 
     public int GetFace()
     {
@@ -38,7 +76,7 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void TextSet(List<string> data, int faceIndex, int valueIndex)
     {
         int dataIndex = valueIndex - faceIndex + data.Count;
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < faces.Count; i++)
         {
             diceText[i].text = data[(dataIndex + i) % data.Count];
         }
@@ -46,9 +84,9 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void TextSetOffset(int faceIndex)
     {
-        List<string> data = dice.faces.ConvertAll(face => face.Value.ToString());
+        List<string> data = Dice.faces.ConvertAll(face => face.Value.ToString());
         //Debug.Log($"FaceIndex: {faceIndex}, DiceResultIndex: {dice.diceResultIndex}");
-        TextSet(data, faceIndex, dice.diceResultIndex);
+        TextSet(data, faceIndex, Dice.diceResultIndex);
     }
 
     public void SetOutline(bool enable)
@@ -57,16 +95,5 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         renderer.material.SetFloat("_Size", enable ? 0.005f : 0f);
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (manager == null) return;
-        if (dice == null) return;
-        manager.tooltip.ShowDiceTooltip(dice, dice.diceResultIndex);
-    }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if(manager == null ) return;
-        manager.tooltip.HideTooltip();
-    }
 }

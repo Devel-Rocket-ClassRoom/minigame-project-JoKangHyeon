@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 194764363ec498549893a3c1fbb476c7, type: 3}
-  m_Name: Shop Rarity Definition SO
+  m_Name: Shop Rarity Definition
   m_EditorClassIdentifier: Assembly-CSharp::ShopRarityDefinitionSO
   rarity: 000000000100000002000000
   raritySpread:

@@ -8,7 +8,10 @@ using Random = UnityEngine.Random;
 [Serializable]
 public abstract class Dice
 {
-    public string name;
+    public string nameStringKey;
+    public string rollSFXKey;
+
+    public string Name => StringTable.GetString(nameStringKey);
     public List<DiceFace> faces = new();
     public DiceObject prefab;
     public List<EffectView> effects = new();
@@ -35,6 +38,8 @@ public abstract class Dice
 
     public abstract void SetFace(int position, int value);
     public abstract void SetFaceValue(int position, int value);
+
+    public abstract void InitFaces();
 }
 
 [Serializable]
@@ -54,15 +59,15 @@ public class NormalDice : Dice
     DiceFace tempFace;
     public bool isTempFace;
 
-    public NormalDice()
+    public List<int> diceFaceValue;
+
+
+    public override void InitFaces()
     {
-        name = "Normal Dice";
-        faces.Add(new DiceFace(1, this));
-        faces.Add(new DiceFace(2, this));
-        faces.Add(new DiceFace(3, this));
-        faces.Add(new DiceFace(4, this));
-        faces.Add(new DiceFace(5, this));
-        faces.Add(new DiceFace(6, this));
+        foreach (int value in diceFaceValue)
+        {
+            faces.Add(new DiceFace(value, this));
+        }
     }
 
     public override void ForceSetDice(int number)
@@ -128,13 +133,19 @@ public class NormalDice : Dice
         NormalDice result = new NormalDice();
         result.rolled = rolled;
         result.faces = new();
-        foreach(var face in faces)
+        result.nameStringKey = nameStringKey;
+        result.diceFaceValue = diceFaceValue;
+        result.prefab = prefab;
+        result.effects = new List<EffectView>(effects);
+        result.rollSFXKey = rollSFXKey;
+
+
+        foreach (var face in faces)
         {
             result.faces.Add(face.Clone(result));
         }
 
-        result.prefab = prefab;
-        result.effects = new List<EffectView>(effects);
+
 
         return result;
     }

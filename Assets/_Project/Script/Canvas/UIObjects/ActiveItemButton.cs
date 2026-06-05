@@ -8,12 +8,12 @@ public class ActiveItemButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
     public Image image;
 
     public int slot;
-    public ActiveItemCanvas canvas;
+    public ActiveItemPanel canvas;
 
     Consumable consumable;
     GameManager gameManager;
 
-    public void Set(GameManager gameManager, Consumable consumable, int slot, ActiveItemCanvas canvas)
+    public void Set(GameManager gameManager, Consumable consumable, int slot, ActiveItemPanel canvas)
     {
         this.slot = slot;
         this.canvas = canvas;

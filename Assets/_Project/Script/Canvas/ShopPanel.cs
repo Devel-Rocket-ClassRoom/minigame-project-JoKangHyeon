@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ShopCanvas : MonoBehaviour
+[RequireComponent(typeof(AudioSource))]
+public class ShopPanel : MonoBehaviour
 {
     public GameManager gameManager;
     public ShopState currentState;
@@ -13,9 +14,17 @@ public class ShopCanvas : MonoBehaviour
 
     public TextMeshProUGUI rerollCostText;
 
+    AudioSource audioSourceSE;
+    const string c_shopBuySEKey = "shop_buy_se";
+
+    private void Awake()
+    {
+        audioSourceSE = GetComponent<AudioSource>();
+    }
 
     public void Init(GameManager gameManager, ShopState shopState)
     {
+        audioSourceSE.clip = gameManager.soundDefine.Find(c_shopBuySEKey);
         currentState = shopState;
         foreach (ShopCard card in shopCards)
         {
@@ -75,6 +84,7 @@ public class ShopCanvas : MonoBehaviour
 
         if(gameManager.currentRun.Coin >= Mathf.RoundToInt((card.cost * currentState.GetMultiplier())))
         {
+            audioSourceSE.Play();
             gameManager.currentRun.Coin -= Mathf.RoundToInt((card.cost * currentState.GetMultiplier()));
             gameManager.currentRun.GetCard(card);
             currentState.cardsBuy[pos] = true;
@@ -91,6 +101,7 @@ public class ShopCanvas : MonoBehaviour
 
         if (gameManager.currentRun.Coin >= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier())))
         {
+            audioSourceSE.Play();
             gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.relics[pos].cost * currentState.GetMultiplier()));
             gameManager.currentRun.GetRelic(currentState.relics[pos]);
             currentState.relicsBuy[pos] = true;
@@ -110,6 +121,7 @@ public class ShopCanvas : MonoBehaviour
 
         if (gameManager.currentRun.Coin >= Mathf.RoundToInt((currentState.consumables[pos].cost * currentState.GetMultiplier())))
         {
+            audioSourceSE.Play();
             gameManager.currentRun.Coin -= Mathf.RoundToInt((currentState.consumables[pos].cost * currentState.GetMultiplier()));
             gameManager.currentRun.AddConsumable(currentState.consumables[pos]);
             currentState.consumablesBuy[pos] = true;
@@ -121,6 +133,7 @@ public class ShopCanvas : MonoBehaviour
 
     public void Reroll()
     {
+        audioSourceSE.Play();
         if(currentState.Reroll())
             Init(gameManager, currentState);
     }

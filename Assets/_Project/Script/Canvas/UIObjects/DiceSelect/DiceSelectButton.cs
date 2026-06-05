@@ -1,26 +1,24 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DiceSelectButton : MonoBehaviour   
 {
-    public GameObject fallowPosition;
-
     public FaceView faceViewPrefab;
     public Transform faceViewParent;
 
     public TextMeshProUGUI diceNameText;
 
+    public RawImage diceImage;
+
     GameManager gameManager;
     List<FaceView> faceViews = new();
-    DiceSelectCanvas parentCanvas;
+    DiceSelectPanel parentCanvas;
     Button button;
     Action<Dice> callback;
     Dice dice;
-    DiceObject dice3D;
 
     private void Awake()
     {
@@ -28,21 +26,18 @@ public class DiceSelectButton : MonoBehaviour
         button.onClick.AddListener(OnButtonClicked);
     }
 
-    public void Show(GameManager gameManager, Dice dice, Action<Dice> callback, DiceSelectCanvas parentCanvas)
+    public void Show(GameManager gameManager, Dice dice, Action<Dice> callback, DiceSelectPanel parentCanvas, DiceRenderCamera diceRenderCamera)
     {
         this.gameManager = gameManager;
         this.parentCanvas = parentCanvas;
         this.callback = callback;
         this.dice = dice;
 
-        dice3D = Instantiate(dice.prefab, parentCanvas.diceObjectParent);
-        dice3D.rb.isKinematic = true;
-        dice3D.dice = dice;
+        diceRenderCamera.gameObject.SetActive(true);
+        RenderTexture texture = diceRenderCamera.Render(dice);
+        diceImage.texture = texture;
 
-        FallowObject fallow = dice3D.AddComponent<FallowObject>();
-        fallow.target = fallowPosition;
-
-        diceNameText.text = dice.name;
+        diceNameText.text = dice.Name;
 
         foreach (FaceView faceView in faceViews)
         {
@@ -66,10 +61,5 @@ public class DiceSelectButton : MonoBehaviour
     {
         callback?.Invoke(dice);
         parentCanvas.FinishDiceSelect();
-    }
-
-    public void Remove3dDice()
-    {
-        Destroy(dice3D.gameObject);
     }
 }

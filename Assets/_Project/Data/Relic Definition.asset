@@ -43,7 +43,7 @@ MonoBehaviour:
         flavorTextStringKey: Relic_CrackedRune_Flavor
         sprite: {fileID: 21300000, guid: 7ebaf573eb7044240afb0930bdf708c5, type: 3}
         rarity: 0
-        cost: 5
+        cost: 22
         category: 0
     - rid: 4409310361715474495
       type: {class: CrystalOrb, ns: , asm: Assembly-CSharp}
@@ -53,7 +53,7 @@ MonoBehaviour:
         flavorTextStringKey: Relic_CrystalOrb_Flavor
         sprite: {fileID: 21300000, guid: 4c97accc1b7b8be4cb6fdf32d5750ce6, type: 3}
         rarity: 0
-        cost: 6
+        cost: 11
         category: 1
     - rid: 4409310361715474496
       type: {class: ThreadOfFate, ns: , asm: Assembly-CSharp}
@@ -63,7 +63,7 @@ MonoBehaviour:
         flavorTextStringKey: Relic_ThreadOfFate_Flavor
         sprite: {fileID: 21300000, guid: b9a0d6c6feeb17847ac797603f5fb29c, type: 3}
         rarity: 1
-        cost: 12
+        cost: 8
         category: 1
     - rid: 4409310361715474497
       type: {class: StarChalice, ns: , asm: Assembly-CSharp}
@@ -73,7 +73,7 @@ MonoBehaviour:
         flavorTextStringKey: Relic_StarChalice_Flavor
         sprite: {fileID: 21300000, guid: f94df4cf8a862b64c98616730bd9f9a1, type: 3}
         rarity: 1
-        cost: 10
+        cost: 28
         category: 1
     - rid: 4409310361715474498
       type: {class: GoldenMirror, ns: , asm: Assembly-CSharp}
@@ -83,7 +83,7 @@ MonoBehaviour:
         flavorTextStringKey: Relic_GoldenMirror_Flavor
         sprite: {fileID: 21300000, guid: 4a36d110230bb2448bc0899c73e1a05d, type: 3}
         rarity: 2
-        cost: 20
+        cost: 50
         category: 1
     - rid: 4409310361715474499
       type: {class: WatchGlass, ns: , asm: Assembly-CSharp}
@@ -93,7 +93,7 @@ MonoBehaviour:
         flavorTextStringKey: Relic_WatchGlass_Flavor
         sprite: {fileID: 21300000, guid: ecde577193b11d74e8b1669b6cf53ba4, type: 3}
         rarity: 0
-        cost: 5
+        cost: 18
         category: 2
     - rid: 4409310361715474500
       type: {class: BrokenChain, ns: , asm: Assembly-CSharp}
@@ -103,5 +103,5 @@ MonoBehaviour:
         flavorTextStringKey: Relic_BrokenChain_Flavor
         sprite: {fileID: 21300000, guid: 18cba5606a5e0514bb087cfb133854d4, type: 3}
         rarity: 1
-        cost: 10
+        cost: 20
         category: 2

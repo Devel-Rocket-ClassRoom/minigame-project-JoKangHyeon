@@ -15,7 +15,7 @@ public class HandSelectButton : MonoBehaviour
     public Image background;
     public Button button;
 
-    HandSelectCanvas parentCanvas;
+    HandSelectPanel parentCanvas;
     Action<HandSlot> callback;
     HandSlot handSlot;
 
@@ -27,7 +27,7 @@ public class HandSelectButton : MonoBehaviour
     /// <param name="cb">선택 시 콜백</param>
     /// <param name="canvas">부모 캔버스 (닫기용)</param>
     /// <param name="interactable">false면 회색 비활성 (filter 미충족)</param>
-    public void Show(HandSlot slot, Action<HandSlot> cb, HandSelectCanvas canvas, bool interactable)
+    public void Show(HandSlot slot, Action<HandSlot> cb, HandSelectPanel canvas, bool interactable)
     {
         handSlot = slot;
         callback = cb;

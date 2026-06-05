@@ -14,8 +14,10 @@ public class GameManager : MonoBehaviour
     public DiceDefinitionSO diceDefine;
     public RelicDefinitionSO relicDefine;
     public CardDefinitionSO cardDefine;
+    public CardImageDefinitionSO cardImageDefine;
     public ConsumableDefinitionSO consumableDefine;
     public ShopRarityDefinitionSO rarityDefine;
+    public SoundDefinitionSO soundDefine;
 
     [Header("UI")]
     public TextMeshProUGUI coinText;
@@ -32,15 +34,18 @@ public class GameManager : MonoBehaviour
 
     [Header("Sub Managers")]
     public RollManager rollManager;
+    public AudioManager audioManager;
 
     [Header("Canvases")]
-    public Canvas overlayCanvas;
-    public ShopCanvas shopCanvas;
-    public DiceSelectCanvas diceSelectCanvas;
-    public FaceSelectCanvas faceSelectCanvas;
-    public HandSelectCanvas handSelectCanvas;
-    public ActiveItemCanvas activeItemCanvas;
-    public GameOverCanvas gameOverCanvas;
+    public Canvas overlayPanel;
+    public ShopPanel shopPanel;
+    public DiceSelectPanel diceSelectPanel;
+    public FaceSelectPanel faceSelectPanel;
+    public HandSelectPanel handSelectPanel;
+    public ActiveItemPanel activeItemPanel;
+    public RelicPanel relicPanel;
+    public GameOverCanvas gameOverPanel;
+    public ConfigPanel configPanel;
 
 
     [Header("View Objects")]
@@ -51,83 +56,183 @@ public class GameManager : MonoBehaviour
 
     [Header("Other")]
     public Animator pauseAnimator;
-
+    public AudioSource bgmAudioSource;
     public GameObject DiceSpawnPoint;
+    public LayerMask diceMask;
     public int currentStartingIndex = 0;
 
     //Not Serialized
     public RunState currentRun;
-    public const string c_skipCoinTextFormat = "{0:+0;-0;0}C";
-    readonly int c_pauseShownAnimationKey = Animator.StringToHash("Shown");
-
     bool isDiceObjectSelecting = false;
     Action<DiceObject> diceObjactSelectCallback;
+    InputAction click;
 
+    //Configs
+    public ConfigPanel.ScreenMode screenMode;
+    public Resolution currentResolution;
+    public ConfigPanel.FrameLimitMode frameLimitMode;
 
+    //Constants
+    public const string c_skipCoinTextFormat = "{0:+0;-0;0}C";
+    const string c_rerollTextFormat = "{0} / {1}";
+
+    readonly int c_pauseModeAnimationKey = Animator.StringToHash("Mode");
+    const string c_roundTextFormatKey = "RoundStatus";
+    const string c_screenModePrefKey = "ScreenMode";
+    const string c_resolutionWidthPrefKey = "Resoultion_Width";
+    const string c_resolutionHeightPrefKey = "Resoultion_Height";
+    const string c_resolutionNumPrefKey = "Resolution_Num";
+    const string c_resolutionDenPrefKey = "Resolution_Den";
+
+    const string c_frameLimitModePrefKey = "FrameLimit";
+
+    public List<SlotUI> handsUI;
+    public SlotUI handUIPrefab;
+    public Transform handParent;
 
     private void Awake()
     {
         rollManager = GetComponent<RollManager>();
-        attack = InputSystem.actions.FindAction("Attack");
+        click = InputSystem.actions.FindAction(Defines.c_inputActionSelect);
 
         diceObjactSelectCallback = (_) => {
-            overlayCanvas.gameObject.SetActive(true);
+            overlayPanel.gameObject.SetActive(true);
             diceObjectSelectHandHider.SetActive(false);
         };
     }
 
     public List<int> demoScoreCut = new()
     {
-        // 레벨당 ×1.22, 그룹 보스(3레벨마다) ×1.35 — 추가 완화 (원안: ×1.3 / ×1.5, 최종 8300)
-        100,  120, 160,
-        190,  240, 320,
-        390,  480, 650,
-        800,  960, 1300,
-        1600, 1900,2600,
+        45,55,60,65,
+        70,75,95,105,
+        115,130,150,180,
+        450,540,640
     };
 
-    InputAction attack;
-    public LayerMask diceMask;
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        faceSelectCanvas.Init(this);
+        faceSelectPanel.Init(this);
+        LoadConfig();
         RestartGame();
     }
+
+    public void LoadConfig()
+    {
+        audioManager.LoadConfig();
+        SetScreenMode((ConfigPanel.ScreenMode)PlayerPrefs.GetInt(c_screenModePrefKey, 0));
+        SetFrameLimitMode((ConfigPanel.FrameLimitMode)PlayerPrefs.GetInt(c_frameLimitModePrefKey, 0));
+        LoadResoluton();
+    }
+
+    public void SaveConfig()
+    {
+        PlayerPrefs.SetInt(c_screenModePrefKey, (int)screenMode);
+        PlayerPrefs.SetInt(c_frameLimitModePrefKey , (int)frameLimitMode);
+        SaveResolution();
+    }
+
+    public void SetScreenMode(ConfigPanel.ScreenMode screenMode)
+    {
+        this.screenMode = screenMode;
+        switch (screenMode)
+        {
+            case ConfigPanel.ScreenMode.WindowedFullScreen:
+                Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+                break;
+            case ConfigPanel.ScreenMode.FullScreen:
+                Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+                break;
+            case ConfigPanel.ScreenMode.Windowed:
+                Screen.fullScreenMode = FullScreenMode.Windowed;
+                break;
+        }
+    }
+
+    public void LoadResoluton()
+    {
+        this.currentResolution = new Resolution()
+        {
+            width = PlayerPrefs.GetInt(c_resolutionWidthPrefKey, 1920),
+            height = PlayerPrefs.GetInt(c_resolutionHeightPrefKey, 1080),
+            refreshRateRatio = new RefreshRate()
+            {
+                numerator = (uint)PlayerPrefs.GetInt(c_resolutionNumPrefKey, 60),
+                denominator = (uint)PlayerPrefs.GetInt(c_resolutionDenPrefKey, 100),
+            }
+        };
+
+        SetResolutionMode(currentResolution);
+    }
+
+    public void SaveResolution()
+    {
+        PlayerPrefs.SetInt(c_resolutionWidthPrefKey, currentResolution.width);
+        PlayerPrefs.SetInt(c_resolutionHeightPrefKey, currentResolution.height);
+        PlayerPrefs.SetInt(c_resolutionNumPrefKey, (int)currentResolution.refreshRateRatio.numerator);
+        PlayerPrefs.SetInt(c_resolutionDenPrefKey, (int)currentResolution.refreshRateRatio.denominator);
+    }
+
+    public void SetResolutionMode(Resolution resolution)
+    {
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
+    }
+
+    public void SetFrameLimitMode(ConfigPanel.FrameLimitMode frameLimitMode)
+    {
+        switch (frameLimitMode)
+        {
+            case ConfigPanel.FrameLimitMode.VSYNC:
+                QualitySettings.vSyncCount = 1;
+                break;
+            case ConfigPanel.FrameLimitMode.F240:
+                QualitySettings.vSyncCount = 0;
+                Application.targetFrameRate = 240;
+                break;
+            case ConfigPanel.FrameLimitMode.F144:
+                QualitySettings.vSyncCount = 0;
+                Application.targetFrameRate = 144;
+                break;
+            case ConfigPanel.FrameLimitMode.F60:
+                QualitySettings.vSyncCount = 0;
+                Application.targetFrameRate = 60;
+                break;
+            case ConfigPanel.FrameLimitMode.None:
+                QualitySettings.vSyncCount = 0;
+                Application.targetFrameRate = -1;
+                break;
+        }
+    }
+
+
 
     // Update is called once per frame
     void Update()
     {
-        if (attack.WasPerformedThisFrame())
+        if (click.WasPerformedThisFrame())
         {
             Vector2 pos = Mouse.current.position.ReadValue();
             Ray ray = Camera.main.ScreenPointToRay(pos);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, diceMask))
             {
-                if (hit.collider.CompareTag("Dice"))
+                if (hit.collider.CompareTag(Defines.c_tagDice))
                 {
                     if(isDiceObjectSelecting)
                     {
                         diceObjactSelectCallback(hit.collider.GetComponent<DiceObject>());
                         isDiceObjectSelecting = false;
                         diceObjactSelectCallback = (_) => { 
-                            overlayCanvas.gameObject.SetActive(true);
+                            overlayPanel.gameObject.SetActive(true);
                             diceObjectSelectHandHider.SetActive(false);
                         };
                     }
                     else
                     {
-                        if(!diceSelectCanvas.gameObject.activeSelf)
+                        if(!diceSelectPanel.gameObject.activeSelf)
                             currentRun.currentRound.currentCycle.ToggleDice(hit.collider.GetComponent<DiceObject>());
                     }
                 }
-            }
-
-            foreach(var hitDeBug in Physics.RaycastAll(ray))
-            {
-                Debug.Log(hitDeBug.collider.name);
             }
         }
 
@@ -159,26 +264,6 @@ public class GameManager : MonoBehaviour
         #endregion
     }
 
-
-    #region UITestMode
-
-    public List<TextMeshProUGUI> dicesSetted;
-    public List<TextMeshProUGUI> dicesRemain;
-    public List<SlotUI> handsUI;
-
-    public GameObject dicePrefab;
-    public SlotUI handPrefab;
-
-    public Transform dicesRemainParent;
-    public Transform dicesSettedParent;
-    public Transform handParent;
-
-    public TextMeshProUGUI testOutput;
-
-    public GameObject restartButton;
-
-
-
     public void Reroll()
     {
         currentRun.currentRound.currentCycle.Reroll();
@@ -205,7 +290,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        gameOverCanvas.gameObject.SetActive(false);
+        gameOverPanel.gameObject.SetActive(false);
 
         foreach (var hand in handsUI)
         {
@@ -218,79 +303,20 @@ public class GameManager : MonoBehaviour
 
         currentRun = new(this);
         currentRun.Setup(startingsDefine.startings[currentStartingIndex]);
-        restartButton.gameObject.SetActive(false);
         EventBus.Subscribe<object>(EventType.OnGameOver, OnGameOver,Defines.c_maxPriority);
         EventBus.Subscribe<object>(EventType.OnGameClear, OnGameClear, Defines.c_maxPriority);
-        EventBus.Subscribe<List<Dice>>(EventType.OnRollComplete, RemoveEffect,Defines.c_maxPriority);
-
 
         currentRun.RoundStart();
         RefreshUI();
     }
 
+    
     public void RefreshUI()
     {
-        foreach (TextMeshProUGUI diceRemianText in dicesRemain)
-        {
-            diceRemianText.transform.parent.gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < currentRun.currentRound.currentCycle.dicesRemain.Count; i++)
-        {
-            if (i < dicesRemain.Count)
-            {
-                dicesRemain[i].transform.parent.gameObject.SetActive(true);
-                dicesRemain[i].text = currentRun.currentRound.currentCycle.dicesRemain[i].GetDice().ToString();
-            }
-            else
-            {
-                GameObject newDice = Instantiate(dicePrefab, dicesRemainParent);
-                TextMeshProUGUI text = newDice.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-
-                text.text = currentRun.currentRound.currentCycle.dicesRemain[i].GetDice().ToString();
-
-                int index = i;
-                newDice.GetComponent<Button>().onClick.AddListener(() => SetDice(index));
-                newDice.SetActive(true);
-
-                dicesRemain.Add(text);
-            }
-        }
-
-        foreach (TextMeshProUGUI diceSetText in dicesSetted)
-        {
-            diceSetText.transform.parent.gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < currentRun.currentRound.currentCycle.dicesSetted.Count; i++)
-        {
-            if (i < dicesSetted.Count)
-            {
-                dicesSetted[i].transform.parent.gameObject.SetActive(true);
-                dicesSetted[i].text = currentRun.currentRound.currentCycle.dicesSetted[i].GetDice().ToString();
-            }
-            else
-            {
-                GameObject newDice = Instantiate(dicePrefab, dicesSettedParent);
-                TextMeshProUGUI text = newDice.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-
-                text.text = currentRun.currentRound.currentCycle.dicesSetted[i].GetDice().ToString();
-
-                int index = i;
-                newDice.GetComponent<Button>().onClick.AddListener(() => RetreveDice(index));
-                newDice.SetActive(true);
-
-                dicesSetted.Add(text);
-            }
-        }
-
-        //DEBUG
-        //testOutput.text = $"reroll left : {currentRun.currentRound.currentCycle.reroll}/{currentRun.rerollPerCycle}\n\ncurrent level : {currentRun.level}\n\ncurrent score : {currentRun.currentScore}\ngoal score : {demoScoreCut[currentRun.level]}\ncurrent coin : {currentRun.coin}";
-
-
-        rerollText.text = $"{currentRun.currentRound.currentCycle.reroll} / {currentRun.rerollPerCycle}";
+        rerollText.text = string.Format(c_rerollTextFormat, currentRun.currentRound.currentCycle.reroll.ToString(), currentRun.rerollPerCycle.ToString());
         coinText.text = currentRun.Coin.ToString();
-        roundText.text = string.Format(StringTable.GetString("RoundStatus"), currentRun.currentScore, currentRun.TargetScore);
+
+        roundText.text = string.Format(StringTable.GetString(c_roundTextFormatKey), currentRun.currentScore, currentRun.TargetScore);
 
         if(currentRun.currentScore >= currentRun.TargetScore)
         {
@@ -305,7 +331,7 @@ public class GameManager : MonoBehaviour
         {
             if (i >= handsUI.Count)
             {
-                var newHand = Instantiate(handPrefab, handParent);
+                var newHand = Instantiate(handUIPrefab, handParent);
                 handsUI.Add(newHand);
                 int index = i;
                 newHand.setButton.onClick.AddListener(() => { SetHand(index); });
@@ -330,41 +356,18 @@ public class GameManager : MonoBehaviour
 
     public void OnGameOver(object _)
     {
-        gameOverCanvas.Show(this, false);
+        gameOverPanel.Show(this, false);
     }
 
     public void OnGameClear(object _)
     {
-        gameOverCanvas.Show(this, true);
+        gameOverPanel.Show(this, true);
     }
-
-    
-
-    public void RemoveEffect(List<Dice> _)
-    {
-        foreach (var dice in dicesRemain)
-        {
-            dice.transform.parent.gameObject.GetComponent<Image>().color = Color.white;
-        }
-
-        foreach (var dice in dicesSetted)
-        {
-            dice.transform.parent.gameObject.GetComponent<Image>().color = Color.white;
-        }
-    }
-
-    public void SetRemianDiceEffect(int pos)
-    {
-        Debug.Log(pos);
-
-
-        dicesRemain[pos].transform.parent.gameObject.GetComponent<Image>().color = Color.green;
-    }
-    #endregion
 
 
     public void StartDiceObjectSelect(Action<DiceObject> callback)
     {
+        overlayPanel.gameObject.SetActive(false);
         diceObjectSelectHandHider.SetActive(true);
         isDiceObjectSelecting = true;
         diceObjactSelectCallback +=callback;
@@ -372,17 +375,17 @@ public class GameManager : MonoBehaviour
 
     public void StartDiceSelect(Action<Dice> callback)
     {
-        diceSelectCanvas.StartDiceSelect(this, callback);
+        diceSelectPanel.StartDiceSelect(this, callback);
     }
 
     public void StartDiceFaceSelect(Dice target, Action<Dice,int> callback)
     {
-        faceSelectCanvas.StartFaceSelect(target, callback);
+        faceSelectPanel.StartFaceSelect(target, callback);
     }
 
     public void StartHandSelect(Action<HandSlot> callback, Func<HandSlot, bool> filter = null, bool isRound = false)
     {
-        handSelectCanvas.StartHandSelect(this, callback, filter, isRound);
+        handSelectPanel.StartHandSelect(this, callback, filter, isRound);
     }
 
     public void RerollButton()
@@ -402,8 +405,10 @@ public class GameManager : MonoBehaviour
             gameobject.gameObject.SetActive(true);
         }
 
+        bgmAudioSource.clip = soundDefine.Find(Defines.c_shopBGMKey);
+        bgmAudioSource.Play();
         tooltip.HideTooltip();
-        shopCanvas.Init(this, state);
+        shopPanel.Init(this, state);
     }
 
     public void ShowGame()
@@ -435,21 +440,30 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         pauseSceen.SetActive(true);
-        pauseAnimator.SetBool(c_pauseShownAnimationKey, true);
+        pauseAnimator.SetInteger(c_pauseModeAnimationKey, 1);
         tooltip.HideTooltip();
     }
 
     public void ResumeGame()
     {
-        pauseAnimator.SetBool(c_pauseShownAnimationKey, false);
+        pauseAnimator.SetInteger(c_pauseModeAnimationKey, 0);
         pauseSceen.SetActive(false);
+    }
+
+    public void ShowConfig()
+    {
+        configPanel.Refresh(this);
+        pauseAnimator.SetInteger(c_pauseModeAnimationKey, 2);
+    }
+
+    public void HideConfig()
+    {
+        pauseAnimator.SetInteger(c_pauseModeAnimationKey, 1);
     }
 
     public void ExitGame()
     {
-#if UNITY_EDITOR
-        
-#else
+#if !UNITY_EDITOR
         Application.Quit();
 #endif
     }
@@ -457,5 +471,15 @@ public class GameManager : MonoBehaviour
     public void ShowDiceView()
     {
         StartDiceSelect((_)=>{ }); 
+    }
+
+    public void PlayBGM(int stage)
+    {
+        AudioClip clip = soundDefine.Find(stage.ToString());
+        if (clip != null)
+        {
+            bgmAudioSource.clip = clip;
+            bgmAudioSource.Play();
+        }
     }
 }

@@ -8,6 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Current build: **v0.2.0** (see `git tag`).
 
+> **⚖️ 밸런싱 Phase B 적용 (2026-06-04)**: 족보 계수·점수컷(`demoScoreCut`)·아이템 가격이 정량 시뮬 기반으로 재조정되어 `Assets/_Project/Data/`의 `.asset`/`Defines`에 반영됨. 핵심: 스트레이트·Big Alignment 점수는 **구성 주사위 합 × 계수**(고정값 아님 — 코드와 일치). 적용 수치·근거는 외부 기획서(§2.6.1 족보 계수 / §2.7.1 점수컷 / §2.9.4 유물 가격) + `밸런싱 분석 리포트.md`. 코드 내 밸런스 수치를 '구버전'으로 가정하지 말 것.
+
 ## Development Environment
 
 This is a Unity project. There are no CLI build/test commands — all development is done through the Unity Editor. Open `Assets/_Project/` as the working directory within Unity.

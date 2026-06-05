@@ -100,7 +100,7 @@ public class CycleState
 
         foreach(var diceObj in diceObjects)
         {
-            if(dicesRemain.Contains(diceObj.dice))
+            if(dicesRemain.Contains(diceObj.Dice))
             {
                 rerollTarget.Add(diceObj);
             }
@@ -128,7 +128,7 @@ public class CycleState
 
     public void SetDice(DiceObject dice)
     {
-        int pos = dicesRemain.IndexOf(dice.dice);
+        int pos = dicesRemain.IndexOf(dice.Dice);
         SetDice(pos);
     }
 
@@ -150,7 +150,7 @@ public class CycleState
     {
         foreach (var diceObj in diceObjects)
         {
-            if (dicesSetted.Contains(diceObj.dice))
+            if (dicesSetted.Contains(diceObj.Dice))
             {
                 diceObj.SetOutline(true);
             }
@@ -164,14 +164,14 @@ public class CycleState
     public void ToggleDice(DiceObject dice)
     {
         if(dice == null) return;
-        if (dice.dice == null) return;
-        if (dicesSetted.Contains(dice.dice))
+        if (dice.Dice == null) return;
+        if (dicesSetted.Contains(dice.Dice))
         {
-            RetreveDice(dice.dice);
+            RetreveDice(dice.Dice);
         }
         else
         {
-            SetDice(dice.dice);
+            SetDice(dice.Dice);
         }
 
         UpdateOutline();
@@ -188,7 +188,7 @@ public class CycleState
             var diceObject = GameObject.Instantiate(dice.prefab, gameManager.DiceSpawnPoint.transform);
             diceObject.rb.isKinematic = true;
             diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.5f);
-            diceObject.dice = dice;
+            diceObject.Dice = dice;
             diceObjects.Add(diceObject);
         }
     }
@@ -209,7 +209,7 @@ public class CycleState
             var diceObject = GameObject.Instantiate(dice.prefab, gameManager.DiceSpawnPoint.transform);
             diceObject.rb.isKinematic = true;
             diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.5f);
-            diceObject.dice = dice;
+            diceObject.Dice = dice;
             diceObjects.Add(diceObject);
             newDiceObjects.Add(diceObject);
         }

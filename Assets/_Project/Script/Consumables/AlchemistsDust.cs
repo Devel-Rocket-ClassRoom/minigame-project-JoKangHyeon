@@ -20,6 +20,7 @@ public class AlchemistsDust : Consumable
         {
             name = "effect_consumable_alchemistsdust_name",
             description = "effect_consumable_alchemistsdust_desc",
+            sprite = sprite,
             isPermanent = false,
             targetFaceValue = -1
         });

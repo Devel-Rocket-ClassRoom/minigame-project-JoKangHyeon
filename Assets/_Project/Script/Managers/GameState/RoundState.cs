@@ -37,6 +37,8 @@ public class RoundState
             dices.Add(dice.Clone());
         }
 
+        gameManager.PlayBGM(currentRun.level);
+
         //이번 라운드의 첫 턴 시작
         CycleStart();
         currentCycle.isFirstCycle = true;

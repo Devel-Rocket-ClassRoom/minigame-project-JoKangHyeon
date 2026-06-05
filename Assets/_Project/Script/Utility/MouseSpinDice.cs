@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class MouseSpinDice : MonoBehaviour
 {
-    InputAction mouseDelta;
+    InputAction pointerDelta;
     InputAction click;
 
     Quaternion targetRotate;
@@ -20,13 +20,11 @@ public class MouseSpinDice : MonoBehaviour
 
     public bool forceFaceChanged = false;
 
-    bool dragStartedOnDice = false;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        mouseDelta = InputSystem.actions.FindAction("Look");
-        click = InputSystem.actions.FindAction("Click");
+        pointerDelta = InputSystem.actions.FindAction(Defines.c_inputActionPointerDelta);
+        click = InputSystem.actions.FindAction(Defines.c_inputActionSelect);
 
         diceObject = GetComponent<DiceObject>();
 
@@ -62,7 +60,7 @@ public class MouseSpinDice : MonoBehaviour
 
         if (click.IsPressed())
         {
-            Vector2 value = mouseDelta.ReadValue<Vector2>();
+            Vector2 value = pointerDelta.ReadValue<Vector2>();
             (value.x, value.y) = (value.y, -value.x);
             transform.Rotate(value, Space.World);
             return;

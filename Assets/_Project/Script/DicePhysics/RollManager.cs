@@ -109,7 +109,7 @@ public class RollManager : MonoBehaviour
         foreach (var dice in dices)
         {
             dice.rb.isKinematic = false;
-            dice.rb.linearVelocity = Random.insideUnitSphere * 3f + Vector3.up * 5f;
+            dice.rb.linearVelocity = Random.insideUnitSphere * 3f + Vector3.up * 7f;
             dice.rb.angularVelocity = Random.insideUnitSphere * 10f;
         }
 

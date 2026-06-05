@@ -12,13 +12,14 @@ public class ProphetsCoin : Consumable
 
         gameManager.StartDiceObjectSelect(target =>
         {
-            gameManager.StartDiceFaceSelect(target.dice, (dice, value) =>
+            gameManager.StartDiceFaceSelect(target.Dice, (dice, value) =>
             {
                 dice.SetDice(value);
                 dice.AddEffect(new EffectView
                 {
                     name = "effect_consumable_prophetscoin_name",
                     description = "effect_consumable_prophetscoin_desc",
+                    sprite = sprite,
                     isPermanent = false,
                     targetFaceValue = dice.GetFace().Value
                 });

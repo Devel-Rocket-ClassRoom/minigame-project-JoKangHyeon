@@ -75,25 +75,25 @@ MonoBehaviour:
       data:
         name: Hand_FullHouse_Name
         desc: Hand_FullHouse_Desc
-        multiplier: 3
+        multiplier: 4
     - rid: 4409310316887802104
       type: {class: SmallStraightHandData, ns: , asm: Assembly-CSharp}
       data:
         name: Hand_SmallStraight_Name
         desc: Hand_SmallStraight_Desc
-        multiplier: 2
+        multiplier: 3
     - rid: 4409310316887802106
       type: {class: SmallAlignmentData, ns: , asm: Assembly-CSharp}
       data:
         name: Hand_SmallAlignment_Name
         desc: Hand_SmallAlignment_Desc
-        multiplier: 2
+        multiplier: 3
     - rid: 4409310316887802108
       type: {class: BigStraightHandData, ns: , asm: Assembly-CSharp}
       data:
         name: Hand_BigStraight_Name
         desc: Hand_BigStraight_Desc
-        multiplier: 4
+        multiplier: 6
     - rid: 4409310316887802110
       type: {class: ChoiceHandData, ns: , asm: Assembly-CSharp}
       data:
@@ -105,4 +105,4 @@ MonoBehaviour:
       data:
         name: Hand_BigAlignment_Name
         desc: Hand_BigAlignment_Desc
-        multiplier: 4
+        multiplier: 8

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3d215f4234634459ed63aa8ee782e2, type: 3}
+  m_Name: Sound Definition
+  m_EditorClassIdentifier: Assembly-CSharp::BGMDefinitionSO
+  bgms:
+  - clip: {fileID: 8300000, guid: bd4cc2e852455004b891763cfb10b911, type: 3}
+    names:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+  - clip: {fileID: 8300000, guid: ed88f036b142a344087f5b8d796e4edc, type: 3}
+    names:
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+  - clip: {fileID: 8300000, guid: 9b3a1b24a31984f448a8bdfd3e65b0d5, type: 3}
+    names:
+    - shop_bgm
+  - clip: {fileID: 8300000, guid: 4a330be81f2fdf2419024628c9db9cd2, type: 3}
+    names:
+    - dice_sf
+  - clip: {fileID: 8300000, guid: aaabede201be72141bf97e64e1484c70, type: 3}
+    names:
+    - assign_sf
+  - clip: {fileID: 8300000, guid: 2ba67ca447c9a5e43a33a15ac12d6512, type: 3}
+    names:
+    - shop_buy_se

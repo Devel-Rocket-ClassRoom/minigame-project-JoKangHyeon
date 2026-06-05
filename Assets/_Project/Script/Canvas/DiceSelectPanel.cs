@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiceSelectCanvas : MonoBehaviour
+public class DiceSelectPanel : MonoBehaviour
 {
-    public GameManager manager;
+    public GameManager gameManager;
 
     public List<DiceObject> dicePreviews;
     public List<DiceSelectButton> diceSelectors;
@@ -14,11 +14,12 @@ public class DiceSelectCanvas : MonoBehaviour
 
     public Transform diceObjectParent;
 
-    public GameObject OverlayUI;
+    public DiceRenderCamera diceRenderCameraPrefab;
+    public List<DiceRenderCamera> diceRenderCameras;
 
     public void StartDiceSelect(GameManager gameManager, Action<Dice> callback, bool isCycle = false)
     {
-        OverlayUI.SetActive(false);
+        this.gameManager = gameManager;
 
         foreach(DiceSelectButton button in diceSelectors)
         {
@@ -33,13 +34,20 @@ public class DiceSelectCanvas : MonoBehaviour
                 diceSelectors.Add(newButton);
             }
 
+            if(i>= diceRenderCameras.Count)
+            {
+                DiceRenderCamera newCamera = Instantiate(diceRenderCameraPrefab, diceObjectParent);
+                newCamera.transform.Translate(-i*100, 0, 0);    
+                diceRenderCameras.Add(newCamera);
+            }
+
             if (isCycle)
             {
-                diceSelectors[i].Show(gameManager, gameManager.currentRun.currentRound.currentCycle.dices[i], callback, this);
+                diceSelectors[i].Show(gameManager, gameManager.currentRun.currentRound.currentCycle.dices[i], callback, this, diceRenderCameras[i]);
             }
             else
             {
-                diceSelectors[i].Show(gameManager, gameManager.currentRun.dices[i], callback, this);
+                diceSelectors[i].Show(gameManager, gameManager.currentRun.dices[i], callback, this, diceRenderCameras[i]);
             }
             diceSelectors[i].gameObject.SetActive(true);
         }
@@ -49,12 +57,12 @@ public class DiceSelectCanvas : MonoBehaviour
 
     public void FinishDiceSelect()
     {
-        foreach(DiceSelectButton diceSelector in diceSelectors)
+        foreach(var dicecamera in diceRenderCameras)
         {
-            diceSelector.Remove3dDice();
+            dicecamera.gameObject.SetActive(false);
         }
 
-        OverlayUI.SetActive(true);
+        gameManager.tooltip.HideTooltip();
         this.gameObject.SetActive(false);
     }
 }

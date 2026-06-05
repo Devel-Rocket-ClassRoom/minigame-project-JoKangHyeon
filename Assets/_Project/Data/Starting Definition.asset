@@ -22,11 +22,11 @@ MonoBehaviour:
     - Hand_FullHouse_Name
     - Hand_SmallStraight_Name
     startingDices:
-    - Dice_Normal_Name
-    - Dice_Normal_Name
-    - Dice_Normal_Name
-    - Dice_Normal_Name
-    - Dice_Normal_Name
+    - Dice_Cube_Name
+    - Dice_Cube_Name
+    - Dice_Cube_Name
+    - Dice_Cube_Name
+    - Dice_Octahedral_Name
     startingRelics: []
   - name: Starting_Full_Name
     description: Starting_Full_Desc

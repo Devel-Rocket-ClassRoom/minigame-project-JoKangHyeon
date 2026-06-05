@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FaceSelectCanvas : MonoBehaviour
+public class FaceSelectPanel : MonoBehaviour
 {
     public Transform dice3dParent;
 

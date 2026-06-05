@@ -7,12 +7,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI diceText;
     public TextMeshProUGUI scoreText;
     public Button setButton;
+    public Image bgImage;
 
     public bool detailView = false;
 
@@ -21,9 +23,21 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private List<Dice> currentTemp;
 
+    private AudioClip selectClip;
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        
+    }
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
+
+        selectClip = gameManager.soundDefine.Find(Defines.c_assignSFXKey);
+        audioSource.clip = selectClip;
     }
 
     private void Update()
@@ -49,6 +63,7 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         nameText.text = slot.hand.Name;
         diceText.text = slot.hand.GetDicesString();
         currentTemp = tempView;
+        bgImage.sprite = gameManager.cardImageDefine.Find(slot.slotLevel);
 
         if (slot.hand.Setted)
         {

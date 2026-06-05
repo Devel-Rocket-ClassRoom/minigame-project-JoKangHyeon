@@ -1,6 +1,7 @@
 "Id","String"
 "Lang_Name","한국어"
-"Dice_Normal_Name","주사위"
+"Dice_Cube_Name","6면체 주사위"
+"Dice_Octahedral_Name","8면체 주사위"
 "Hand_Ones_Name","하나"
 "Hand_Ones_Desc","1의 합계만큼 점수를 획득합니다."
 "Hand_Twos_Name","둘"

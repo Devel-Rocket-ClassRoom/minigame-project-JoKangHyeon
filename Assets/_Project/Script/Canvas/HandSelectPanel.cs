@@ -6,7 +6,7 @@ using UnityEngine;
 /// 족보 슬롯 선택 UI 캔버스. DiceSelectCanvas 패턴 미러.
 /// CardS0·W4·W6·M8·M1 등 슬롯 대상이 필요한 카드가 사용한다.
 /// </summary>
-public class HandSelectCanvas : MonoBehaviour
+public class HandSelectPanel : MonoBehaviour
 {
     public List<HandSelectButton> handSelectors;
     public HandSelectButton handSelectorPrefab;

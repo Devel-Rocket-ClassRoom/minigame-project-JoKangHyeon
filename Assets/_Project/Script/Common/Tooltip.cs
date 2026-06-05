@@ -70,7 +70,7 @@ public class Tooltip : MonoBehaviour
     private void Awake()
     {
         rt = GetComponent<RectTransform>();
-        scrollWheel = InputSystem.actions.FindAction("ScrollWheel");
+        scrollWheel = InputSystem.actions.FindAction(Defines.c_inputActionWheel);
     }
 
     private void Update()
@@ -90,7 +90,6 @@ public class Tooltip : MonoBehaviour
         Vector2 mousePos = Mouse.current.position.value;
         Vector2 size = rt.rect.size;
 
-        // 플립 진입: 경계 초과 시. 플립 해제: 반대 방향에 여유(hysteresis)가 생겼을 때만.
         if (!flippedX) { if (mousePos.x + size.x > Screen.width)        flippedX = true; }
         else           { if (mousePos.x + size.x <= Screen.width - c_flipHysteresis) flippedX = false; }
 
@@ -121,7 +120,9 @@ public class Tooltip : MonoBehaviour
         transform.position = Mouse.current.position.value;
 
         diceResultTooltip.SetActive(true);
-        if(faceIndex == -1)
+        diceNameText.text = dice.Name;
+
+        if (faceIndex == -1)
         {
             faceView.faceText.text = "?";
         }

@@ -16,6 +16,7 @@ public class RunState
 
     public int level;
     private int _coin;
+
     public int Coin
     {
         get
@@ -104,7 +105,7 @@ public class RunState
 
 
         rerollPerCycle = 2;
-        gameManager.activeItemCanvas.Refresh(gameManager, consumableInventory, slotCount);
+        gameManager.activeItemPanel.Refresh(gameManager, consumableInventory, slotCount);
     }
 
    
@@ -149,6 +150,7 @@ public class RunState
     {
         relics.Add(relic);
         relic.OnObtain(gameManager);
+        gameManager.relicPanel.Refresh(relics, gameManager);
     }
 
     public bool CanAddConsumable() => consumableInventory.Count < maxCunsumable;
@@ -162,7 +164,7 @@ public class RunState
         consumableInventory.Add(clone);
         clone.OnAdd(gameManager);
 
-        gameManager.activeItemCanvas.Refresh(gameManager, consumableInventory, slotCount);
+        gameManager.activeItemPanel.Refresh(gameManager, consumableInventory, slotCount);
     }
     
 
@@ -174,7 +176,7 @@ public class RunState
             consumableInventory.Remove(c);
             c.OnRemove();
             gameManager.RefreshUI();
-            gameManager.activeItemCanvas.Refresh(gameManager, consumableInventory, slotCount);
+            gameManager.activeItemPanel.Refresh(gameManager, consumableInventory, slotCount);
         }
     }
 

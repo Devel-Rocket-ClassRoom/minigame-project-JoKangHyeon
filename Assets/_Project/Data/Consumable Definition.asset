@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48d710d9f47c6c74e9ae4600b86f6642, type: 3}
-  m_Name: Consumable Definition SO
+  m_Name: Consumable Definition
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableDefinitionSO
   consumables:
   - rid: 4409310565517230142

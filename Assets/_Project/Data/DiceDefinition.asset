@@ -14,14 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DiceDefinitionSO
   dices:
   - rid: 4409310318304952505
+  - rid: 4656523048947024427
   references:
     version: 2
     RefIds:
     - rid: 4409310318304952505
       type: {class: NormalDice, ns: , asm: Assembly-CSharp}
       data:
-        name: Dice_Normal_Name
+        nameStringKey: Dice_Cube_Name
+        rollSFXKey: dice_sf
         prefab: {fileID: 7009460997972177953, guid: bec09755c147823459dd01cce822f73c, type: 3}
         diceResultIndex: 0
         rolled: 0
         isTempFace: 0
+        diceFaceValue: 010000000200000003000000040000000500000006000000
+    - rid: 4656523048947024427
+      type: {class: NormalDice, ns: , asm: Assembly-CSharp}
+      data:
+        nameStringKey: Dice_Octahedral_Name
+        rollSFXKey: dice_sf
+        prefab: {fileID: 2084966984837401743, guid: 9c25528105ce8504c9979a546dd30ba9, type: 3}
+        diceResultIndex: 0
+        rolled: 0
+        isTempFace: 0
+        diceFaceValue: 0100000002000000030000000400000005000000060000000700000008000000
