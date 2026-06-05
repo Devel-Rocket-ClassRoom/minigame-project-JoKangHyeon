@@ -44,8 +44,12 @@ public class ConfigPanel : MonoBehaviour
     List<Resolution> resolutions;
     GameManager gameManager;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    // 주의: 옵션 구성을 Start()에 두면, 패널이 비활성→활성으로 켜질 때
+    // Refresh()가 값을 설정한 "뒤에" Start()의 ClearOptions가 값을 0으로 되돌린다.
+    // 그래서 옵션 구성은 Refresh()에서만 수행한다.
+
+    // 드롭다운 옵션을 Screen.resolutions(역순) 기준으로 채운다.
+    void BuildResolutionOptions()
     {
         resolutionDropdown.ClearOptions();
 
@@ -61,15 +65,15 @@ public class ConfigPanel : MonoBehaviour
     {
         this.gameManager = gameManager;
 
-        screenModeDropdown.value = (int)gameManager.screenMode;
+        BuildResolutionOptions();
+
+        screenModeDropdown.SetValueWithoutNotify((int)gameManager.screenMode);
         screenModeDropdown.RefreshShownValue();
 
-        Resolution current = gameManager.currentResolution;
-        int resolutionIndex = Screen.resolutions.ToList().IndexOf(current);
-        resolutionDropdown.value = resolutionIndex == -1?0: resolutionIndex;
+        resolutionDropdown.SetValueWithoutNotify(gameManager.currentResolutionIndex);
         resolutionDropdown.RefreshShownValue();
 
-        framelimitDropdown.value = (int)gameManager.frameLimitMode;
+        framelimitDropdown.SetValueWithoutNotify((int)gameManager.frameLimitMode);
         framelimitDropdown.RefreshShownValue();
 
         masterVolumeSlider.value = gameManager.audioManager.MasterVolume;
@@ -84,8 +88,7 @@ public class ConfigPanel : MonoBehaviour
 
     public void OnResolutionChanged(int mode)
     {
-        Resolution resolution = Screen.resolutions[Screen.resolutions.Length - mode - 1];
-        gameManager.SetResolutionMode(resolution);
+        gameManager.SetResolutionByIndex(mode);
     }
 
     public void OnFrameLimitChanged(int mode)

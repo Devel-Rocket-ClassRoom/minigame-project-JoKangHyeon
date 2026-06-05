@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     public RelicPanel relicPanel;
     public GameOverCanvas gameOverPanel;
     public ConfigPanel configPanel;
+    public GameObject TutorialPanel;
 
 
     [Header("View Objects")]
@@ -70,6 +71,8 @@ public class GameManager : MonoBehaviour
     //Configs
     public ConfigPanel.ScreenMode screenMode;
     public Resolution currentResolution;
+    // 드롭다운(=Screen.resolutions 역순) 기준 인덱스. 표시/저장의 단일 기준값.
+    public int currentResolutionIndex;
     public ConfigPanel.FrameLimitMode frameLimitMode;
 
     //Constants
@@ -79,12 +82,11 @@ public class GameManager : MonoBehaviour
     readonly int c_pauseModeAnimationKey = Animator.StringToHash("Mode");
     const string c_roundTextFormatKey = "RoundStatus";
     const string c_screenModePrefKey = "ScreenMode";
-    const string c_resolutionWidthPrefKey = "Resoultion_Width";
-    const string c_resolutionHeightPrefKey = "Resoultion_Height";
-    const string c_resolutionNumPrefKey = "Resolution_Num";
-    const string c_resolutionDenPrefKey = "Resolution_Den";
+    const string c_resolutionIndexPrefKey = "Resolution_Index";
 
     const string c_frameLimitModePrefKey = "FrameLimit";
+
+    const string c_tutorialShow = "Tutorial";
 
     public List<SlotUI> handsUI;
     public SlotUI handUIPrefab;
@@ -131,6 +133,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt(c_screenModePrefKey, (int)screenMode);
         PlayerPrefs.SetInt(c_frameLimitModePrefKey , (int)frameLimitMode);
         SaveResolution();
+        PlayerPrefs.Save();
     }
 
     public void SetScreenMode(ConfigPanel.ScreenMode screenMode)
@@ -152,35 +155,54 @@ public class GameManager : MonoBehaviour
 
     public void LoadResoluton()
     {
-        this.currentResolution = new Resolution()
-        {
-            width = PlayerPrefs.GetInt(c_resolutionWidthPrefKey, 1920),
-            height = PlayerPrefs.GetInt(c_resolutionHeightPrefKey, 1080),
-            refreshRateRatio = new RefreshRate()
-            {
-                numerator = (uint)PlayerPrefs.GetInt(c_resolutionNumPrefKey, 60),
-                denominator = (uint)PlayerPrefs.GetInt(c_resolutionDenPrefKey, 100),
-            }
-        };
+        int count = Screen.resolutions.Length;
 
-        SetResolutionMode(currentResolution);
+        // 저장값이 없으면(-1) 현재 데스크톱 해상도에 해당하는 인덱스를 기본값으로.
+        int savedIndex = PlayerPrefs.GetInt(c_resolutionIndexPrefKey, -1);
+        if (savedIndex < 0)
+            savedIndex = GetDropdownIndexOf(Screen.currentResolution);
+
+        // 모니터 구성이 바뀌어 인덱스가 범위를 벗어나는 경우 방어.
+        savedIndex = Mathf.Clamp(savedIndex, 0, Mathf.Max(0, count - 1));
+
+        SetResolutionByIndex(savedIndex);
     }
 
     public void SaveResolution()
     {
-        PlayerPrefs.SetInt(c_resolutionWidthPrefKey, currentResolution.width);
-        PlayerPrefs.SetInt(c_resolutionHeightPrefKey, currentResolution.height);
-        PlayerPrefs.SetInt(c_resolutionNumPrefKey, (int)currentResolution.refreshRateRatio.numerator);
-        PlayerPrefs.SetInt(c_resolutionDenPrefKey, (int)currentResolution.refreshRateRatio.denominator);
+        PlayerPrefs.SetInt(c_resolutionIndexPrefKey, currentResolutionIndex);
     }
 
-    public void SetResolutionMode(Resolution resolution)
+    // 드롭다운은 Screen.resolutions를 역순으로 표시한다(인덱스 0 = 가장 높은 해상도).
+    // 적용·표시 모두 이 한 곳의 변환을 거쳐 항상 일치하게 한다.
+    public void SetResolutionByIndex(int dropdownIndex)
     {
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
+        int count = Screen.resolutions.Length;
+        if (count == 0) return;
+
+        dropdownIndex = Mathf.Clamp(dropdownIndex, 0, count - 1);
+        currentResolutionIndex = dropdownIndex;
+        currentResolution = Screen.resolutions[count - 1 - dropdownIndex];
+
+        Screen.SetResolution(currentResolution.width, currentResolution.height,
+                             Screen.fullScreenMode, currentResolution.refreshRateRatio);
+    }
+
+    // 해상도(주로 데스크톱 현재값)를 너비/높이로 찾아 드롭다운 인덱스로 환산. 없으면 0.
+    int GetDropdownIndexOf(Resolution target)
+    {
+        Resolution[] list = Screen.resolutions;
+        for (int i = 0; i < list.Length; i++)
+        {
+            if (list[i].width == target.width && list[i].height == target.height)
+                return list.Length - 1 - i;
+        }
+        return 0;
     }
 
     public void SetFrameLimitMode(ConfigPanel.FrameLimitMode frameLimitMode)
     {
+        this.frameLimitMode = frameLimitMode;
         switch (frameLimitMode)
         {
             case ConfigPanel.FrameLimitMode.VSYNC:
@@ -308,15 +330,27 @@ public class GameManager : MonoBehaviour
 
         currentRun.RoundStart();
         RefreshUI();
+
+        if (!PlayerPrefs.HasKey(c_tutorialShow))
+        {
+            PlayerPrefs.SetInt(c_tutorialShow, 1);
+            Time.timeScale = 0;
+            TutorialPanel.SetActive(true);
+        }
     }
 
+    public void EndTutorial()
+    {
+        Time.timeScale = 1;
+        TutorialPanel.SetActive(false);
+    }
     
     public void RefreshUI()
     {
         rerollText.text = string.Format(c_rerollTextFormat, currentRun.currentRound.currentCycle.reroll.ToString(), currentRun.rerollPerCycle.ToString());
         coinText.text = currentRun.Coin.ToString();
 
-        roundText.text = string.Format(StringTable.GetString(c_roundTextFormatKey), currentRun.currentScore, currentRun.TargetScore);
+        roundText.text = string.Format(StringTable.GetString(c_roundTextFormatKey),currentRun.level,demoScoreCut.Count+1, currentRun.currentScore, currentRun.TargetScore);
 
         if(currentRun.currentScore >= currentRun.TargetScore)
         {
