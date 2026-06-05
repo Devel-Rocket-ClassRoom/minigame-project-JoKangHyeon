@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -47,6 +48,7 @@ public class GameManager : MonoBehaviour
     public GameOverCanvas gameOverPanel;
     public ConfigPanel configPanel;
     public GameObject TutorialPanel;
+    public GameObject startPanel;
 
 
     [Header("View Objects")]
@@ -117,7 +119,7 @@ public class GameManager : MonoBehaviour
     {
         faceSelectPanel.Init(this);
         LoadConfig();
-        RestartGame();
+        //RestartGame();
     }
 
     public void LoadConfig()
@@ -313,6 +315,7 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         gameOverPanel.gameObject.SetActive(false);
+        startPanel.SetActive(false);
 
         foreach (var hand in handsUI)
         {
@@ -330,6 +333,8 @@ public class GameManager : MonoBehaviour
 
         currentRun.RoundStart();
         RefreshUI();
+        relicPanel.Refresh(currentRun.relics, this);
+        activeItemPanel.Refresh(this, currentRun.consumableInventory, currentRun.maxConsumable);
 
         if (!PlayerPrefs.HasKey(c_tutorialShow))
         {
@@ -350,7 +355,7 @@ public class GameManager : MonoBehaviour
         rerollText.text = string.Format(c_rerollTextFormat, currentRun.currentRound.currentCycle.reroll.ToString(), currentRun.rerollPerCycle.ToString());
         coinText.text = currentRun.Coin.ToString();
 
-        roundText.text = string.Format(StringTable.GetString(c_roundTextFormatKey),currentRun.level,demoScoreCut.Count+1, currentRun.currentScore, currentRun.TargetScore);
+        roundText.text = string.Format(StringTable.GetString(c_roundTextFormatKey),currentRun.level+1,demoScoreCut.Count, currentRun.currentScore, currentRun.TargetScore);
 
         if(currentRun.currentScore >= currentRun.TargetScore)
         {

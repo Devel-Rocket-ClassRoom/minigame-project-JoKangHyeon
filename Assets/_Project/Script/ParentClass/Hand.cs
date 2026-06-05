@@ -96,7 +96,8 @@ public abstract class Hand
         var dices = result.dices.ConvertAll<int>((d) => d.GetDice());
         var effectiveDices = result.effectiveDices.ConvertAll<int>((d) => d.GetDice());
 
-        return string.Join(',', dices) + "\neffective:" + string.Join(',', effectiveDices);
+        return string.Join(',', dices);
+        //+ "\neffective:" + string.Join(',', effectiveDices);
     }
 
     public int GetCurrentMultipliedScore()

@@ -39,7 +39,7 @@ public class RunState
         }
     }
 
-    public int maxCunsumable;
+    public int maxConsumable;
     const int c_defaultMaxCunsumable = 3;
 
     public Starting startingSet;
@@ -97,7 +97,7 @@ public class RunState
             relic.OnObtain(gameManager);
         }
 
-        maxCunsumable = c_defaultMaxCunsumable;
+        maxConsumable = c_defaultMaxCunsumable;
         consumableInventory = new();
 
         Coin = Defines.c_startingCoin;
@@ -153,7 +153,7 @@ public class RunState
         gameManager.relicPanel.Refresh(relics, gameManager);
     }
 
-    public bool CanAddConsumable() => consumableInventory.Count < maxCunsumable;
+    public bool CanAddConsumable() => consumableInventory.Count < maxConsumable;
 
     public void AddConsumable(Consumable c)
     {
