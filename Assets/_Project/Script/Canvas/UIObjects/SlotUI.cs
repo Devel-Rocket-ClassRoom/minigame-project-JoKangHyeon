@@ -32,6 +32,11 @@ public class SlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         
     }
 
+    public bool IsUsed()
+    {
+        return slot.isUsed;
+    }
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;

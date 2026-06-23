@@ -9,6 +9,44 @@
       },
       "hash": "ef554167015bf60706b3a112c26cd070aa375c4c"
     },
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "e5acc106ee196bc5a32fb14cdf2987b0f96d11e0"
+    },
+    "com.google.external-dependency-manager": {
+      "version": "1.2.186",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
+    "com.google.firebase.app": {
+      "version": "file:C:/Users/jokh9/Downloads/com.google.firebase.app-13.6.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.186"
+      }
+    },
+    "com.google.firebase.auth": {
+      "version": "file:C:/Users/jokh9/Downloads/com.google.firebase.auth-13.6.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "13.6.0"
+      }
+    },
+    "com.google.firebase.database": {
+      "version": "file:C:/Users/jokh9/Downloads/com.google.firebase.database-13.6.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.auth": "13.6.0"
+      }
+    },
     "com.unify.unified-universal-blur": {
       "version": "https://github.com/lukakldiashvili/Unified-Universal-Blur.git",
       "depth": 0,

@@ -298,3 +298,9 @@ CLAUDE.local.md
 
 # Cowork / 임시 출력물 폴더 실수 커밋 방지
 /outputs/
+Assets/google-services.json
+Assets/StreamingAssets/google-services-desktop.json
+Assets/StreamingAssets/google-services-desktop.json.meta
+Assets/google-services.json.meta
+Assets/Resources/FirebaseConfig.asset
+Assets/Resources/FirebaseConfig.asset.meta

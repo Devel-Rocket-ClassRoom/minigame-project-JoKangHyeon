@@ -63,8 +63,9 @@ public class CycleState
     public void ClearDiceObject() {
         foreach (DiceObject dice in diceObjects)
         {
-            GameObject.Destroy(dice.gameObject);
+            dice.Release();
         }
+        diceObjects.Clear();
     }
 
     public void Reroll()
@@ -185,7 +186,7 @@ public class CycleState
         for (int i = 0; i < dicesRemain.Count; i++)
         {
             Dice dice = dicesRemain[i];
-            var diceObject = GameObject.Instantiate(dice.prefab, gameManager.DiceSpawnPoint.transform);
+            var diceObject = DiceObjectPool.Instance.GetDiceObject(dice);
             diceObject.rb.isKinematic = true;
             diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.5f);
             diceObject.Dice = dice;
@@ -206,7 +207,7 @@ public class CycleState
         for (int i = 0; i < dices.Count; i++)
         {
             Dice dice = dices[i];
-            var diceObject = GameObject.Instantiate(dice.prefab, gameManager.DiceSpawnPoint.transform);
+            var diceObject = DiceObjectPool.Instance.GetDiceObject(dice); 
             diceObject.rb.isKinematic = true;
             diceObject.transform.localPosition = Vector3.left * (i - dicesRemain.Count / 2.5f);
             diceObject.Dice = dice;

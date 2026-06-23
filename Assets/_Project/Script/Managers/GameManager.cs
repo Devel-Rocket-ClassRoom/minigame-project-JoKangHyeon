@@ -1,3 +1,7 @@
+using Cysharp.Threading.Tasks;
+using Firebase.Auth;
+using Firebase.Database;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -5,8 +9,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static ServerSaveDataManager;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IInitCheckable
 {
 
     [Header("Scriptable Objects")]
@@ -47,9 +52,10 @@ public class GameManager : MonoBehaviour
     public RelicPanel relicPanel;
     public GameOverCanvas gameOverPanel;
     public ConfigPanel configPanel;
+    public RecordPanel recordPanel;
     public GameObject TutorialPanel;
     public GameObject startPanel;
-
+    public LoginPanel loginPanel;
 
     [Header("View Objects")]
     public List<GameObject> gameStateObjects;
@@ -69,6 +75,10 @@ public class GameManager : MonoBehaviour
     bool isDiceObjectSelecting = false;
     Action<DiceObject> diceObjactSelectCallback;
     InputAction click;
+
+    //Firebase
+    bool inited = false;
+    public PersonalData personalData;
 
     //Configs
     public ConfigPanel.ScreenMode screenMode;
@@ -115,10 +125,12 @@ public class GameManager : MonoBehaviour
 
 
 
-    void Start()
+    async UniTaskVoid Start()
     {
         faceSelectPanel.Init(this);
         LoadConfig();
+
+        FirebaseManager.Instance.Assign(100, this).Forget();
         //RestartGame();
     }
 
@@ -262,6 +274,8 @@ public class GameManager : MonoBehaviour
 
 
 
+        if (currentRun == null)
+            return;
         //TODO : 키 옮기고 디버그 삭제
         #region DEBUG
         if (Keyboard.current.rKey.wasPressedThisFrame)
@@ -273,6 +287,7 @@ public class GameManager : MonoBehaviour
             RefreshUI();
         }
 
+#if UNITY_EDITOR
         //디버그용 치트
         if (Keyboard.current.tKey.wasPressedThisFrame)
         {
@@ -284,6 +299,7 @@ public class GameManager : MonoBehaviour
             currentRun.Coin += 100;
             RefreshUI();
         }
+#endif
 
         #endregion
     }
@@ -308,6 +324,8 @@ public class GameManager : MonoBehaviour
 
     public void SetHand(int pos)
     {
+        if (handsUI[pos].IsUsed()) return;
+
         currentRun.currentRound.currentCycle.EndCycle(pos);
         RefreshUI();
     }
@@ -339,8 +357,7 @@ public class GameManager : MonoBehaviour
         if (!PlayerPrefs.HasKey(c_tutorialShow))
         {
             PlayerPrefs.SetInt(c_tutorialShow, 1);
-            Time.timeScale = 0;
-            TutorialPanel.SetActive(true);
+            ShowTutorial();
         }
     }
 
@@ -350,6 +367,12 @@ public class GameManager : MonoBehaviour
         TutorialPanel.SetActive(false);
     }
     
+    public void ShowTutorial()
+    {
+        Time.timeScale = 0;
+        TutorialPanel.SetActive(true);
+    }
+
     public void RefreshUI()
     {
         rerollText.text = string.Format(c_rerollTextFormat, currentRun.currentRound.currentCycle.reroll.ToString(), currentRun.rerollPerCycle.ToString());
@@ -396,11 +419,36 @@ public class GameManager : MonoBehaviour
     public void OnGameOver(object _)
     {
         gameOverPanel.Show(this, false);
+
+        if (currentRun.currentScore > personalData.MaxScore)
+        {
+            personalData.MaxScore = currentRun.currentScore;
+        }
+
+        personalData.PlayCount++;
+
+        if (personalData.IsDirty)
+        {
+            UpdateServerData();
+        }
     }
 
     public void OnGameClear(object _)
     {
         gameOverPanel.Show(this, true);
+
+        if (currentRun.currentScore > personalData.MaxScore)
+        {
+            personalData.MaxScore = currentRun.currentScore;
+        }
+
+        personalData.PlayCount++;
+        personalData.ClearCount++;
+
+        if (personalData.IsDirty)
+        {
+            UpdateServerData();
+        }
     }
 
 
@@ -495,6 +543,12 @@ public class GameManager : MonoBehaviour
         pauseAnimator.SetInteger(c_pauseModeAnimationKey, 2);
     }
 
+    public void ShowRecord()
+    {
+        recordPanel.Refresh(this);
+        pauseAnimator.SetInteger(c_pauseModeAnimationKey, 3);
+    }
+
     public void HideConfig()
     {
         pauseAnimator.SetInteger(c_pauseModeAnimationKey, 1);
@@ -520,5 +574,75 @@ public class GameManager : MonoBehaviour
             bgmAudioSource.clip = clip;
             bgmAudioSource.Play();
         }
+    }
+
+    public bool IsInited() => inited;
+
+    public async UniTask<bool> Init()
+    {
+        inited = false;
+
+        if (!FirebaseAuthManager.Instance.IsLoggedIn)
+        {
+            loginPanel.Construct(this);
+            loginPanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            loginPanel.gameObject.SetActive(false);
+            LoadServerData().Forget();
+        }
+
+        inited = true;
+        return true;
+    }
+
+    public async UniTask LoadServerData()
+    {
+        personalData = await LoadData();
+    }
+
+    public UniTask SaveServerData()
+    {
+        return SaveData(personalData);
+    }
+
+    public UniTask UpdateServerData()
+    {
+        return UpdateData(personalData);
+    }
+}
+
+public static partial class ServerSaveDataManager
+{
+    const string c_FirebasePersonalDataPath = "personal/{0}";
+
+
+    public static async UniTask<PersonalData> LoadData()
+    {
+        DataSnapshot snapshot = await FirebaseDatabaseManager.Instance.LoadWithUserId(c_FirebasePersonalDataPath);
+
+        if (snapshot.Exists)
+        {
+            return PersonalData.FromJson(snapshot.GetRawJsonValue());
+        }
+        else
+        {
+            return new();
+        }
+    }
+
+    public static async UniTask<(bool success, string error)> SaveData(PersonalData data)
+    {
+        var json = data.ToJson();
+        var result = await FirebaseDatabaseManager.Instance.SaveWithUserId(c_FirebasePersonalDataPath, json, true);
+        return result;
+    }
+
+    public static async UniTask<(bool success, string error)> UpdateData(PersonalData data)
+    {
+        var dict = data.GetUpdateDict();
+        var result = await FirebaseDatabaseManager.Instance.UpdateWithUserId(c_FirebasePersonalDataPath, dict);
+        return result;
     }
 }

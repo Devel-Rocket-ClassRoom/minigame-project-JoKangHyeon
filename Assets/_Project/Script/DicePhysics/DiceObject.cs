@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Pool;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
@@ -18,6 +19,13 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         get { return _dice; }
         set { 
+            if(value == null)
+            {
+                _dice = value;
+                rollClip = null;
+                audioSource.clip = null;
+                return;
+            }
             _dice = value;
             rollClip = gameManager.soundDefine.Find(_dice.rollSFXKey);
             audioSource.clip = rollClip;
@@ -25,6 +33,8 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
     GameManager gameManager;
     AudioSource audioSource;
+
+    public IObjectPool<DiceObject> pool;
 
     private void Awake()
     {
@@ -95,5 +105,8 @@ public class DiceObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         renderer.material.SetFloat("_Size", enable ? 0.005f : 0f);
     }
 
-
+    public void Release()
+    {
+        pool.Release(this);
+    }
 }
