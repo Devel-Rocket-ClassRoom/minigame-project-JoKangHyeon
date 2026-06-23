@@ -304,3 +304,9 @@ Assets/StreamingAssets/google-services-desktop.json.meta
 Assets/google-services.json.meta
 Assets/Resources/FirebaseConfig.asset
 Assets/Resources/FirebaseConfig.asset.meta
+
+# --------------------------------------------------------------------------
+# Firebase UPM 타르볼 — Tools > Firebase 메뉴로 받음 (Git/LFS 제외)
+# --------------------------------------------------------------------------
+/GooglePackages/*.tgz
+Packages/packages-lock.json

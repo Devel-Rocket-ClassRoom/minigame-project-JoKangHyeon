@@ -1,20 +1,11 @@
 {
-  "scopedRegistries": [
-    {
-      "name": "OpenUPM",
-      "url": "https://package.openupm.com",
-      "scopes": [
-        "com.google.firebase",
-        "com.google.external-dependency-manager"
-      ]
-    }
-  ],
   "dependencies": {
     "com.alexeytaranov.serializereferencedropdown": "https://github.com/AlexeyTaranov/SerializeReferenceDropdown.git",
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-    "com.google.firebase.app": "file:C:/Users/jokh9/Downloads/com.google.firebase.app-13.6.0.tgz",
-    "com.google.firebase.auth": "file:C:/Users/jokh9/Downloads/com.google.firebase.auth-13.6.0.tgz",
-    "com.google.firebase.database": "file:C:/Users/jokh9/Downloads/com.google.firebase.database-13.6.0.tgz",
+    "com.google.external-dependency-manager": "file:../GooglePackages/com.google.external-dependency-manager-1.2.186.tgz",
+    "com.google.firebase.app": "file:../GooglePackages/com.google.firebase.app-13.6.0.tgz",
+    "com.google.firebase.auth": "file:../GooglePackages/com.google.firebase.auth-13.6.0.tgz",
+    "com.google.firebase.database": "file:../GooglePackages/com.google.firebase.database-13.6.0.tgz",
     "com.unify.unified-universal-blur": "https://github.com/lukakldiashvili/Unified-Universal-Blur.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.12",
